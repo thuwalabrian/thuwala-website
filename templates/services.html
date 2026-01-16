@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Our Services - Thuwala Co.{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="container">
+        <h1>Our Services</h1>
+        <p>Comprehensive solutions for your business needs</p>
+    </div>
+</section>
+
+<section class="all-services">
+    <div class="container">
+        <div class="services-grid">
+            {% for service in services %}
+            <div class="service-card" id="service-{{ service.id }}">
+                <div class="service-icon">
+                    <i class="{{ service.icon }}"></i>
+                </div>
+                <h3>{{ service.title }}</h3>
+                <p>{{ service.description }}</p>
+                {% if service.details %}
+                <div class="service-details">
+                    <h4>What we offer:</h4>
+                    <ul>
+                        {% for detail in service.details.split(', ') %}
+                        <li>{{ detail }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="cta">
+    <div class="container">
+        <h2>Need a Custom Solution?</h2>
+        <p>Contact us to discuss your specific requirements</p>
+        <a href="{{ url_for('contact') }}" class="btn btn-primary">Get in Touch</a>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,543 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard - Thuwala Co.{% endblock %}
+
+{% block content %}
+<div class="admin-container">
+    <div class="admin-header">
+        <div>
+            <h1>Admin Dashboard</h1>
+            <p>Welcome back, {{ current_user.username }}!</p>
+        </div>
+        <div class="admin-actions">
+            <a href="{{ url_for('admin_logout') }}" class="btn btn-danger">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+        </div>
+    </div>
+
+    <div class="dashboard-stats">
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-envelope"></i>
+            </div>
+            <div class="stat-content">
+                <h3>Total Messages</h3>
+                <p class="stat-number">{{ messages|length }}</p>
+            </div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-envelope-open"></i>
+            </div>
+            <div class="stat-content">
+                <h3>Read Messages</h3>
+                <p class="stat-number">{{ messages|length - unread_count }}</p>
+            </div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-envelope"></i>
+            </div>
+            <div class="stat-content">
+                <h3>Unread Messages</h3>
+                <p class="stat-number">{{ unread_count }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="messages-section">
+        <div class="section-header">
+            <h2>Contact Messages</h2>
+            {% if messages %}
+            <span class="badge">{{ messages|length }} total</span>
+            {% endif %}
+        </div>
+        
+        {% if messages %}
+        <div class="messages-table-container">
+            <table class="messages-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Subject</th>
+                        <th>Message Preview</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for msg in messages %}
+                    <tr class="{{ 'unread-row' if not msg.is_read }}">
+                        <td>{{ msg.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                        <td>{{ msg.name }}</td>
+                        <td>
+                            <a href="mailto:{{ msg.email }}" class="email-link">
+                                {{ msg.email }}
+                            </a>
+                        </td>
+                        <td>{{ msg.subject or 'No Subject' }}</td>
+                        <td>{{ msg.message[:50] }}{% if msg.message|length > 50 %}...{% endif %}</td>
+                        <td>
+                            {% if msg.is_read %}
+                            <span class="status-badge read">Read</span>
+                            {% else %}
+                            <span class="status-badge unread">Unread</span>
+                            {% endif %}
+                        </td>
+                        <td class="actions">
+                            <button class="btn-view" onclick="viewMessage({{ msg.id }})">
+                                <i class="fas fa-eye"></i> View
+                            </button>
+                            {% if not msg.is_read %}
+                            <a href="{{ url_for('mark_message_read', message_id=msg.id) }}" 
+                               class="btn-mark-read"
+                               onclick="return confirm('Mark this message as read?')">
+                                <i class="fas fa-check"></i> Mark Read
+                            </a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <i class="fas fa-inbox"></i>
+            <h3>No messages yet</h3>
+            <p>Contact messages from your website will appear here.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Message View Modal -->
+<div id="messageModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal" onclick="closeModal()">&times;</span>
+        <div id="messageContent"></div>
+    </div>
+</div>
+
+<script>
+// Simple message viewer
+function viewMessage(id) {
+    // Get the row data
+    const row = document.querySelector(`tr.unread-row, tr`).parentNode.querySelectorAll('tr')[id-1];
+    const cells = row.querySelectorAll('td');
+    
+    const content = `
+        <h2>Message Details</h2>
+        <div class="message-details">
+            <div class="detail-row">
+                <strong>From:</strong>
+                <div>${cells[1].textContent} (${cells[2].querySelector('a').textContent})</div>
+            </div>
+            <div class="detail-row">
+                <strong>Date:</strong>
+                <div>${cells[0].textContent}</div>
+            </div>
+            <div class="detail-row">
+                <strong>Subject:</strong>
+                <div>${cells[3].textContent}</div>
+            </div>
+            <div class="message-body">
+                <strong>Message:</strong>
+                <div class="message-text">${cells[4].textContent}</div>
+            </div>
+        </div>
+    `;
+    
+    document.getElementById('messageContent').innerHTML = content;
+    document.getElementById('messageModal').style.display = 'block';
+}
+
+function closeModal() {
+    document.getElementById('messageModal').style.display = 'none';
+}
+
+// Close modal when clicking outside
+window.onclick = function(event) {
+    const modal = document.getElementById('messageModal');
+    if (event.target === modal) {
+        closeModal();
+    }
+}
+
+// Close with Escape key
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        closeModal();
+    }
+});
+</script>
+
+<style>
+.admin-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.admin-header h1 {
+    margin: 0;
+    color: var(--dark);
+}
+
+.admin-header p {
+    margin: 0.5rem 0 0;
+    color: var(--gray);
+}
+
+.btn-danger {
+    background: #ef4444;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    text-decoration: none;
+    border-radius: var(--radius);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: background 0.3s;
+}
+
+.btn-danger:hover {
+    background: #dc2626;
+}
+
+.dashboard-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+}
+
+.stat-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: transform 0.3s;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+}
+
+.stat-icon {
+    font-size: 2rem;
+    color: var(--primary);
+    width: 60px;
+    height: 60px;
+    background: #eff6ff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.stat-content h3 {
+    margin: 0 0 0.5rem;
+    font-size: 1rem;
+    color: var(--gray);
+    font-weight: 500;
+}
+
+.stat-number {
+    font-size: 2rem;
+    font-weight: bold;
+    color: var(--dark);
+    margin: 0;
+}
+
+.messages-section {
+    background: white;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+}
+
+.section-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--gray-light);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.section-header h2 {
+    margin: 0;
+    color: var(--dark);
+}
+
+.badge {
+    background: var(--primary);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.875rem;
+}
+
+.messages-table-container {
+    overflow-x: auto;
+}
+
+.messages-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.messages-table thead {
+    background: #f9fafb;
+}
+
+.messages-table th {
+    padding: 1rem;
+    text-align: left;
+    font-weight: 600;
+    color: var(--dark);
+    border-bottom: 2px solid var(--gray-light);
+}
+
+.messages-table td {
+    padding: 1rem;
+    border-bottom: 1px solid var(--gray-light);
+    vertical-align: middle;
+}
+
+.unread-row {
+    background: #f0f7ff;
+    font-weight: 500;
+}
+
+.unread-row td {
+    border-color: #dbeafe;
+}
+
+.email-link {
+    color: var(--primary);
+    text-decoration: none;
+}
+
+.email-link:hover {
+    text-decoration: underline;
+}
+
+.status-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    display: inline-block;
+}
+
+.status-badge.read {
+    background: #d1fae5;
+    color: #10b981;
+}
+
+.status-badge.unread {
+    background: #fee2e2;
+    color: #ef4444;
+}
+
+.actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.btn-view, .btn-mark-read {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: var(--radius);
+    font-size: 0.875rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
+.btn-view {
+    background: var(--primary);
+    color: white;
+}
+
+.btn-view:hover {
+    background: var(--primary-dark);
+}
+
+.btn-mark-read {
+    background: #10b981;
+    color: white;
+}
+
+.btn-mark-read:hover {
+    background: #0da271;
+}
+
+.empty-state {
+    padding: 4rem 2rem;
+    text-align: center;
+    color: var(--gray);
+}
+
+.empty-state i {
+    font-size: 4rem;
+    color: #e5e7eb;
+    margin-bottom: 1rem;
+}
+
+.empty-state h3 {
+    margin: 1rem 0 0.5rem;
+    color: var(--dark);
+}
+
+.empty-state p {
+    margin: 0;
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    animation: fadeIn 0.3s;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.modal-content {
+    background: white;
+    margin: 2% auto;
+    padding: 2rem;
+    border-radius: var(--radius);
+    width: 90%;
+    max-width: 700px;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    animation: slideIn 0.3s;
+}
+
+@keyframes slideIn {
+    from { transform: translateY(-50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.close-modal {
+    position: absolute;
+    right: 1.5rem;
+    top: 1.5rem;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--gray);
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+.close-modal:hover {
+    background: #f9fafb;
+    color: var(--dark);
+}
+
+.message-details {
+    margin-top: 1rem;
+}
+
+.detail-row {
+    margin-bottom: 1rem;
+    display: flex;
+    gap: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--gray-light);
+}
+
+.detail-row:last-child {
+    border-bottom: none;
+}
+
+.detail-row strong {
+    min-width: 100px;
+    color: var(--dark);
+}
+
+.message-body {
+    margin-top: 2rem;
+}
+
+.message-text {
+    margin-top: 0.5rem;
+    padding: 1rem;
+    background: #f9fafb;
+    border-radius: var(--radius);
+    line-height: 1.6;
+    white-space: pre-wrap;
+}
+
+@media (max-width: 768px) {
+    .admin-container {
+        padding: 1rem;
+    }
+    
+    .admin-header {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .dashboard-stats {
+        grid-template-columns: 1fr;
+    }
+    
+    .messages-table {
+        font-size: 0.875rem;
+    }
+    
+    .messages-table th,
+    .messages-table td {
+        padding: 0.75rem 0.5rem;
+    }
+    
+    .actions {
+        flex-direction: column;
+    }
+    
+    .modal-content {
+        margin: 1rem;
+        padding: 1.5rem;
+        width: calc(100% - 2rem);
+    }
+}
+</style>
+{% endblock %}
