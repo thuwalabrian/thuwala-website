@@ -21,6 +21,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import os
 from datetime import datetime
 from functools import wraps
+from sqlalchemy import inspect  # Add this import
 
 app = Flask(__name__)
 app.config.from_object("config.Config")
@@ -253,13 +254,18 @@ def mark_message_read(message_id):
 @app.route("/debug/db-status")
 def debug_db_status():
     try:
-        tables = db.engine.table_names()
-        service_count = Service.query.count()
-        user_count = User.query.count()
-        message_count = ContactMessage.query.count()
+        # SQLAlchemy 2.0 compatible way to get table names
+        inspector = inspect(db.engine)
+        tables = inspector.get_table_names()
+
+        service_count = Service.query.count() if "service" in tables else 0
+        user_count = User.query.count() if "user" in tables else 0
+        message_count = (
+            ContactMessage.query.count() if "contact_message" in tables else 0
+        )
 
         return {
-            "database": app.config["SQLALCHEMY_DATABASE_URI"],
+            "database": str(app.config["SQLALCHEMY_DATABASE_URI"]),
             "tables": tables,
             "service_count": service_count,
             "user_count": user_count,
@@ -268,6 +274,12 @@ def debug_db_status():
         }
     except Exception as e:
         return {"status": "ERROR", "error": str(e)}
+
+
+# Simple health check route
+@app.route("/health")
+def health_check():
+    return {"status": "healthy", "service": "thuwala-co"}
 
 
 if __name__ == "__main__":
