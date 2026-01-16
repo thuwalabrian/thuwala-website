@@ -240,15 +240,13 @@ def init_db():
 
 
 if __name__ == "__main__":
-    # For production
-    port = int(os.environ.get("PORT", 5000))
-
     # Create necessary folders
     os.makedirs("static/uploads", exist_ok=True)
     os.makedirs("templates/admin", exist_ok=True)
 
-    # Initialize database (only if not exists)
+    # Initialize database inside app context
     with app.app_context():
+        print("Creating database tables...")
         db.create_all()
 
         # Create admin user if not exists
@@ -259,8 +257,45 @@ if __name__ == "__main__":
                 password_hash=generate_password_hash("Admin@2024"),
             )
             db.session.add(admin)
-            db.session.commit()
             print("Admin user created")
 
-    # Run the app
+        # Add sample services if none exist
+        if not Service.query.first():
+            services = [
+                Service(
+                    title="Administrative & Executive Support",
+                    description="Virtual assistant services, document formatting, calendar management",
+                    icon="fas fa-briefcase",
+                    details="Report writing, document formatting, minute-taking, calendar management, task management, filing systems, policy support",
+                ),
+                Service(
+                    title="Project & Operations Support",
+                    description="Proposal writing, budget tracking, donor reporting",
+                    icon="fas fa-project-diagram",
+                    details="Proposal and report writing, budget tracking, M&E data management, donor reporting, stakeholder coordination",
+                ),
+                Service(
+                    title="Data Management & Analytics",
+                    description="Data cleaning, analysis, dashboard design, visualization",
+                    icon="fas fa-chart-bar",
+                    details="Data collection, data entry, cleaning, analysis, dashboard design, visualization, executive summaries",
+                ),
+                Service(
+                    title="Communications & Documentation",
+                    description="Corporate profiles, proposal writing, report editing",
+                    icon="fas fa-comments",
+                    details="Corporate profiles, capability statements, proposal writing, report editing, success stories, press releases",
+                ),
+            ]
+
+            for service in services:
+                db.session.add(service)
+
+            print("Sample services added")
+
+        db.session.commit()
+        print("Database initialization complete!")
+
+    # Get port from environment (Render provides this)
+    port = int(os.environ.get("PORT", 10000))
     app.run(host="0.0.0.0", port=port, debug=False)
