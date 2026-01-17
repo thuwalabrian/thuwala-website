@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (menuToggle && navMenu) {
         menuToggle.addEventListener('click', function() {
             navMenu.classList.toggle('active');
-            body.classList.toggle('menu-open'); // Add this line
+            body.classList.toggle('menu-open');
             
             menuToggle.innerHTML = navMenu.classList.contains('active') 
                 ? '<i class="fas fa-times"></i>' 
@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.addEventListener('click', function(e) {
             if (!menuToggle.contains(e.target) && !navMenu.contains(e.target)) {
                 navMenu.classList.remove('active');
-                body.classList.remove('menu-open'); // Add this line
+                body.classList.remove('menu-open');
                 menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
             }
         });
@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape' && navMenu.classList.contains('active')) {
                 navMenu.classList.remove('active');
-                body.classList.remove('menu-open'); // Add this line
+                body.classList.remove('menu-open');
                 menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
             }
         });
@@ -49,34 +49,13 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }, 5000);
     
-    // Form validation
-    const contactForm = document.querySelector('.contact-form form');
-    if (contactForm) {
-        contactForm.addEventListener('submit', function(e) {
-            const email = this.querySelector('input[type="email"]');
-            const phone = this.querySelector('input[type="tel"]');
-            
-            if (email && !isValidEmail(email.value)) {
-                e.preventDefault();
-                alert('Please enter a valid email address');
-                email.focus();
-                return;
-            }
-            
-            if (phone && phone.value && !isValidPhone(phone.value)) {
-                e.preventDefault();
-                alert('Please enter a valid phone number');
-                phone.focus();
-                return;
-            }
-        });
-    }
-    
-    function isValidEmail(email) {
+    // Basic email validation function (used by both main.js and enhancements.js)
+    window.isValidEmail = function(email) {
         return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-    }
+    };
     
-    function isValidPhone(phone) {
+    // Basic phone validation function
+    window.isValidPhone = function(phone) {
         return /^[\d\s\-\+\(\)]{10,}$/.test(phone);
-    }
+    };
 });

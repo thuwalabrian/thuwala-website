@@ -3,44 +3,630 @@
 {% block title %}Our Services - Thuwala Co.{% endblock %}
 
 {% block content %}
-<section class="page-header">
+<!-- Services Hero -->
+<section class="services-hero">
     <div class="container">
-        <h1>Our Services</h1>
-        <p>Comprehensive solutions for your business needs</p>
+        <div class="hero-content">
+            <h1 class="hero-title animate__animated animate__fadeInUp">
+                Comprehensive Business Solutions
+            </h1>
+            <p class="hero-subtitle animate__animated animate__fadeInUp animate__delay-1s">
+                10 specialized service areas designed to optimize your operations, enhance productivity, and drive growth.
+            </p>
+            <div class="hero-stats animate__animated animate__fadeInUp animate__delay-2s">
+                <div class="stat">
+                    <span class="stat-number" data-target="10">0</span>
+                    <span class="stat-label">Service Areas</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number" data-target="100">0</span>
+                    <span class="stat-label">Projects Delivered</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number" data-target="95">0</span>
+                    <span class="stat-label">Client Satisfaction</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="hero-wave">
+        <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
+            <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z"></path>
+        </svg>
     </div>
 </section>
 
-<section class="all-services">
+<!-- Services Navigation -->
+<section class="services-nav">
     <div class="container">
-        <div class="services-grid">
-            {% for service in services %}
-            <div class="service-card" id="service-{{ service.id }}">
-                <div class="service-icon">
-                    <i class="{{ service.icon }}"></i>
-                </div>
-                <h3>{{ service.title }}</h3>
-                <p>{{ service.description }}</p>
-                {% if service.details %}
-                <div class="service-details">
-                    <h4>What we offer:</h4>
-                    <ul>
-                        {% for detail in service.details.split(', ') %}
-                        <li>{{ detail }}</li>
-                        {% endfor %}
-                    </ul>
-                </div>
-                {% endif %}
+        <div class="nav-container">
+            <div class="nav-label">Jump to:</div>
+            <div class="nav-links">
+                <a href="#administrative" class="nav-link active" data-category="administrative">
+                    <i class="fas fa-clipboard-check"></i>
+                    <span>Administrative</span>
+                </a>
+                <a href="#operations" class="nav-link" data-category="operations">
+                    <i class="fas fa-project-diagram"></i>
+                    <span>Operations</span>
+                </a>
+                <a href="#data" class="nav-link" data-category="data">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>Data & Analytics</span>
+                </a>
+                <a href="#communications" class="nav-link" data-category="communications">
+                    <i class="fas fa-bullhorn"></i>
+                    <span>Communications</span>
+                </a>
+                <a href="#branding" class="nav-link" data-category="branding">
+                    <i class="fas fa-palette"></i>
+                    <span>Branding</span>
+                </a>
+                <a href="#business" class="nav-link" data-category="business">
+                    <i class="fas fa-briefcase"></i>
+                    <span>Business Support</span>
+                </a>
+                <a href="#systems" class="nav-link" data-category="systems">
+                    <i class="fas fa-cogs"></i>
+                    <span>Systems</span>
+                </a>
+                <a href="#training" class="nav-link" data-category="training">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>Training</span>
+                </a>
+                <a href="#creative" class="nav-link" data-category="creative">
+                    <i class="fas fa-lightbulb"></i>
+                    <span>Creative</span>
+                </a>
+                <a href="#consulting" class="nav-link" data-category="consulting">
+                    <i class="fas fa-chess"></i>
+                    <span>Consulting</span>
+                </a>
             </div>
-            {% endfor %}
         </div>
     </div>
 </section>
 
-<section class="cta">
+<!-- Service Categories -->
+<section class="service-categories">
     <div class="container">
-        <h2>Need a Custom Solution?</h2>
-        <p>Contact us to discuss your specific requirements</p>
-        <a href="{{ url_for('contact') }}" class="btn btn-primary">Get in Touch</a>
+        <!-- Administrative Services -->
+        <div class="category-section" id="administrative">
+            <div class="category-header">
+                <div class="category-icon">
+                    <i class="fas fa-clipboard-check"></i>
+                </div>
+                <div class="category-title">
+                    <h2>Administrative & Executive Support</h2>
+                    <p>Seamless virtual and on-site administrative solutions to keep organizations operating with order and professionalism.</p>
+                </div>
+            </div>
+            
+            <div class="services-cards">
+                {% for service in services if service.category == 'administrative' %}
+                <div class="service-card-enhanced" id="service-{{ service.id }}">
+                    <div class="service-card-header">
+                        <div class="service-icon">
+                            <i class="{{ service.icon }}"></i>
+                        </div>
+                        <h3>{{ service.title }}</h3>
+                    </div>
+                    <div class="service-card-body">
+                        <p>{{ service.description }}</p>
+                        {% if service.details %}
+                        <div class="service-features">
+                            <h4>Key Services:</h4>
+                            <ul>
+                                {% for detail in service.details.split(', ') %}
+                                <li><i class="fas fa-check"></i> {{ detail }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="service-card-footer">
+                        <span class="outcome">Outcome: Increased productivity and structure through reliable administrative systems.</span>
+                        <button class="service-inquire" data-service="{{ service.title }}">
+                            <i class="fas fa-envelope"></i> Inquire About This Service
+                        </button>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Operations Support -->
+        <div class="category-section" id="operations">
+            <div class="category-header">
+                <div class="category-icon">
+                    <i class="fas fa-project-diagram"></i>
+                </div>
+                <div class="category-title">
+                    <h2>Project & Operations Support</h2>
+                    <p>Plan, execute, and report on projects with precision and transparency.</p>
+                </div>
+            </div>
+            
+            <div class="services-cards">
+                {% for service in services if service.category == 'operations' %}
+                <div class="service-card-enhanced" id="service-{{ service.id }}">
+                    <div class="service-card-header">
+                        <div class="service-icon">
+                            <i class="{{ service.icon }}"></i>
+                        </div>
+                        <h3>{{ service.title }}</h3>
+                    </div>
+                    <div class="service-card-body">
+                        <p>{{ service.description }}</p>
+                        {% if service.details %}
+                        <div class="service-features">
+                            <h4>Key Services:</h4>
+                            <ul>
+                                {% for detail in service.details.split(', ') %}
+                                <li><i class="fas fa-check"></i> {{ detail }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="service-card-footer">
+                        <span class="outcome">Outcome: Projects stay organized, compliant, and deliver measurable results.</span>
+                        <button class="service-inquire" data-service="{{ service.title }}">
+                            <i class="fas fa-envelope"></i> Inquire About This Service
+                        </button>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Data & Analytics -->
+        <div class="category-section" id="data">
+            <div class="category-header">
+                <div class="category-icon">
+                    <i class="fas fa-chart-bar"></i>
+                </div>
+                <div class="category-title">
+                    <h2>Data Management & Analytics</h2>
+                    <p>Transform raw data into actionable insights for smarter decisions.</p>
+                </div>
+            </div>
+            
+            <div class="services-cards">
+                {% for service in services if service.category == 'data' %}
+                <div class="service-card-enhanced" id="service-{{ service.id }}">
+                    <div class="service-card-header">
+                        <div class="service-icon">
+                            <i class="{{ service.icon }}"></i>
+                        </div>
+                        <h3>{{ service.title }}</h3>
+                    </div>
+                    <div class="service-card-body">
+                        <p>{{ service.description }}</p>
+                        {% if service.details %}
+                        <div class="service-features">
+                            <h4>Key Services:</h4>
+                            <ul>
+                                {% for detail in service.details.split(', ') %}
+                                <li><i class="fas fa-check"></i> {{ detail }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="service-card-footer">
+                        <span class="outcome">Outcome: Clean, clear, and visual data insights that inform smarter decisions.</span>
+                        <button class="service-inquire" data-service="{{ service.title }}">
+                            <i class="fas fa-envelope"></i> Inquire About This Service
+                        </button>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Communications -->
+        <div class="category-section" id="communications">
+            <div class="category-header">
+                <div class="category-icon">
+                    <i class="fas fa-bullhorn"></i>
+                </div>
+                <div class="category-title">
+                    <h2>Communications & Documentation</h2>
+                    <p>Communicate your story, impact, and value clearly to your audience.</p>
+                </div>
+            </div>
+            
+            <div class="services-cards">
+                {% for service in services if service.category == 'communications' %}
+                <div class="service-card-enhanced" id="service-{{ service.id }}">
+                    <div class="service-card-header">
+                        <div class="service-icon">
+                            <i class="{{ service.icon }}"></i>
+                        </div>
+                        <h3>{{ service.title }}</h3>
+                    </div>
+                    <div class="service-card-body">
+                        <p>{{ service.description }}</p>
+                        {% if service.details %}
+                        <div class="service-features">
+                            <h4>Key Services:</h4>
+                            <ul>
+                                {% for detail in service.details.split(', ') %}
+                                <li><i class="fas fa-check"></i> {{ detail }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="service-card-footer">
+                        <span class="outcome">Outcome: Your message looks, sounds, and feels professional at every level.</span>
+                        <button class="service-inquire" data-service="{{ service.title }}">
+                            <i class="fas fa-envelope"></i> Inquire About This Service
+                        </button>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Branding -->
+        <div class="category-section" id="branding">
+            <div class="category-header">
+                <div class="category-icon">
+                    <i class="fas fa-palette"></i>
+                </div>
+                <div class="category-title">
+                    <h2>Branding, Design & Marketing</h2>
+                    <p>Build brands that command attention and credibility.</p>
+                </div>
+            </div>
+            
+            <div class="services-cards">
+                {% for service in services if service.category == 'branding' %}
+                <div class="service-card-enhanced" id="service-{{ service.id }}">
+                    <div class="service-card-header">
+                        <div class="service-icon">
+                            <i class="{{ service.icon }}"></i>
+                        </div>
+                        <h3>{{ service.title }}</h3>
+                    </div>
+                    <div class="service-card-body">
+                        <p>{{ service.description }}</p>
+                        {% if service.details %}
+                        <div class="service-features">
+                            <h4>Key Services:</h4>
+                            <ul>
+                                {% for detail in service.details.split(', ') %}
+                                <li><i class="fas fa-check"></i> {{ detail }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="service-card-footer">
+                        <span class="outcome">Outcome: A consistent, attractive, and persuasive brand presence online and offline.</span>
+                        <button class="service-inquire" data-service="{{ service.title }}">
+                            <i class="fas fa-envelope"></i> Inquire About This Service
+                        </button>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Business Support -->
+        <div class="category-section" id="business">
+            <div class="category-header">
+                <div class="category-icon">
+                    <i class="fas fa-briefcase"></i>
+                </div>
+                <div class="category-title">
+                    <h2>Business & Startup Support</h2>
+                    <p>All the foundational tools needed to launch, formalize, and grow.</p>
+                </div>
+            </div>
+            
+            <div class="services-cards">
+                {% for service in services if service.category == 'business' %}
+                <div class="service-card-enhanced" id="service-{{ service.id }}">
+                    <div class="service-card-header">
+                        <div class="service-icon">
+                            <i class="{{ service.icon }}"></i>
+                        </div>
+                        <h3>{{ service.title }}</h3>
+                    </div>
+                    <div class="service-card-body">
+                        <p>{{ service.description }}</p>
+                        {% if service.details %}
+                        <div class="service-features">
+                            <h4>Key Services:</h4>
+                            <ul>
+                                {% for detail in service.details.split(', ') %}
+                                <li><i class="fas fa-check"></i> {{ detail }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="service-card-footer">
+                        <span class="outcome">Outcome: Businesses start and scale with professionalism and strategic direction.</span>
+                        <button class="service-inquire" data-service="{{ service.title }}">
+                            <i class="fas fa-envelope"></i> Inquire About This Service
+                        </button>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Note: You'll need to add 'category' field to your services data model -->
+        <!-- For now, using placeholder data structure -->
     </div>
 </section>
+
+<!-- Process Section -->
+<section class="services-process">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">Our Service Delivery Process</h2>
+            <p class="section-subtitle">A structured approach to ensure quality and success</p>
+        </div>
+        
+        <div class="process-timeline">
+            <div class="process-step">
+                <div class="step-icon">
+                    <i class="fas fa-search"></i>
+                </div>
+                <div class="step-content">
+                    <h3>Discovery & Analysis</h3>
+                    <p>We begin by understanding your specific needs, challenges, and objectives.</p>
+                </div>
+                <div class="step-number">01</div>
+            </div>
+            
+            <div class="process-step">
+                <div class="step-icon">
+                    <i class="fas fa-clipboard-list"></i>
+                </div>
+                <div class="step-content">
+                    <h3>Solution Design</h3>
+                    <p>Customized strategy and plan development tailored to your requirements.</p>
+                </div>
+                <div class="step-number">02</div>
+            </div>
+            
+            <div class="process-step">
+                <div class="step-icon">
+                    <i class="fas fa-cogs"></i>
+                </div>
+                <div class="step-content">
+                    <h3>Implementation</h3>
+                    <p>Expert execution with regular updates and transparent communication.</p>
+                </div>
+                <div class="step-number">03</div>
+            </div>
+            
+            <div class="process-step">
+                <div class="step-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="step-content">
+                    <h3>Review & Optimization</h3>
+                    <p>Continuous monitoring, reporting, and improvement for ongoing success.</p>
+                </div>
+                <div class="step-number">04</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="services-cta">
+    <div class="container">
+        <div class="cta-content">
+            <div class="cta-text">
+                <h2>Ready to Transform Your Business Operations?</h2>
+                <p>Get a personalized consultation and discover how our services can drive your success.</p>
+                <div class="cta-features">
+                    <div class="feature">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Free initial consultation</span>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Customized service packages</span>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Flexible engagement models</span>
+                    </div>
+                </div>
+            </div>
+            <div class="cta-action">
+                <a href="{{ url_for('contact') }}" class="btn btn-primary btn-lg">
+                    <i class="fas fa-calendar-check"></i> Schedule Free Consultation
+                </a>
+                <p class="cta-note">
+                    <i class="fas fa-phone"></i> Or call us: +265 887 580 622
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FAQ Section -->
+<section class="services-faq">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">Frequently Asked Questions</h2>
+            <p class="section-subtitle">Common questions about our services</p>
+        </div>
+        
+        <div class="faq-grid">
+            <div class="faq-item">
+                <div class="faq-question">
+                    <h3>How do you determine which services I need?</h3>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>We begin with a comprehensive consultation to understand your specific challenges, goals, and current processes. Based on this analysis, we recommend the most relevant services from our portfolio.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    <h3>Can you customize service packages?</h3>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>Yes, absolutely! We specialize in creating tailored solutions that combine multiple services to meet your specific requirements and budget.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    <h3>What is your typical project timeline?</h3>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>Timelines vary based on project complexity and scope. During our initial consultation, we provide a detailed timeline with milestones for your specific project.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    <h3>Do you offer ongoing support after project completion?</h3>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>Yes, we offer various support packages including maintenance, updates, and additional services to ensure continued success.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Animate numbers counting up
+    document.addEventListener('DOMContentLoaded', function() {
+        const counters = document.querySelectorAll('.stat-number');
+        
+        counters.forEach(counter => {
+            const updateCount = () => {
+                const target = +counter.getAttribute('data-target');
+                const count = +counter.innerText;
+                const increment = target / 100;
+                
+                if (count < target) {
+                    counter.innerText = Math.ceil(count + increment);
+                    setTimeout(updateCount, 20);
+                } else {
+                    counter.innerText = target;
+                }
+            };
+            
+            // Start counting when element is in viewport
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        updateCount();
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.5 });
+            
+            observer.observe(counter);
+        });
+        
+        // Services navigation
+        const navLinks = document.querySelectorAll('.nav-link');
+        const categorySections = document.querySelectorAll('.category-section');
+        
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const category = this.getAttribute('data-category');
+                
+                // Update active link
+                navLinks.forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Scroll to category
+                const targetSection = document.getElementById(category);
+                if (targetSection) {
+                    targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+        
+        // FAQ accordion
+        const faqQuestions = document.querySelectorAll('.faq-question');
+        
+        faqQuestions.forEach(question => {
+            question.addEventListener('click', function() {
+                const answer = this.nextElementSibling;
+                const icon = this.querySelector('i');
+                
+                // Toggle current answer
+                answer.classList.toggle('active');
+                icon.classList.toggle('fa-chevron-up');
+                icon.classList.toggle('fa-chevron-down');
+                
+                // Close other answers
+                faqQuestions.forEach(otherQuestion => {
+                    if (otherQuestion !== this) {
+                        const otherAnswer = otherQuestion.nextElementSibling;
+                        const otherIcon = otherQuestion.querySelector('i');
+                        otherAnswer.classList.remove('active');
+                        otherIcon.classList.remove('fa-chevron-up');
+                        otherIcon.classList.add('fa-chevron-down');
+                    }
+                });
+            });
+        });
+        
+        // Service inquiry buttons
+        const inquiryButtons = document.querySelectorAll('.service-inquire');
+        
+        inquiryButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const serviceName = this.getAttribute('data-service');
+                
+                // Store service name in sessionStorage for contact form
+                sessionStorage.setItem('interestedService', serviceName);
+                
+                // Redirect to contact page
+                window.location.href = "{{ url_for('contact') }}";
+            });
+        });
+        
+        // Scroll spy for service navigation
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.3
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const category = entry.target.id;
+                    navLinks.forEach(link => {
+                        if (link.getAttribute('data-category') === category) {
+                            navLinks.forEach(l => l.classList.remove('active'));
+                            link.classList.add('active');
+                        }
+                    });
+                }
+            });
+        }, observerOptions);
+        
+        categorySections.forEach(section => {
+            observer.observe(section);
+        });
+    });
+</script>
 {% endblock %}
