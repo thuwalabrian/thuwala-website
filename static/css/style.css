@@ -339,8 +339,6 @@ h3 {
     color: white;
 }
 
-/* Footer Logo removed - as requested */
-
 .footer-bottom {
     text-align: center;
     padding-top: 2rem;
@@ -348,7 +346,7 @@ h3 {
     color: var(--gray-light);
 }
 
-/* Responsive Design */
+/* ===== MOBILE MENU FIXES ===== */
 @media (max-width: 768px) {
     h1 {
         font-size: 2.5rem;
@@ -358,25 +356,85 @@ h3 {
         font-size: 2rem;
     }
     
+    /* Force menu toggle to be visible and clickable */
     .menu-toggle {
-        display: block;
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        width: 44px;
+        height: 44px;
+        background: none;
+        border: 2px solid var(--primary);
+        border-radius: var(--radius);
+        color: var(--primary);
+        font-size: 1.5rem;
+        cursor: pointer;
+        z-index: 1001;
+        position: relative;
+        transition: all 0.3s ease;
     }
     
-    /* Adjust mobile menu position for taller navbar */
+    .menu-toggle:hover {
+        background: var(--primary);
+        color: white;
+    }
+    
+    .menu-toggle i {
+        pointer-events: none; /* Prevent icon from interfering with clicks */
+    }
+    
+    /* Mobile menu - FIXED VERSION */
     .nav-menu {
         position: fixed;
-        top: 80px; /* Match navbar height */
+        top: 80px !important; /* Match navbar height */
         left: 0;
         right: 0;
         background: white;
         flex-direction: column;
         padding: 2rem;
-        box-shadow: var(--shadow);
-        display: none;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        display: none !important;
+        z-index: 1000;
+        max-height: calc(100vh - 80px);
+        overflow-y: auto;
+        opacity: 0;
+        transform: translateY(-10px);
+        transition: opacity 0.3s ease, transform 0.3s ease;
     }
     
     .nav-menu.active {
-        display: flex;
+        display: flex !important;
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
+    .nav-menu a {
+        padding: 1rem 0;
+        width: 100%;
+        text-align: center;
+        border-bottom: 1px solid var(--gray-light);
+        font-size: 1.1rem;
+        transition: all 0.3s ease;
+    }
+    
+    .nav-menu a:last-child {
+        border-bottom: none;
+    }
+    
+    .nav-menu a:hover {
+        color: var(--primary);
+        background: rgba(37, 99, 235, 0.05);
+        transform: translateX(5px);
+    }
+    
+    .nav-menu .btn {
+        margin-top: 1rem;
+        width: 100%;
+    }
+    
+    /* Prevent body scroll when menu is open */
+    body.menu-open {
+        overflow: hidden;
     }
     
     .hero-buttons {
@@ -391,7 +449,7 @@ h3 {
     
     /* Responsive Logo Sizes */
     .logo {
-        height: 50px; /* Slightly smaller on mobile */
+        height: 50px;
     }
     
     .logo-image {
@@ -399,6 +457,7 @@ h3 {
     }
 }
 
+/* For very small screens */
 @media (max-width: 480px) {
     .logo {
         height: 45px;
@@ -411,6 +470,14 @@ h3 {
     .logo-text {
         font-size: 1.2rem;
     }
+    
+    .nav-menu {
+        padding: 1.5rem;
+    }
+    
+    .nav-menu a {
+        padding: 0.75rem 0;
+    }
 }
 
 /* Flash Messages */
@@ -421,35 +488,6 @@ h3 {
     z-index: 1000;
 }
 
-.flash {
-    padding: 1rem;
-    margin-bottom: 1rem;
-    border-radius: var(--radius);
-    animation: slideIn 0.3s ease;
-}
-
-.flash-success {
-    background: #10b981;
-    color: white;
-}
-
-.flash-error {
-    background: #ef4444;
-    color: white;
-}
-
-@keyframes slideIn {
-    from {
-        transform: translateX(100%);
-        opacity: 0;
-    }
-    to {
-        transform: translateX(0);
-        opacity: 1;
-    }
-}
-
-/* Flash Message Improvements */
 .flash {
     display: flex;
     justify-content: space-between;
@@ -497,4 +535,55 @@ h3 {
     border: 1px solid #ffeaa7;
 }
 
-.flash-close
+.flash-close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: inherit;
+    opacity: 0.7;
+    padding: 0 0 0 15px;
+    line-height: 1;
+    transition: opacity 0.3s;
+}
+
+.flash-close:hover {
+    opacity: 1;
+}
+
+/* Social Links */
+.social-links {
+    display: flex;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.social-link {
+    color: var(--gray-light);
+    font-size: 1.2rem;
+    transition: all 0.3s;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.1);
+}
+
+.social-link:hover {
+    color: white;
+    background: var(--primary);
+    transform: translateY(-3px);
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}

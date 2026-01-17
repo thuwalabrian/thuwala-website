@@ -2,10 +2,13 @@
 document.addEventListener('DOMContentLoaded', function() {
     const menuToggle = document.getElementById('menuToggle');
     const navMenu = document.getElementById('navMenu');
+    const body = document.body;
     
     if (menuToggle && navMenu) {
         menuToggle.addEventListener('click', function() {
             navMenu.classList.toggle('active');
+            body.classList.toggle('menu-open'); // Add this line
+            
             menuToggle.innerHTML = navMenu.classList.contains('active') 
                 ? '<i class="fas fa-times"></i>' 
                 : '<i class="fas fa-bars"></i>';
@@ -15,6 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.addEventListener('click', function(e) {
             if (!menuToggle.contains(e.target) && !navMenu.contains(e.target)) {
                 navMenu.classList.remove('active');
+                body.classList.remove('menu-open'); // Add this line
                 menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
             }
         });
@@ -23,6 +27,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape' && navMenu.classList.contains('active')) {
                 navMenu.classList.remove('active');
+                body.classList.remove('menu-open'); // Add this line
                 menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
             }
         });
