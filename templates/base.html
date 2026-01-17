@@ -4,28 +4,77 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Thuwala Co. - Efficiency. Precision. Excellence.{% endblock %}</title>
+    
+    <!-- Favicon Configuration -->
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='images/logo/logo-180x180.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='images/logo/logo-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='images/logo/logo-16x16.png') }}">
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/logo/favicon.ico') }}">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+    
+    <!-- Theme Color -->
+    <meta name="theme-color" content="#2563eb">
+    <meta name="msapplication-TileColor" content="#2563eb">
+    <meta name="msapplication-TileImage" content="{{ url_for('static', filename='images/logo/logo-144x144.png') }}">
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Thuwala Co. provides comprehensive business solutions with efficiency, precision, and excellence. Based in Lilongwe, Malawi.">
+    <meta name="keywords" content="business services, administration, project support, data analytics, branding, Malawi, Lilongwe">
+    <meta name="author" content="Thuwala Co.">
+    
+    <!-- Open Graph for Social Media -->
+    <meta property="og:title" content="Thuwala Co. - Efficiency. Precision. Excellence.">
+    <meta property="og:description" content="Comprehensive business solutions in Malawi">
+    <meta property="og:image" content="{{ url_for('static', filename='images/logo/logo-512x512.png', _external=True) }}">
+    <meta property="og:url" content="{{ request.url_root }}">
+    <meta property="og:type" content="website">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Thuwala Co. - Efficiency. Precision. Excellence.">
+    <meta name="twitter:description" content="Comprehensive business solutions in Malawi">
+    <meta name="twitter:image" content="{{ url_for('static', filename='images/logo/logo-512x512.png', _external=True) }}">
+    
+    <!-- CSS Files -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/improvements.css') }}">
+    
+    <!-- External CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    {% block head %}{% endblock %}
 </head>
 <body>
     <!-- Navigation -->
     <nav class="navbar">
         <div class="container">
-            <a href="{{ url_for('index') }}" class="logo">
+            <a href="{{ url_for('index') }}" class="logo" title="Thuwala Co. Home">
+                <!-- Logo Image -->
+                <img src="{{ url_for('static', filename='images/logo/Thuwalaco first logo.png') }}" 
+                     alt="Thuwala Co. Logo - Efficiency. Precision. Excellence."
+                     class="logo-image"
+                     width="180"
+                     height="60">
+                <!-- Fallback text for accessibility -->
                 <span class="logo-text">THUWALA CO.</span>
             </a>
             <div class="nav-menu" id="navMenu">
-                <a href="{{ url_for('index') }}">Home</a>
-                <a href="{{ url_for('about') }}">About</a>
-                <a href="{{ url_for('services') }}">Services</a>
-                <a href="{{ url_for('contact') }}">Contact</a>
+                <a href="{{ url_for('index') }}" class="nav-link">Home</a>
+                <a href="{{ url_for('about') }}" class="nav-link">About</a>
+                <a href="{{ url_for('services') }}" class="nav-link">Services</a>
+                <a href="{{ url_for('contact') }}" class="nav-link">Contact</a>
                 {% if current_user.is_authenticated %}
-                <a href="{{ url_for('admin_dashboard') }}" class="admin-btn">Dashboard</a>
-                <a href="{{ url_for('admin_logout') }}" class="logout-btn">Logout</a>
+                <a href="{{ url_for('admin_dashboard') }}" class="btn admin-btn">Dashboard</a>
+                <a href="{{ url_for('admin_logout') }}" class="btn logout-btn">Logout</a>
                 {% endif %}
             </div>
-            <button class="menu-toggle" id="menuToggle">
+            <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation menu">
                 <i class="fas fa-bars"></i>
             </button>
         </div>
@@ -36,14 +85,20 @@
         {% if messages %}
             <div class="flash-messages">
                 {% for category, message in messages %}
-                    <div class="flash flash-{{ category }}">{{ message }}</div>
+                    <div class="flash flash-{{ category }} animate__animated animate__fadeInRight">
+                        <div class="flash-content">
+                            <i class="fas fa-{% if category == 'success' %}check-circle{% elif category == 'error' %}exclamation-circle{% else %}info-circle{% endif %}"></i>
+                            <span>{{ message }}</span>
+                        </div>
+                        <button class="flash-close" aria-label="Close message">&times;</button>
+                    </div>
                 {% endfor %}
             </div>
         {% endif %}
     {% endwith %}
 
     <!-- Main Content -->
-    <main>
+    <main id="top">
         {% block content %}{% endblock %}
     </main>
 
@@ -52,29 +107,40 @@
         <div class="container">
             <div class="footer-content">
                 <div class="footer-section">
-                    <h3>THUWALA CO.</h3>
-                    <p class="tagline">Efficiency. Precision. Excellence.</p>
-                    <p>Head Office: Lilongwe, Malawi</p>
-                </div>
-                <div class="footer-section">
                     <h4>Contact</h4>
                     <p><i class="fas fa-envelope"></i> info@thuwalaco.com</p>
                     <p><i class="fas fa-phone"></i> +265 887 580 622</p>
                 </div>
                 <div class="footer-section">
                     <h4>Quick Links</h4>
-                    <a href="{{ url_for('services') }}">Services</a>
-                    <a href="{{ url_for('about') }}">About Us</a>
-                    <a href="{{ url_for('contact') }}">Contact</a>
+                    <a href="{{ url_for('services') }}" class="footer-link">Services</a>
+                    <a href="{{ url_for('about') }}" class="footer-link">About Us</a>
+                    <a href="{{ url_for('contact') }}" class="footer-link">Contact</a>
+                </div>
+                <div class="footer-section">
+                    <h4>Follow Us</h4>
+                    <div class="social-links">
+                        <a href="#" class="social-link" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="social-link" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" class="social-link" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    </div>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; {{ now.year }} Thuwala Co. All rights reserved.</p>
+                <p>&copy; <span id="current-year">{{ now.year if now else "2024" }}</span> Thuwala Co. All rights reserved.</p>
+                <p class="footer-links">
+                    <a href="#" class="footer-bottom-link">Privacy Policy</a>
+                    <span>•</span>
+                    <a href="#" class="footer-bottom-link">Terms of Service</a>
+                </p>
             </div>
         </div>
     </footer>
 
+    <!-- JavaScript Files -->
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/enhancements.js') }}"></script>
     {% block scripts %}{% endblock %}
 </body>
 </html>
