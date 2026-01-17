@@ -195,7 +195,7 @@ h3 {
     color: white;
 }
 
-/* Hero Section */
+/* Hero Section - Keep old styles for backward compatibility */
 .hero {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
@@ -220,6 +220,11 @@ h3 {
     gap: 1rem;
     justify-content: center;
     flex-wrap: wrap;
+}
+
+/* Hide old hero when modern hero is present */
+.modern-hero + .hero {
+    display: none;
 }
 
 /* Services Grid */
