@@ -60,6 +60,27 @@ class Service(db.Model):
     category = db.Column(db.String(100))  # Added category field
 
 
+class Portfolio(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(200), nullable=False)
+    client = db.Column(db.String(200))
+    description = db.Column(db.Text)
+    category = db.Column(
+        db.String(100)
+    )  # e.g., 'branding', 'data', 'administrative'
+    image_url = db.Column(db.String(500))
+    project_url = db.Column(
+        db.String(500)
+    )  # Link to live project if available
+    completion_date = db.Column(db.Date)
+    technologies = db.Column(db.String(500))  # Comma-separated tech/tools used
+    testimonial = db.Column(db.Text)
+    client_name = db.Column(db.String(200))
+    client_role = db.Column(db.String(200))
+    featured = db.Column(db.Boolean, default=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
@@ -290,6 +311,93 @@ with app.app_context():
             for s in services_list:
                 print(f"  - {s.title} ({s.category})")
 
+        # Add sample portfolio items if none exist
+        if Portfolio.query.count() == 0:
+            sample_portfolio = [
+                {
+                    "title": "Malawi NGO Data Dashboard",
+                    "client": "Malawi Development NGO",
+                    "description": "Designed and implemented a comprehensive data dashboard for monitoring and evaluation. The system collects field data via ODK and presents real-time insights through interactive Power BI dashboards.",
+                    "category": "data",
+                    "image_url": "/static/images/portfolio/data-dashboard.jpg",
+                    "technologies": "Power BI, ODK, Python, SQL",
+                    "testimonial": "Thuwala Co. transformed our data management. What used to take weeks now takes hours. Their dashboard helps us make data-driven decisions.",
+                    "client_name": "John Banda",
+                    "client_role": "M&E Director",
+                    "featured": True,
+                },
+                {
+                    "title": "Startup Business Branding Package",
+                    "client": "AgriTech Startup",
+                    "description": "Complete branding package including logo design, business cards, company profile, and social media setup. Created a cohesive brand identity that helped secure initial funding.",
+                    "category": "branding",
+                    "image_url": "/static/images/portfolio/branding-package.jpg",
+                    "technologies": "Adobe Creative Suite, Canva, WordPress",
+                    "testimonial": "Professional, timely, and exceeded expectations. Our investors commented on how polished our materials looked.",
+                    "client_name": "Sarah Chibwana",
+                    "client_role": "CEO & Founder",
+                    "featured": True,
+                },
+                {
+                    "title": "Government Project Reporting System",
+                    "client": "Ministry Department",
+                    "description": "Streamlined project reporting system that reduced report preparation time by 60%. Created templates, automated data collection, and trained staff on new processes.",
+                    "category": "administrative",
+                    "image_url": "/static/images/portfolio/reporting-system.jpg",
+                    "technologies": "Microsoft Office, Google Workspace, Process Automation",
+                    "testimonial": "The efficiency gains have been remarkable. Our team now focuses on analysis rather than data compilation.",
+                    "client_name": "Dr. Michael Phiri",
+                    "client_role": "Project Director",
+                    "featured": True,
+                },
+                {
+                    "title": "Educational Institution Website Redesign",
+                    "client": "Private College",
+                    "description": "Complete website redesign with CMS integration, improving user engagement by 200%. Added online application system and student portal.",
+                    "category": "systems",
+                    "image_url": "/static/images/portfolio/website-redesign.jpg",
+                    "project_url": "https://example-college.mw",
+                    "technologies": "WordPress, PHP, JavaScript, CSS3",
+                    "testimonial": "Our online applications increased by 150% after the redesign. Professional and student-friendly.",
+                    "client_name": "Prof. Elizabeth Kachali",
+                    "client_role": "Principal",
+                    "featured": True,
+                },
+                {
+                    "title": "Corporate Training Program",
+                    "client": "Financial Institution",
+                    "description": "Designed and delivered Excel & Data Visualization training for 50+ staff members. Created custom training materials and follow-up support system.",
+                    "category": "training",
+                    "image_url": "/static/images/portfolio/training-program.jpg",
+                    "technologies": "Excel, Power BI, Training Materials",
+                    "testimonial": "The training was practical and immediately applicable. Staff confidence with data tools improved dramatically.",
+                    "client_name": "Robert Mwale",
+                    "client_role": "HR Director",
+                    "featured": False,
+                },
+                {
+                    "title": "Business Process Optimization",
+                    "client": "Manufacturing Company",
+                    "description": "Analyzed and optimized supply chain documentation processes, reducing processing time by 40% and errors by 75%.",
+                    "category": "operations",
+                    "image_url": "/static/images/portfolio/process-optimization.jpg",
+                    "technologies": "Process Mapping, SOP Development, Workflow Automation",
+                    "testimonial": "The new processes saved us significant time and reduced frustration across departments.",
+                    "client_name": "David Simbeye",
+                    "client_role": "Operations Manager",
+                    "featured": True,
+                },
+            ]
+
+            for item in sample_portfolio:
+                portfolio = Portfolio(**item)
+                db.session.add(portfolio)
+
+            db.session.commit()
+            print(f"Added {len(sample_portfolio)} portfolio items")
+        else:
+            print(f"Portfolio already has {Portfolio.query.count()} items")
+
         print("✅ Database initialization complete!")
         print("=" * 50)
 
@@ -332,6 +440,43 @@ def services():
         print(f"Database error in services route: {e}")
         services_list = []
     return render_template("services.html", services=services_list)
+
+
+@app.route("/portfolio")
+def portfolio():
+    try:
+        # Get filter category from query parameter
+        category_filter = request.args.get("category", "all")
+
+        # Query portfolio items
+        if category_filter == "all":
+            portfolio_items = Portfolio.query.order_by(
+                Portfolio.featured.desc(), Portfolio.created_at.desc()
+            ).all()
+        else:
+            portfolio_items = (
+                Portfolio.query.filter_by(category=category_filter)
+                .order_by(
+                    Portfolio.featured.desc(), Portfolio.created_at.desc()
+                )
+                .all()
+            )
+
+        # Get unique categories for filter
+        categories = db.session.query(Portfolio.category).distinct().all()
+        categories = [cat[0] for cat in categories if cat[0]]
+
+    except Exception as e:
+        print(f"Database error in portfolio route: {e}")
+        portfolio_items = []
+        categories = []
+
+    return render_template(
+        "portfolio.html",
+        portfolio_items=portfolio_items,
+        categories=categories,
+        current_category=category_filter,
+    )
 
 
 @app.route("/contact", methods=["GET", "POST"])
@@ -438,6 +583,9 @@ def debug_db_status():
         message_count = (
             ContactMessage.query.count() if "contact_message" in tables else 0
         )
+        portfolio_count = (
+            Portfolio.query.count() if "portfolio" in tables else 0
+        )
 
         # Get services with categories
         services = Service.query.all()
@@ -452,6 +600,7 @@ def debug_db_status():
             "service_count": service_count,
             "user_count": user_count,
             "message_count": message_count,
+            "portfolio_count": portfolio_count,
             "services": services_info,
             "status": "OK",
         }
@@ -469,6 +618,7 @@ if __name__ == "__main__":
     # Create necessary folders
     os.makedirs("static/uploads", exist_ok=True)
     os.makedirs("templates/admin", exist_ok=True)
+    os.makedirs("static/images/portfolio", exist_ok=True)
 
     # Get port from environment
     port = int(os.environ.get("PORT", 10000))

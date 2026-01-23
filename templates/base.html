@@ -54,20 +54,19 @@
     <!-- Navigation -->
     <nav class="navbar">
         <div class="container">
-            <a href="{{ url_for('index') }}" class="logo" title="Thuwala Co. Home">
+            <a href="{{ url_for('index') }}" class="logo">
                 <!-- Logo Image -->
                 <img src="{{ url_for('static', filename='images/logo/Thuwalaco first logo.png') }}" 
                      alt="Thuwala Co. Logo - Efficiency. Precision. Excellence."
                      class="logo-image"
                      width="180"
                      height="60">
-                <!-- Fallback text for accessibility -->
-                <span class="logo-text">THUWALA CO.</span>
             </a>
             <div class="nav-menu" id="navMenu">
                 <a href="{{ url_for('index') }}" class="nav-link" data-nav-link="true">Home</a>
                 <a href="{{ url_for('about') }}" class="nav-link" data-nav-link="true">About</a>
                 <a href="{{ url_for('services') }}" class="nav-link" data-nav-link="true">Services</a>
+                <a href="{{ url_for('portfolio') }}" class="nav-link" data-nav-link="true">Portfolio</a>
                 <a href="{{ url_for('contact') }}" class="nav-link" data-nav-link="true" id="contact-link">Contact</a>
                 {% if current_user.is_authenticated %}
                 <a href="{{ url_for('admin_dashboard') }}" class="btn admin-btn">Dashboard</a>
@@ -114,6 +113,7 @@
                 <div class="footer-section">
                     <h4>Quick Links</h4>
                     <a href="{{ url_for('services') }}" class="footer-link">Services</a>
+                    <a href="{{ url_for('portfolio') }}" class="footer-link">Portfolio</a>
                     <a href="{{ url_for('about') }}" class="footer-link">About Us</a>
                     <a href="{{ url_for('contact') }}" class="footer-link">Contact</a>
                 </div>

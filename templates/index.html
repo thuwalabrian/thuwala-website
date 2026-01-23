@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Home - Thuwala Co.{% endblock %}
+{% block title %}Home{% endblock %}
 
 {% block content %}
 <!-- Modern Hero Section -->
@@ -123,31 +123,130 @@
     </div>
 </section>
 
-<!-- Why Choose Us -->
-<section class="why-us">
+<!-- Why Choose Us Section -->
+<section class="why-choose-us">
     <div class="container">
-        <h2 class="section-title">Why Choose Thuwala Co.</h2>
-        <div class="features-grid">
-            <div class="feature">
-                <i class="fas fa-shield-alt"></i>
-                <h3>Comprehensive Coverage</h3>
-                <p>Everything you need under one roof</p>
+        <div class="section-header">
+            <h2 class="section-title"><span class="highlight">Why Choose Us ?</span></h2>
+            <p class="section-subtitle">
+                We combine expertise, innovation, and dedication to deliver exceptional results 
+                that drive your business forward.
+            </p>
+        </div>
+        
+        <div class="why-grid">
+            <!-- Feature 1 -->
+            <div class="why-feature">
+                <div class="feature-number">01</div>
+                <div class="feature-icon">
+                    <i class="fas fa-bullseye"></i>
+                </div>
+                <div class="feature-content">
+                    <h3>Precision & Excellence</h3>
+                    <p>Every detail matters. We deliver work that exceeds expectations with meticulous attention to quality.</p>
+                    <div class="feature-points">
+                        <div class="feature-point">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Meticulous quality control</span>
+                        </div>
+                        <div class="feature-point">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Industry best practices</span>
+                        </div>
+                        <div class="feature-point">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Continuous improvement</span>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="feature">
-                <i class="fas fa-clock"></i>
-                <h3>Reliable & Precise</h3>
-                <p>Confidential and accurate service delivery</p>
+            
+            <!-- Feature 2 -->
+            <div class="why-feature">
+                <div class="feature-number">02</div>
+                <div class="feature-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="feature-content">
+                    <h3>Efficiency First</h3>
+                    <p>Streamlined processes that save you time and resources while maximizing output and value.</p>
+                    <div class="feature-points">
+                        <div class="feature-point">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Optimized workflows</span>
+                        </div>
+                        <div class="feature-point">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Time-saving solutions</span>
+                        </div>
+                        <div class="feature-point">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Resource optimization</span>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="feature">
-                <i class="fas fa-briefcase"></i>
-                <h3>Cross-Sector Experience</h3>
-                <p>Corporate, humanitarian, and tech sectors</p>
+            
+            <!-- Feature 3 -->
+            <div class="why-feature">
+                <div class="feature-number">03</div>
+                <div class="feature-icon">
+                    <i class="fas fa-handshake"></i>
+                </div>
+                <div class="feature-content">
+                    <h3>Client-Centric Approach</h3>
+                    <p>Your success is our priority. We work closely with you to understand and achieve your goals.</p>
+                    <div class="feature-points">
+                        <div class="feature-point">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Personalized solutions</span>
+                        </div>
+                        <div class="feature-point">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Regular communication</span>
+                        </div>
+                        <div class="feature-point">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Results-driven partnership</span>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="feature">
-                <i class="fas fa-eye"></i>
-                <h3>Attention to Detail</h3>
-                <p>Strong focus on design and presentation</p>
+            
+            <!-- Feature 4 -->
+            <div class="why-feature">
+                <div class="feature-number">04</div>
+                <div class="feature-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="feature-content">
+                    <h3>Proven Results</h3>
+                    <p>Track record of delivering measurable impact and growth for businesses of all sizes.</p>
+                    <div class="feature-points">
+                        <div class="feature-point">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Measurable outcomes</span>
+                        </div>
+                        <div class="feature-point">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Data-driven decisions</span>
+                        </div>
+                        <div class="feature-point">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Growth-focused strategies</span>
+                        </div>
+                    </div>
+                </div>
             </div>
+        </div>
+        
+        <!-- CTA -->
+        <div class="why-cta">
+            <h3>Ready to Experience the Difference?</h3>
+            <p>Join dozens of satisfied clients who have transformed their operations with our services.</p>
+            <a href="{{ url_for('contact') }}" class="btn btn-primary">
+                <i class="fas fa-calendar-check"></i> Book a Free Consultation
+            </a>
         </div>
     </div>
 </section>

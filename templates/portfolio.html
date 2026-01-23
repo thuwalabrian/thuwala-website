@@ -1,0 +1,303 @@
+{% extends "base.html" %}
+
+{% block title %}Our Portfolio - Thuwala Co.{% endblock %}
+
+{% block content %}
+<!-- Portfolio Hero -->
+<section class="portfolio-hero">
+    <div class="container">
+        <div class="hero-content">
+            <h1 class="hero-title animate__animated animate__fadeInUp">
+                Our Success Stories
+            </h1>
+            <p class="hero-subtitle animate__animated animate__fadeInUp animate__delay-1s">
+                See how we've helped organizations achieve efficiency, precision, and excellence
+            </p>
+            <div class="hero-stats animate__animated animate__fadeInUp animate__delay-2s">
+                <div class="stat">
+                    <i class="fas fa-check-circle"></i>
+                    <span><span class="counter" data-target="50">0</span>+ Projects Completed</span>
+                </div>
+                <div class="stat">
+                    <i class="fas fa-smile"></i>
+                    <span><span class="counter" data-target="45">0</span>+ Satisfied Clients</span>
+                </div>
+                <div class="stat">
+                    <i class="fas fa-chart-line"></i>
+                    <span><span class="counter" data-target="60">0</span>% Average Efficiency Gain</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="hero-wave">
+        <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
+            <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z"></path>
+        </svg>
+    </div>
+</section>
+
+<!-- Portfolio Filter -->
+<section class="portfolio-filter">
+    <div class="container">
+        <div class="filter-container">
+            <h3>Filter by Service Category</h3>
+            <div class="filter-buttons">
+                <a href="{{ url_for('portfolio', category='all') }}" 
+                   class="filter-btn {% if current_category == 'all' %}active{% endif %}">
+                    All Projects
+                </a>
+                {% for category in categories %}
+                <a href="{{ url_for('portfolio', category=category) }}" 
+                   class="filter-btn {% if current_category == category %}active{% endif %}">
+                    {{ category|title }}
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Portfolio Grid -->
+<section class="portfolio-grid">
+    <div class="container">
+        {% if portfolio_items %}
+        <div class="grid">
+            {% for item in portfolio_items %}
+            <div class="portfolio-card {% if item.featured %}featured{% endif %}">
+                <div class="card-image">
+                    <img src="{{ item.image_url }}" 
+                         alt="{{ item.title }}" 
+                         class="portfolio-img"
+                         onerror="this.src='https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'">
+                    {% if item.featured %}
+                    <span class="featured-badge">
+                        <i class="fas fa-star"></i> Featured
+                    </span>
+                    {% endif %}
+                    <div class="category-badge">
+                        {{ item.category|title }}
+                    </div>
+                </div>
+                <div class="card-content">
+                    <div class="card-header">
+                        <h3 class="card-title">{{ item.title }}</h3>
+                        <p class="card-client"><i class="fas fa-building"></i> {{ item.client }}</p>
+                    </div>
+                    
+                    <p class="card-description">{{ item.description }}</p>
+                    
+                    <div class="card-tech">
+                        <h4><i class="fas fa-tools"></i> Technologies Used:</h4>
+                        <div class="tech-tags">
+                            {% for tech in item.technologies.split(',') %}
+                            <span class="tech-tag">{{ tech.strip() }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    {% if item.testimonial %}
+                    <div class="card-testimonial">
+                        <div class="testimonial-content">
+                            <i class="fas fa-quote-left"></i>
+                            <p>"{{ item.testimonial }}"</p>
+                        </div>
+                        <div class="testimonial-author">
+                            <strong>{{ item.client_name }}</strong>
+                            <span>{{ item.client_role }}</span>
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="card-actions">
+                        {% if item.project_url %}
+                        <a href="{{ item.project_url }}" target="_blank" class="btn btn-outline">
+                            <i class="fas fa-external-link-alt"></i> View Project
+                        </a>
+                        {% endif %}
+                        <button class="btn btn-primary view-details" data-id="{{ item.id }}">
+                            <i class="fas fa-info-circle"></i> View Details
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <i class="fas fa-folder-open"></i>
+            <h3>No portfolio items found</h3>
+            <p>Please check back soon for our latest projects.</p>
+            <a href="{{ url_for('contact') }}" class="btn btn-primary">
+                <i class="fas fa-handshake"></i> Start Your Project
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Portfolio Modal -->
+<div id="portfolioModal" class="modal">
+    <div class="modal-content portfolio-modal-content">
+        <span class="close-modal">&times;</span>
+        <div id="modalContent"></div>
+    </div>
+</div>
+
+<!-- CTA Section -->
+<section class="portfolio-cta">
+    <div class="container">
+        <div class="cta-content">
+            <div class="cta-text">
+                <h2>Ready to Start Your Success Story?</h2>
+                <p>Let's discuss how we can help you achieve similar results</p>
+            </div>
+            <div class="cta-action">
+                <a href="{{ url_for('contact') }}" class="btn btn-primary">
+                    <i class="fas fa-calendar-check"></i> Book a Free Consultation
+                </a>
+                <a href="{{ url_for('services') }}" class="btn btn-secondary">
+                    <i class="fas fa-list"></i> View Our Services
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Portfolio modal functionality
+    const modal = document.getElementById('portfolioModal');
+    const closeBtn = document.querySelector('.close-modal');
+    const modalContent = document.getElementById('modalContent');
+    const viewButtons = document.querySelectorAll('.view-details');
+    
+    // Sample detailed content (in real app, this would come from AJAX)
+    const portfolioDetails = {
+        {% for item in portfolio_items %}
+        "{{ item.id }}": {
+            title: "{{ item.title }}",
+            client: "{{ item.client }}",
+            description: `{{ item.description }}`,
+            category: "{{ item.category }}",
+            technologies: "{{ item.technologies }}",
+            testimonial: `{{ item.testimonial }}`,
+            client_name: "{{ item.client_name }}",
+            client_role: "{{ item.client_role }}",
+            featured: {{ 'true' if item.featured else 'false' }}
+        },
+        {% endfor %}
+    };
+    
+    // View details button click
+    viewButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const itemId = this.getAttribute('data-id');
+            const details = portfolioDetails[itemId];
+            
+            if (details) {
+                modalContent.innerHTML = `
+                    <div class="modal-header">
+                        <h2>${details.title}</h2>
+                        <span class="modal-category">${details.category}</span>
+                    </div>
+                    <div class="modal-body">
+                        <div class="modal-section">
+                            <h3><i class="fas fa-building"></i> Client</h3>
+                            <p>${details.client}</p>
+                        </div>
+                        
+                        <div class="modal-section">
+                            <h3><i class="fas fa-info-circle"></i> Project Overview</h3>
+                            <p>${details.description}</p>
+                        </div>
+                        
+                        <div class="modal-section">
+                            <h3><i class="fas fa-tools"></i> Technologies & Tools</h3>
+                            <div class="tech-tags">
+                                ${details.technologies.split(',').map(tech => 
+                                    `<span class="tech-tag">${tech.trim()}</span>`
+                                ).join('')}
+                            </div>
+                        </div>
+                        
+                        ${details.testimonial ? `
+                        <div class="modal-section testimonial-section">
+                            <h3><i class="fas fa-quote-left"></i> Client Testimonial</h3>
+                            <div class="testimonial-box">
+                                <p>"${details.testimonial}"</p>
+                                <div class="testimonial-author">
+                                    <strong>${details.client_name}</strong>
+                                    <span>${details.client_role}</span>
+                                </div>
+                            </div>
+                        </div>
+                        ` : ''}
+                        
+                        <div class="modal-actions">
+                            <a href="{{ url_for('contact') }}" class="btn btn-primary">
+                                <i class="fas fa-handshake"></i> Start Similar Project
+                            </a>
+                        </div>
+                    </div>
+                `;
+                
+                modal.style.display = 'block';
+                document.body.style.overflow = 'hidden';
+            }
+        });
+    });
+    
+    // Close modal
+    closeBtn.addEventListener('click', function() {
+        modal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+    });
+    
+    // Close when clicking outside
+    window.addEventListener('click', function(e) {
+        if (e.target === modal) {
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+    });
+    
+    // Close with Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && modal.style.display === 'block') {
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+    });
+    
+    // Counter animation
+    const counters = document.querySelectorAll('.counter');
+    const counterObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const target = parseInt(entry.target.getAttribute('data-target'));
+                animateCounter(entry.target, target);
+                counterObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.5 });
+    
+    counters.forEach(counter => counterObserver.observe(counter));
+    
+    function animateCounter(element, target, duration = 2000) {
+        let start = 0;
+        const increment = target / (duration / 16);
+        const timer = setInterval(() => {
+            start += increment;
+            if (start >= target) {
+                element.textContent = target + '+';
+                clearInterval(timer);
+            } else {
+                element.textContent = Math.floor(start);
+            }
+        }, 16);
+    }
+});
+</script>
+{% endblock %}
