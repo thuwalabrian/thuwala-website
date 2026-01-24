@@ -18,10 +18,16 @@ from flask_login import (
     current_user,
 )
 from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.utils import secure_filename
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
 from functools import wraps
 from sqlalchemy import inspect
+import secrets
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+from itsdangerous import URLSafeTimedSerializer
 
 app = Flask(__name__)
 app.config.from_object("config.Config")
@@ -29,6 +35,9 @@ app.config.from_object("config.Config")
 db = SQLAlchemy(app)
 login_manager = LoginManager(app)
 login_manager.login_view = "admin_login"
+
+# Create URL safe serializer for tokens
+s = URLSafeTimedSerializer(app.config["SECRET_KEY"])
 
 
 # Database Models
@@ -81,9 +90,129 @@ class Portfolio(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
 
+class PasswordResetToken(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    token = db.Column(db.String(100), unique=True, nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    expires_at = db.Column(db.DateTime, nullable=False)
+    is_used = db.Column(db.Boolean, default=False)
+
+    user = db.relationship("User", backref="reset_tokens")
+
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
+
+
+def generate_reset_token():
+    """Generate a secure reset token"""
+    return secrets.token_urlsafe(32)
+
+
+def send_password_reset_email(user_email, reset_url):
+    """Send password reset email to user"""
+    if not app.config["MAIL_USERNAME"] or not app.config["MAIL_PASSWORD"]:
+        print(
+            f"DEBUG: Email credentials not configured. Would send reset link to {user_email}: {reset_url}"
+        )
+        return True  # Return True for development
+
+    try:
+        msg = MIMEMultipart("alternative")
+        msg["Subject"] = "Password Reset Request - Thuwala Co."
+        msg["From"] = app.config["MAIL_DEFAULT_SENDER"]
+        msg["To"] = user_email
+
+        # HTML email content
+        html = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <title>Password Reset - Thuwala Co.</title>
+            <style>
+                body {{ font-family: Arial, sans-serif; line-height: 1.6; color: #333; }}
+                .container {{ max-width: 600px; margin: 0 auto; padding: 20px; }}
+                .header {{ background: linear-gradient(135deg, #2563eb, #1d4ed8); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }}
+                .content {{ background: #f9fafb; padding: 30px; border-radius: 0 0 10px 10px; }}
+                .button {{ display: inline-block; background: #2563eb; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; font-weight: bold; }}
+                .footer {{ margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e7eb; color: #6b7280; font-size: 14px; }}
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <div class="header">
+                    <h1>Thuwala Co.</h1>
+                    <p>Password Reset Request</p>
+                </div>
+                <div class="content">
+                    <h2>Hello,</h2>
+                    <p>We received a request to reset your password for the Thuwala Co. admin account.</p>
+                    <p>Click the button below to reset your password:</p>
+                    <p style="text-align: center; margin: 30px 0;">
+                        <a href="{reset_url}" class="button">Reset Password</a>
+                    </p>
+                    <p>Or copy and paste this link into your browser:</p>
+                    <p style="background: #f3f4f6; padding: 15px; border-radius: 5px; word-break: break-all;">
+                        {reset_url}
+                    </p>
+                    <p>This link will expire in 24 hours.</p>
+                    <p>If you didn't request a password reset, you can safely ignore this email.</p>
+                    <div class="footer">
+                        <p>Best regards,<br>The Thuwala Co. Team</p>
+                        <p style="font-size: 12px; color: #9ca3af;">
+                            This is an automated message. Please do not reply to this email.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </body>
+        </html>
+        """
+
+        # Plain text version
+        text = f"""
+        Password Reset Request - Thuwala Co.
+        
+        Hello,
+        
+        We received a request to reset your password for the Thuwala Co. admin account.
+        
+        Click this link to reset your password: {reset_url}
+        
+        This link will expire in 24 hours.
+        
+        If you didn't request a password reset, you can safely ignore this email.
+        
+        Best regards,
+        The Thuwala Co. Team
+        """
+
+        # Attach both versions
+        part1 = MIMEText(text, "plain")
+        part2 = MIMEText(html, "html")
+
+        msg.attach(part1)
+        msg.attach(part2)
+
+        # Send email
+        with smtplib.SMTP(
+            app.config["MAIL_SERVER"], app.config["MAIL_PORT"]
+        ) as server:
+            server.starttls()
+            server.login(
+                app.config["MAIL_USERNAME"], app.config["MAIL_PASSWORD"]
+            )
+            server.send_message(msg)
+
+        print(f"Password reset email sent to {user_email}")
+        return True
+
+    except Exception as e:
+        print(f"Error sending email: {e}")
+        return False
 
 
 def init_or_migrate_database():
@@ -398,6 +527,16 @@ with app.app_context():
         else:
             print(f"Portfolio already has {Portfolio.query.count()} items")
 
+        # Clean up expired tokens on startup
+        expired_tokens = PasswordResetToken.query.filter(
+            PasswordResetToken.expires_at < datetime.utcnow()
+        ).all()
+
+        for token in expired_tokens:
+            db.session.delete(token)
+
+        db.session.commit()
+
         print("✅ Database initialization complete!")
         print("=" * 50)
 
@@ -512,6 +651,191 @@ def contact():
     return render_template("contact.html")
 
 
+# Password Reset Routes
+@app.route("/admin/forgot-password", methods=["GET", "POST"])
+def forgot_password():
+    """Handle forgot password requests"""
+    if current_user.is_authenticated:
+        return redirect(url_for("admin_dashboard"))
+
+    if request.method == "POST":
+        email = request.form.get("email", "").strip().lower()
+
+        if not email:
+            flash("Please enter your email address", "error")
+            return redirect(url_for("forgot_password"))
+
+        # Find user by email
+        user = User.query.filter_by(email=email).first()
+
+        if user:
+            # Generate reset token
+            token = generate_reset_token()
+            expires_at = datetime.utcnow() + timedelta(
+                hours=app.config["PASSWORD_RESET_TOKEN_EXPIRE_HOURS"]
+            )
+
+            # Save token to database
+            reset_token = PasswordResetToken(
+                user_id=user.id, token=token, expires_at=expires_at
+            )
+
+            try:
+                # Delete any existing unused tokens for this user
+                PasswordResetToken.query.filter_by(
+                    user_id=user.id, is_used=False
+                ).delete()
+
+                db.session.add(reset_token)
+                db.session.commit()
+
+                # Generate reset URL
+                reset_url = url_for(
+                    "reset_password", token=token, _external=True
+                )
+
+                # Send email
+                if send_password_reset_email(user.email, reset_url):
+                    flash(
+                        "Password reset instructions have been sent to your email.",
+                        "success",
+                    )
+                else:
+                    flash(
+                        "Error sending email. Please contact support.", "error"
+                    )
+
+            except Exception as e:
+                db.session.rollback()
+                print(f"Error creating reset token: {e}")
+                flash("An error occurred. Please try again.", "error")
+        else:
+            # For security, show success even if email doesn't exist
+            flash(
+                "If an account exists with that email, reset instructions have been sent.",
+                "success",
+            )
+
+        return redirect(url_for("admin_login"))
+
+    return render_template("admin/forgot_password.html")
+
+
+@app.route("/admin/reset-password/<token>", methods=["GET", "POST"])
+def reset_password(token):
+    """Handle password reset with token"""
+    if current_user.is_authenticated:
+        return redirect(url_for("admin_dashboard"))
+
+    # Validate token
+    reset_token = PasswordResetToken.query.filter_by(
+        token=token, is_used=False
+    ).first()
+
+    if not reset_token:
+        flash("Invalid or expired reset token.", "error")
+        return redirect(url_for("admin_login"))
+
+    if datetime.utcnow() > reset_token.expires_at:
+        flash("Reset token has expired. Please request a new one.", "error")
+        return redirect(url_for("forgot_password"))
+
+    if request.method == "POST":
+        password = request.form.get("password")
+        confirm_password = request.form.get("confirm_password")
+
+        # Validate passwords
+        if not password or not confirm_password:
+            flash("Please fill in all fields", "error")
+            return render_template("admin/reset_password.html", token=token)
+
+        if password != confirm_password:
+            flash("Passwords do not match", "error")
+            return render_template("admin/reset_password.html", token=token)
+
+        if len(password) < 8:
+            flash("Password must be at least 8 characters long", "error")
+            return render_template("admin/reset_password.html", token=token)
+
+        # Update user password
+        user = User.query.get(reset_token.user_id)
+        if user:
+            user.password_hash = generate_password_hash(password)
+            reset_token.is_used = True
+
+            try:
+                db.session.commit()
+                flash(
+                    "Password has been reset successfully. You can now login with your new password.",
+                    "success",
+                )
+                return redirect(url_for("admin_login"))
+            except Exception as e:
+                db.session.rollback()
+                print(f"Error resetting password: {e}")
+                flash("An error occurred. Please try again.", "error")
+        else:
+            flash("User not found", "error")
+
+    return render_template("admin/reset_password.html", token=token)
+
+
+@app.route("/admin/change-password", methods=["GET", "POST"])
+@login_required
+def change_password():
+    """Allow logged-in users to change their password"""
+    if request.method == "POST":
+        current_password = request.form.get("current_password")
+        new_password = request.form.get("new_password")
+        confirm_password = request.form.get("confirm_password")
+
+        # Validate inputs
+        if not current_password or not new_password or not confirm_password:
+            flash("Please fill in all fields", "error")
+            return redirect(url_for("change_password"))
+
+        # Verify current password
+        if not check_password_hash(
+            current_user.password_hash, current_password
+        ):
+            flash("Current password is incorrect", "error")
+            return redirect(url_for("change_password"))
+
+        # Check if new password is different
+        if check_password_hash(current_user.password_hash, new_password):
+            flash(
+                "New password must be different from current password", "error"
+            )
+            return redirect(url_for("change_password"))
+
+        # Validate new password
+        if new_password != confirm_password:
+            flash("New passwords do not match", "error")
+            return redirect(url_for("change_password"))
+
+        if len(new_password) < 8:
+            flash("Password must be at least 8 characters long", "error")
+            return redirect(url_for("change_password"))
+
+        # Update password
+        current_user.password_hash = generate_password_hash(new_password)
+
+        try:
+            db.session.commit()
+            flash("Password changed successfully", "success")
+
+            # Log user out and redirect to login page
+            logout_user()
+            return redirect(url_for("admin_login"))
+
+        except Exception as e:
+            db.session.rollback()
+            print(f"Error changing password: {e}")
+            flash("An error occurred. Please try again.", "error")
+
+    return render_template("admin/change_password.html")
+
+
 # Admin Routes
 @app.route("/admin/login", methods=["GET", "POST"])
 def admin_login():
@@ -541,14 +865,49 @@ def admin_dashboard():
             ContactMessage.created_at.desc()
         ).all()
         unread_count = ContactMessage.query.filter_by(is_read=False).count()
+        service_count = Service.query.count()
+        portfolio_count = Portfolio.query.count()
+        user_count = User.query.count()
     except Exception as e:
         print(f"Database error in admin dashboard: {e}")
         messages = []
         unread_count = 0
+        service_count = 0
+        portfolio_count = 0
+        user_count = 0
 
     return render_template(
-        "admin/dashboard.html", messages=messages, unread_count=unread_count
+        "admin/dashboard.html",
+        messages=messages,
+        unread_count=unread_count,
+        service_count=service_count,
+        portfolio_count=portfolio_count,
+        user_count=user_count,
     )
+
+
+@app.route("/admin/message/<int:message_id>/view")
+@login_required
+def view_message(message_id):
+    try:
+        message = ContactMessage.query.get_or_404(message_id)
+        return jsonify(
+            {
+                "success": True,
+                "message": {
+                    "name": message.name,
+                    "email": message.email,
+                    "phone": message.phone,
+                    "subject": message.subject,
+                    "message": message.message,
+                    "created_at": message.created_at.strftime(
+                        "%Y-%m-%d %H:%M"
+                    ),
+                },
+            }
+        )
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 500
 
 
 @app.route("/admin/logout")
@@ -570,6 +929,319 @@ def mark_message_read(message_id):
         return jsonify({"success": False, "error": str(e)}), 500
 
 
+# Admin Services Management
+@app.route("/admin/services")
+@login_required
+def admin_services():
+    try:
+        services = Service.query.order_by(Service.category, Service.id).all()
+        categories = db.session.query(Service.category).distinct().all()
+        categories = [cat[0] for cat in categories if cat[0]]
+    except Exception as e:
+        print(f"Database error in admin services: {e}")
+        services = []
+        categories = []
+
+    return render_template(
+        "admin/services.html", services=services, categories=categories
+    )
+
+
+@app.route("/admin/service/add", methods=["GET", "POST"])
+@login_required
+def add_service():
+    if request.method == "POST":
+        try:
+            service = Service(
+                title=request.form.get("title"),
+                description=request.form.get("description"),
+                icon=request.form.get("icon"),
+                details=request.form.get("details"),
+                category=request.form.get("category"),
+            )
+            db.session.add(service)
+            db.session.commit()
+            flash("Service added successfully!", "success")
+            return redirect(url_for("admin_services"))
+        except Exception as e:
+            flash(f"Error adding service: {str(e)}", "error")
+
+    categories = [
+        "administrative",
+        "operations",
+        "data",
+        "communications",
+        "branding",
+        "business",
+        "systems",
+        "training",
+        "creative",
+        "consulting",
+    ]
+    return render_template("admin/edit_service.html", categories=categories)
+
+
+@app.route("/admin/service/<int:service_id>/edit", methods=["GET", "POST"])
+@login_required
+def edit_service(service_id):
+    service = Service.query.get_or_404(service_id)
+
+    if request.method == "POST":
+        try:
+            service.title = request.form.get("title")
+            service.description = request.form.get("description")
+            service.icon = request.form.get("icon")
+            service.details = request.form.get("details")
+            service.category = request.form.get("category")
+
+            db.session.commit()
+            flash("Service updated successfully!", "success")
+            return redirect(url_for("admin_services"))
+        except Exception as e:
+            flash(f"Error updating service: {str(e)}", "error")
+
+    categories = [
+        "administrative",
+        "operations",
+        "data",
+        "communications",
+        "branding",
+        "business",
+        "systems",
+        "training",
+        "creative",
+        "consulting",
+    ]
+    return render_template(
+        "admin/edit_service.html", service=service, categories=categories
+    )
+
+
+@app.route("/admin/service/<int:service_id>/delete", methods=["POST"])
+@login_required
+def delete_service(service_id):
+    try:
+        service = Service.query.get_or_404(service_id)
+        db.session.delete(service)
+        db.session.commit()
+        flash("Service deleted successfully!", "success")
+    except Exception as e:
+        flash(f"Error deleting service: {str(e)}", "error")
+
+    return redirect(url_for("admin_services"))
+
+
+# Admin Portfolio Management
+@app.route("/admin/portfolio")
+@login_required
+def admin_portfolio():
+    try:
+        portfolio_items = Portfolio.query.order_by(
+            Portfolio.featured.desc(), Portfolio.created_at.desc()
+        ).all()
+    except Exception as e:
+        print(f"Database error in admin portfolio: {e}")
+        portfolio_items = []
+
+    return render_template(
+        "admin/portfolio.html", portfolio_items=portfolio_items
+    )
+
+
+@app.route("/admin/portfolio/add", methods=["GET", "POST"])
+@login_required
+def add_portfolio():
+    if request.method == "POST":
+        try:
+            # Handle file upload for image
+            image_url = request.form.get("image_url")
+            if "image_file" in request.files:
+                file = request.files["image_file"]
+                if file and file.filename != "":
+                    filename = secure_filename(file.filename)
+                    filepath = os.path.join(
+                        app.config["UPLOAD_FOLDER"], "portfolio", filename
+                    )
+                    os.makedirs(os.path.dirname(filepath), exist_ok=True)
+                    file.save(filepath)
+                    image_url = f"/static/uploads/portfolio/{filename}"
+
+            portfolio = Portfolio(
+                title=request.form.get("title"),
+                client=request.form.get("client"),
+                description=request.form.get("description"),
+                category=request.form.get("category"),
+                image_url=image_url,
+                project_url=request.form.get("project_url"),
+                technologies=request.form.get("technologies"),
+                testimonial=request.form.get("testimonial"),
+                client_name=request.form.get("client_name"),
+                client_role=request.form.get("client_role"),
+                featured=bool(request.form.get("featured")),
+            )
+            db.session.add(portfolio)
+            db.session.commit()
+            flash("Portfolio item added successfully!", "success")
+            return redirect(url_for("admin_portfolio"))
+        except Exception as e:
+            flash(f"Error adding portfolio item: {str(e)}", "error")
+
+    categories = [
+        "administrative",
+        "operations",
+        "data",
+        "communications",
+        "branding",
+        "business",
+        "systems",
+        "training",
+        "creative",
+        "consulting",
+    ]
+    return render_template("admin/edit_portfolio.html", categories=categories)
+
+
+@app.route("/admin/portfolio/<int:item_id>/edit", methods=["GET", "POST"])
+@login_required
+def edit_portfolio(item_id):
+    portfolio = Portfolio.query.get_or_404(item_id)
+
+    if request.method == "POST":
+        try:
+            # Handle file upload for image
+            image_url = request.form.get("image_url")
+            if "image_file" in request.files:
+                file = request.files["image_file"]
+                if file and file.filename != "":
+                    filename = secure_filename(file.filename)
+                    filepath = os.path.join(
+                        app.config["UPLOAD_FOLDER"], "portfolio", filename
+                    )
+                    os.makedirs(os.path.dirname(filepath), exist_ok=True)
+                    file.save(filepath)
+                    image_url = f"/static/uploads/portfolio/{filename}"
+
+            portfolio.title = request.form.get("title")
+            portfolio.client = request.form.get("client")
+            portfolio.description = request.form.get("description")
+            portfolio.category = request.form.get("category")
+            if image_url:
+                portfolio.image_url = image_url
+            portfolio.project_url = request.form.get("project_url")
+            portfolio.technologies = request.form.get("technologies")
+            portfolio.testimonial = request.form.get("testimonial")
+            portfolio.client_name = request.form.get("client_name")
+            portfolio.client_role = request.form.get("client_role")
+            portfolio.featured = bool(request.form.get("featured"))
+
+            db.session.commit()
+            flash("Portfolio item updated successfully!", "success")
+            return redirect(url_for("admin_portfolio"))
+        except Exception as e:
+            flash(f"Error updating portfolio item: {str(e)}", "error")
+
+    categories = [
+        "administrative",
+        "operations",
+        "data",
+        "communications",
+        "branding",
+        "business",
+        "systems",
+        "training",
+        "creative",
+        "consulting",
+    ]
+    return render_template(
+        "admin/edit_portfolio.html", portfolio=portfolio, categories=categories
+    )
+
+
+@app.route("/admin/portfolio/<int:item_id>/delete", methods=["POST"])
+@login_required
+def delete_portfolio(item_id):
+    try:
+        portfolio = Portfolio.query.get_or_404(item_id)
+        db.session.delete(portfolio)
+        db.session.commit()
+        flash("Portfolio item deleted successfully!", "success")
+    except Exception as e:
+        flash(f"Error deleting portfolio item: {str(e)}", "error")
+
+    return redirect(url_for("admin_portfolio"))
+
+
+# User Management Routes
+@app.route("/admin/users")
+@login_required
+def admin_users():
+    """Manage users (only accessible to admins)"""
+    users = User.query.order_by(User.created_at.desc()).all()
+    return render_template("admin/users.html", users=users)
+
+
+@app.route("/admin/users/add", methods=["GET", "POST"])
+@login_required
+def add_user():
+    """Add new admin user"""
+    if request.method == "POST":
+        username = request.form.get("username")
+        email = request.form.get("email")
+        password = request.form.get("password")
+
+        # Validate inputs
+        if not username or not email or not password:
+            flash("Please fill in all fields", "error")
+            return redirect(url_for("add_user"))
+
+        # Check if username or email already exists
+        if User.query.filter_by(username=username).first():
+            flash("Username already exists", "error")
+            return redirect(url_for("add_user"))
+
+        if User.query.filter_by(email=email).first():
+            flash("Email already exists", "error")
+            return redirect(url_for("add_user"))
+
+        if len(password) < 8:
+            flash("Password must be at least 8 characters long", "error")
+            return redirect(url_for("add_user"))
+
+        # Create new user
+        new_user = User(
+            username=username,
+            email=email,
+            password_hash=generate_password_hash(password),
+        )
+
+        try:
+            db.session.add(new_user)
+            db.session.commit()
+            flash("User added successfully", "success")
+            return redirect(url_for("admin_users"))
+        except Exception as e:
+            db.session.rollback()
+            print(f"Error adding user: {e}")
+            flash("An error occurred. Please try again.", "error")
+
+    return render_template("admin/add_user.html")
+
+
+# Test route for email configuration (development only)
+@app.route("/admin/test-email")
+def test_email():
+    """Test email configuration (for development only)"""
+    if app.config.get("FLASK_ENV") == "production":
+        return "Not available in production", 403
+
+    reset_url = url_for(
+        "reset_password", token="test-token-123", _external=True
+    )
+    success = send_password_reset_email("test@example.com", reset_url)
+
+    return f"Test email sent: {success}<br>Reset URL: {reset_url}"
+
+
 # Add a debug route to check database status
 @app.route("/debug/db-status")
 def debug_db_status():
@@ -586,6 +1258,11 @@ def debug_db_status():
         portfolio_count = (
             Portfolio.query.count() if "portfolio" in tables else 0
         )
+        reset_token_count = (
+            PasswordResetToken.query.count()
+            if "password_reset_token" in tables
+            else 0
+        )
 
         # Get services with categories
         services = Service.query.all()
@@ -601,6 +1278,7 @@ def debug_db_status():
             "user_count": user_count,
             "message_count": message_count,
             "portfolio_count": portfolio_count,
+            "reset_token_count": reset_token_count,
             "services": services_info,
             "status": "OK",
         }
@@ -616,7 +1294,7 @@ def health_check():
 
 if __name__ == "__main__":
     # Create necessary folders
-    os.makedirs("static/uploads", exist_ok=True)
+    os.makedirs("static/uploads/portfolio", exist_ok=True)
     os.makedirs("templates/admin", exist_ok=True)
     os.makedirs("static/images/portfolio", exist_ok=True)
 

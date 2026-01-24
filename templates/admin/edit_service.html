@@ -1,0 +1,399 @@
+{% extends "base.html" %}
+
+{% block title %}{{ 'Edit' if service else 'Add' }} Service - Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="admin-container">
+    <div class="admin-header">
+        <div>
+            <h1>{{ 'Edit Service' if service else 'Add New Service' }}</h1>
+            <p>{{ 'Update service details' if service else 'Create a new service for your website' }}</p>
+        </div>
+        <div class="admin-actions">
+            <a href="{{ url_for('admin_services') }}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to Services
+            </a>
+        </div>
+    </div>
+
+    <div class="admin-form-container">
+        <form method="POST" class="admin-form">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="title">Service Title *</label>
+                    <input type="text" 
+                           id="title" 
+                           name="title" 
+                           value="{{ service.title if service else '' }}" 
+                           required 
+                           placeholder="e.g., Administrative Support">
+                </div>
+                
+                <div class="form-group">
+                    <label for="category">Category *</label>
+                    <select id="category" name="category" required>
+                        <option value="">Select a category</option>
+                        {% for cat in categories %}
+                        <option value="{{ cat }}" 
+                                {% if service and service.category == cat %}selected{% endif %}>
+                            {{ cat|title }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="description">Short Description *</label>
+                <textarea id="description" 
+                          name="description" 
+                          rows="3" 
+                          required 
+                          placeholder="Brief description displayed on cards">{{ service.description if service else '' }}</textarea>
+                <small>Keep it concise (1-2 sentences)</small>
+            </div>
+
+            <div class="form-group">
+                <label for="icon">FontAwesome Icon *</label>
+                <div class="icon-selector">
+                    <input type="text" 
+                           id="icon" 
+                           name="icon" 
+                           value="{{ service.icon if service else 'fas fa-cogs' }}" 
+                           required 
+                           placeholder="fas fa-icon-name">
+                    <div class="icon-preview">
+                        <i id="iconPreview" class="{{ service.icon if service else 'fas fa-cogs' }}"></i>
+                    </div>
+                </div>
+                <small>Use FontAwesome 5 icon classes (e.g., fas fa-cogs, fas fa-chart-bar)</small>
+            </div>
+
+            <div class="form-group">
+                <label for="details">Service Details</label>
+                <textarea id="details" 
+                          name="details" 
+                          rows="6" 
+                          placeholder="Detailed description of the service. Use bullet points or paragraphs.">{{ service.details if service else '' }}</textarea>
+                <small>You can use HTML tags or plain text. This appears on the service details page.</small>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i> {{ 'Update Service' if service else 'Add Service' }}
+                </button>
+                <a href="{{ url_for('admin_services') }}" class="btn btn-secondary">
+                    Cancel
+                </a>
+            </div>
+        </form>
+        
+        <div class="form-preview">
+            <h3>Preview</h3>
+            <div class="preview-card">
+                <div class="preview-icon">
+                    <i id="previewIcon" class="{{ service.icon if service else 'fas fa-cogs' }}"></i>
+                </div>
+                <h4 id="previewTitle">{{ service.title if service else 'Service Title' }}</h4>
+                <p id="previewDescription">{{ service.description if service else 'Service description will appear here...' }}</p>
+                <div class="preview-category">
+                    Category: <span id="previewCategory">{{ service.category if service else 'category' }}</span>
+                </div>
+            </div>
+            
+            <div class="icon-gallery">
+                <h4>Common Icon Suggestions:</h4>
+                <div class="icons-grid">
+                    <div class="icon-option" data-icon="fas fa-clipboard-check">📋</div>
+                    <div class="icon-option" data-icon="fas fa-chart-bar">📊</div>
+                    <div class="icon-option" data-icon="fas fa-bullhorn">📢</div>
+                    <div class="icon-option" data-icon="fas fa-palette">🎨</div>
+                    <div class="icon-option" data-icon="fas fa-briefcase">💼</div>
+                    <div class="icon-option" data-icon="fas fa-cogs">⚙️</div>
+                    <div class="icon-option" data-icon="fas fa-graduation-cap">🎓</div>
+                    <div class="icon-option" data-icon="fas fa-lightbulb">💡</div>
+                    <div class="icon-option" data-icon="fas fa-chess">♟️</div>
+                    <div class="icon-option" data-icon="fas fa-rocket">🚀</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.admin-form-container {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+@media (max-width: 1024px) {
+    .admin-form-container {
+        grid-template-columns: 1fr;
+    }
+}
+
+.admin-form {
+    background: white;
+    padding: 2rem;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: var(--dark);
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--gray-light);
+    border-radius: var(--radius);
+    font-size: 1rem;
+    font-family: inherit;
+    transition: all 0.3s;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.form-group small {
+    display: block;
+    margin-top: 0.25rem;
+    color: var(--gray);
+    font-size: 0.85rem;
+}
+
+.icon-selector {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.icon-selector input {
+    flex: 1;
+}
+
+.icon-preview {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    border-radius: var(--radius);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.5rem;
+}
+
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--gray-light);
+}
+
+.form-preview {
+    background: white;
+    padding: 2rem;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    align-self: start;
+    position: sticky;
+    top: 2rem;
+}
+
+.form-preview h3 {
+    color: var(--dark);
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--gray-light);
+}
+
+.preview-card {
+    background: var(--light);
+    padding: 1.5rem;
+    border-radius: var(--radius);
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.preview-icon {
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    color: white;
+    font-size: 2rem;
+}
+
+.preview-card h4 {
+    margin: 0 0 0.75rem;
+    color: var(--dark);
+    font-size: 1.25rem;
+}
+
+.preview-card p {
+    color: var(--gray);
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.preview-category {
+    font-size: 0.85rem;
+    color: var(--gray);
+}
+
+.preview-category span {
+    font-weight: 500;
+    color: var(--primary);
+}
+
+.icon-gallery h4 {
+    margin: 1.5rem 0 1rem;
+    color: var(--dark);
+    font-size: 1rem;
+}
+
+.icons-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0.5rem;
+}
+
+.icon-option {
+    width: 50px;
+    height: 50px;
+    background: var(--light);
+    border: 2px solid var(--gray-light);
+    border-radius: var(--radius);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.icon-option:hover {
+    border-color: var(--primary);
+    background: white;
+    transform: scale(1.1);
+}
+
+.icon-option.active {
+    border-color: var(--primary);
+    background: var(--primary);
+    color: white;
+}
+
+@media (max-width: 768px) {
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+    
+    .icons-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+@media (max-width: 480px) {
+    .admin-form,
+    .form-preview {
+        padding: 1.5rem;
+    }
+    
+    .icons-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const titleInput = document.getElementById('title');
+    const descriptionInput = document.getElementById('description');
+    const iconInput = document.getElementById('icon');
+    const categorySelect = document.getElementById('category');
+    const iconPreview = document.getElementById('iconPreview');
+    const previewIcon = document.getElementById('previewIcon');
+    const previewTitle = document.getElementById('previewTitle');
+    const previewDescription = document.getElementById('previewDescription');
+    const previewCategory = document.getElementById('previewCategory');
+    const iconOptions = document.querySelectorAll('.icon-option');
+    
+    // Update preview in real-time
+    titleInput.addEventListener('input', function() {
+        previewTitle.textContent = this.value || 'Service Title';
+    });
+    
+    descriptionInput.addEventListener('input', function() {
+        previewDescription.textContent = this.value || 'Service description will appear here...';
+    });
+    
+    iconInput.addEventListener('input', function() {
+        const iconClass = this.value.trim();
+        iconPreview.className = iconClass;
+        previewIcon.className = iconClass;
+    });
+    
+    categorySelect.addEventListener('change', function() {
+        previewCategory.textContent = this.value || 'category';
+    });
+    
+    // Icon selection from gallery
+    iconOptions.forEach(option => {
+        option.addEventListener('click', function() {
+            const iconClass = this.getAttribute('data-icon');
+            iconInput.value = iconClass;
+            iconPreview.className = iconClass;
+            previewIcon.className = iconClass;
+            
+            // Update active state
+            iconOptions.forEach(opt => opt.classList.remove('active'));
+            this.classList.add('active');
+        });
+    });
+    
+    // Initialize icon gallery active state
+    const currentIcon = iconInput.value;
+    iconOptions.forEach(option => {
+        if (option.getAttribute('data-icon') === currentIcon) {
+            option.classList.add('active');
+        }
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,485 @@
+{% extends "base.html" %}
+
+{% block title %}{{ 'Edit' if portfolio else 'Add' }} Portfolio - Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="admin-container">
+    <div class="admin-header">
+        <div>
+            <h1>{{ 'Edit Portfolio Item' if portfolio else 'Add New Portfolio Item' }}</h1>
+            <p>{{ 'Update project details' if portfolio else 'Showcase your work' }}</p>
+        </div>
+        <div class="admin-actions">
+            <a href="{{ url_for('admin_portfolio') }}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to Portfolio
+            </a>
+        </div>
+    </div>
+
+    <div class="admin-form-container">
+        <form method="POST" class="admin-form" enctype="multipart/form-data">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="title">Project Title *</label>
+                    <input type="text" 
+                           id="title" 
+                           name="title" 
+                           value="{{ portfolio.title if portfolio else '' }}" 
+                           required 
+                           placeholder="e.g., Malawi NGO Data Dashboard">
+                </div>
+                
+                <div class="form-group">
+                    <label for="client">Client Name *</label>
+                    <input type="text" 
+                           id="client" 
+                           name="client" 
+                           value="{{ portfolio.client if portfolio else '' }}" 
+                           required 
+                           placeholder="e.g., Malawi Development NGO">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="category">Category *</label>
+                    <select id="category" name="category" required>
+                        <option value="">Select a category</option>
+                        {% for cat in categories %}
+                        <option value="{{ cat }}" 
+                                {% if portfolio and portfolio.category == cat %}selected{% endif %}>
+                            {{ cat|title }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="project_url">Project URL</label>
+                    <input type="url" 
+                           id="project_url" 
+                           name="project_url" 
+                           value="{{ portfolio.project_url if portfolio else '' }}" 
+                           placeholder="https://example.com">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="description">Project Description *</label>
+                <textarea id="description" 
+                          name="description" 
+                          rows="4" 
+                          required 
+                          placeholder="Describe the project, challenges, and solutions">{{ portfolio.description if portfolio else '' }}</textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="technologies">Technologies Used</label>
+                <input type="text" 
+                       id="technologies" 
+                       name="technologies" 
+                       value="{{ portfolio.technologies if portfolio else '' }}" 
+                       placeholder="Power BI, ODK, Python, SQL (comma separated)">
+                <small>Separate with commas</small>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="image_url">Image URL</label>
+                    <input type="url" 
+                           id="image_url" 
+                           name="image_url" 
+                           value="{{ portfolio.image_url if portfolio else '' }}" 
+                           placeholder="https://images.unsplash.com/photo-...">
+                </div>
+                
+                <div class="form-group">
+                    <label for="image_file">Or Upload Image</label>
+                    <input type="file" 
+                           id="image_file" 
+                           name="image_file" 
+                           accept="image/*">
+                    <small>Max 5MB. JPG, PNG, or GIF</small>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" 
+                           name="featured" 
+                           value="1"
+                           {% if portfolio and portfolio.featured %}checked{% endif %}>
+                    <span>Featured Project</span>
+                </label>
+                <small>Featured projects will be highlighted on the portfolio page</small>
+            </div>
+
+            <div class="form-section">
+                <h3>Testimonial (Optional)</h3>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="client_name">Client Name</label>
+                        <input type="text" 
+                               id="client_name" 
+                               name="client_name" 
+                               value="{{ portfolio.client_name if portfolio else '' }}" 
+                               placeholder="John Banda">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="client_role">Client Role</label>
+                        <input type="text" 
+                               id="client_role" 
+                               name="client_role" 
+                               value="{{ portfolio.client_role if portfolio else '' }}" 
+                               placeholder="M&E Director">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="testimonial">Testimonial Text</label>
+                    <textarea id="testimonial" 
+                              name="testimonial" 
+                              rows="3" 
+                              placeholder="Client's feedback about the project">{{ portfolio.testimonial if portfolio else '' }}</textarea>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i> {{ 'Update Project' if portfolio else 'Add Project' }}
+                </button>
+                <a href="{{ url_for('admin_portfolio') }}" class="btn btn-secondary">
+                    Cancel
+                </a>
+            </div>
+        </form>
+        
+        <div class="form-preview">
+            <h3>Preview</h3>
+            
+            <div class="preview-card">
+                <div class="preview-image">
+                    <img id="previewImage" 
+                         src="{{ portfolio.image_url if portfolio and portfolio.image_url else 'https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80' }}" 
+                         alt="Project preview">
+                    <span id="previewCategory" class="category-badge">
+                        {{ portfolio.category|title if portfolio else 'Category' }}
+                    </span>
+                    <span id="previewFeatured" class="featured-badge" style="display: none;">
+                        <i class="fas fa-star"></i> Featured
+                    </span>
+                </div>
+                
+                <div class="preview-content">
+                    <h4 id="previewTitle">{{ portfolio.title if portfolio else 'Project Title' }}</h4>
+                    <p class="preview-client" id="previewClient">
+                        {{ portfolio.client if portfolio else 'Client Name' }}
+                    </p>
+                    <p class="preview-description" id="previewDescription">
+                        {{ portfolio.description[:100] + '...' if portfolio else 'Project description will appear here...' }}
+                    </p>
+                    
+                    <div class="preview-tech" id="previewTech">
+                        {% if portfolio and portfolio.technologies %}
+                            {% for tech in portfolio.technologies.split(',')[:3] %}
+                            <span class="tech-tag">{{ tech.strip() }}</span>
+                            {% endfor %}
+                        {% else %}
+                            <span class="tech-tag">Technology</span>
+                            <span class="tech-tag">Tools</span>
+                        {% endif %}
+                    </div>
+                    
+                    {% if portfolio and portfolio.testimonial %}
+                    <div class="preview-testimonial">
+                        <i class="fas fa-quote-left"></i>
+                        <p>"{{ portfolio.testimonial[:100] }}..."</p>
+                        <div class="testimonial-author">
+                            <strong>{{ portfolio.client_name }}</strong>
+                            <span>{{ portfolio.client_role }}</span>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="image-tips">
+                <h4>Image Tips:</h4>
+                <ul>
+                    <li>Use high-quality images (1200x800px recommended)</li>
+                    <li>Maintain aspect ratio 3:2</li>
+                    <li>Optimize for web (under 500KB)</li>
+                    <li>Use descriptive alt text</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.form-section {
+    margin: 2rem 0;
+    padding: 1.5rem;
+    background: var(--light);
+    border-radius: var(--radius);
+}
+
+.form-section h3 {
+    margin: 0 0 1rem;
+    color: var(--dark);
+    font-size: 1.25rem;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    cursor: pointer;
+    margin-bottom: 0.5rem;
+}
+
+.checkbox-label input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    accent-color: var(--primary);
+}
+
+.preview-card {
+    border: 1px solid var(--gray-light);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: 2rem;
+}
+
+.preview-image {
+    position: relative;
+    height: 150px;
+    overflow: hidden;
+}
+
+.preview-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.category-badge {
+    position: absolute;
+    bottom: 0.75rem;
+    right: 0.75rem;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 50px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.featured-badge {
+    position: absolute;
+    top: 0.75rem;
+    left: 0.75rem;
+    background: var(--primary);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 50px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.preview-content {
+    padding: 1.25rem;
+}
+
+.preview-content h4 {
+    margin: 0 0 0.5rem;
+    color: var(--dark);
+    font-size: 1.1rem;
+}
+
+.preview-client {
+    color: var(--primary);
+    font-size: 0.85rem;
+    font-weight: 500;
+    margin: 0 0 0.75rem;
+}
+
+.preview-description {
+    color: var(--gray);
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin-bottom: 1rem;
+}
+
+.preview-tech {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.preview-testimonial {
+    background: var(--light);
+    padding: 1rem;
+    border-radius: var(--radius);
+    border-left: 3px solid var(--primary);
+}
+
+.preview-testimonial i {
+    color: var(--primary);
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.preview-testimonial p {
+    margin: 0 0 0.5rem;
+    color: var(--gray);
+    font-style: italic;
+    font-size: 0.9rem;
+}
+
+.testimonial-author {
+    text-align: right;
+}
+
+.testimonial-author strong {
+    display: block;
+    color: var(--dark);
+    font-size: 0.9rem;
+}
+
+.testimonial-author span {
+    font-size: 0.8rem;
+    color: var(--gray);
+}
+
+.image-tips {
+    background: var(--light);
+    padding: 1.25rem;
+    border-radius: var(--radius);
+}
+
+.image-tips h4 {
+    margin: 0 0 0.75rem;
+    color: var(--dark);
+    font-size: 1rem;
+}
+
+.image-tips ul {
+    margin: 0;
+    padding-left: 1.25rem;
+    color: var(--gray);
+}
+
+.image-tips li {
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+.image-tips li:last-child {
+    margin-bottom: 0;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const titleInput = document.getElementById('title');
+    const clientInput = document.getElementById('client');
+    const categorySelect = document.getElementById('category');
+    const descriptionInput = document.getElementById('description');
+    const technologiesInput = document.getElementById('technologies');
+    const imageUrlInput = document.getElementById('image_url');
+    const featuredCheckbox = document.querySelector('input[name="featured"]');
+    const clientNameInput = document.getElementById('client_name');
+    const clientRoleInput = document.getElementById('client_role');
+    const testimonialInput = document.getElementById('testimonial');
+    
+    const previewTitle = document.getElementById('previewTitle');
+    const previewClient = document.getElementById('previewClient');
+    const previewCategory = document.getElementById('previewCategory');
+    const previewDescription = document.getElementById('previewDescription');
+    const previewImage = document.getElementById('previewImage');
+    const previewTech = document.getElementById('previewTech');
+    const previewFeatured = document.getElementById('previewFeatured');
+    
+    // Update preview in real-time
+    titleInput.addEventListener('input', function() {
+        previewTitle.textContent = this.value || 'Project Title';
+    });
+    
+    clientInput.addEventListener('input', function() {
+        previewClient.textContent = this.value || 'Client Name';
+    });
+    
+    categorySelect.addEventListener('change', function() {
+        previewCategory.textContent = this.value ? this.value.charAt(0).toUpperCase() + this.value.slice(1) : 'Category';
+    });
+    
+    descriptionInput.addEventListener('input', function() {
+        const text = this.value || 'Project description will appear here...';
+        previewDescription.textContent = text.length > 100 ? text.substring(0, 100) + '...' : text;
+    });
+    
+    technologiesInput.addEventListener('input', function() {
+        const techs = this.value.split(',').filter(tech => tech.trim()).map(tech => tech.trim());
+        previewTech.innerHTML = '';
+        
+        techs.slice(0, 3).forEach(tech => {
+            const tag = document.createElement('span');
+            tag.className = 'tech-tag';
+            tag.textContent = tech;
+            previewTech.appendChild(tag);
+        });
+        
+        if (techs.length > 3) {
+            const moreTag = document.createElement('span');
+            moreTag.className = 'tech-tag';
+            moreTag.textContent = '+' + (techs.length - 3);
+            previewTech.appendChild(moreTag);
+        }
+        
+        if (techs.length === 0) {
+            const tag1 = document.createElement('span');
+            tag1.className = 'tech-tag';
+            tag1.textContent = 'Technology';
+            previewTech.appendChild(tag1);
+            
+            const tag2 = document.createElement('span');
+            tag2.className = 'tech-tag';
+            tag2.textContent = 'Tools';
+            previewTech.appendChild(tag2);
+        }
+    });
+    
+    imageUrlInput.addEventListener('input', function() {
+        if (this.value) {
+            previewImage.src = this.value;
+        }
+    });
+    
+    featuredCheckbox.addEventListener('change', function() {
+        previewFeatured.style.display = this.checked ? 'flex' : 'none';
+    });
+    
+    // Handle image file upload preview
+    const imageFileInput = document.getElementById('image_file');
+    imageFileInput.addEventListener('change', function() {
+        if (this.files && this.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                previewImage.src = e.target.result;
+                imageUrlInput.value = ''; // Clear URL input if file is selected
+            };
+            reader.readAsDataURL(this.files[0]);
+        }
+    });
+});
+</script>
+{% endblock %}
