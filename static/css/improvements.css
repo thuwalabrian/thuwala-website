@@ -3858,3 +3858,286 @@ html {
 .service-card.featured:hover::before {
     transform: rotate(5deg) scale(1.05);
 }
+
+/* ===== HERO SECTION MOBILE FIXES ===== */
+
+@media (max-width: 1024px) {
+    .hero-grid {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+    }
+    
+    .hero-content {
+        order: 2;
+        text-align: center;
+        max-width: 100%;
+    }
+    
+    .hero-image {
+        order: 1;
+        max-width: 500px;
+        margin: 0 auto;
+    }
+    
+    .hero-title {
+        font-size: 2.8rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 1.1rem;
+    }
+    
+    .hero-stats {
+        justify-content: center;
+        gap: 2rem;
+    }
+    
+    .hero-buttons {
+        justify-content: center;
+    }
+    
+    /* Adjust floating elements for tablet */
+    .floating-element {
+        transform: scale(0.9);
+    }
+    
+    .element-1 {
+        left: -10px;
+    }
+    
+    .element-2 {
+        right: -10px;
+    }
+}
+
+@media (max-width: 768px) {
+    .modern-hero {
+        padding: 4rem 0 2rem;
+        min-height: auto;
+    }
+    
+    .hero-title {
+        font-size: 2.2rem;
+        line-height: 1.2;
+    }
+    
+    .hero-title .gradient-text {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    
+    .hero-subtitle {
+        font-size: 1rem;
+        margin-bottom: 2rem;
+    }
+    
+    .hero-stats {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+        padding: 1rem 0;
+        margin-bottom: 2rem;
+    }
+    
+    .stat {
+        flex: 0 0 calc(50% - 0.75rem);
+    }
+    
+    .stat-number {
+        font-size: 2rem;
+    }
+    
+    .stat-label {
+        font-size: 0.8rem;
+    }
+    
+    .hero-buttons {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .hero-buttons .btn {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    /* Hero image adjustments */
+    .image-container {
+        height: 300px;
+    }
+    
+    .placeholder-content i {
+        font-size: 3rem;
+    }
+    
+    .placeholder-content h3 {
+        font-size: 1.3rem;
+    }
+    
+    .placeholder-content p {
+        font-size: 0.9rem;
+    }
+    
+    /* Floating elements for mobile */
+    .floating-element {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.8rem;
+        transform: scale(0.8);
+    }
+    
+    .floating-element i {
+        font-size: 1rem;
+    }
+    
+    .floating-element span {
+        font-size: 0.8rem;
+    }
+    
+    /* Adjust floating element positions for mobile */
+    .element-1 {
+        top: 15%;
+        left: -15px;
+    }
+    
+    .element-2 {
+        top: 45%;
+        right: -15px;
+    }
+    
+    .element-3 {
+        bottom: 15%;
+        left: 50%;
+        transform: translateX(-50%) scale(0.8);
+    }
+}
+
+@media (max-width: 480px) {
+    .modern-hero {
+        padding: 3rem 0 1.5rem;
+    }
+    
+    .hero-title {
+        font-size: 1.8rem;
+    }
+    
+    .hero-stats {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .stat {
+        flex: 0 0 100%;
+    }
+    
+    /* Hero image further adjustments */
+    .image-container {
+        height: 250px;
+    }
+    
+    .placeholder-content {
+        padding: 1.5rem;
+    }
+    
+    .placeholder-content i {
+        font-size: 2.5rem;
+    }
+    
+    .placeholder-content h3 {
+        font-size: 1.1rem;
+    }
+    
+    /* Hide or adjust floating elements on very small screens */
+    .floating-element {
+        display: none; /* Hide on very small screens */
+    }
+    
+    /* Alternative: Show floating elements as smaller badges */
+    /*
+    .floating-element {
+        padding: 0.3rem 0.5rem;
+        font-size: 0.7rem;
+        transform: scale(0.7);
+    }
+    
+    .floating-element i {
+        display: none; /* Hide icons on very small screens */
+    }
+    */
+    
+    .scroll-indicator {
+        display: none; /* Hide scroll indicator on mobile for cleaner look */
+    }
+}
+
+/* Ensure hero section doesn't have any hidden overflow on mobile */
+@media (max-width: 768px) {
+    .modern-hero {
+        overflow: visible;
+    }
+    
+    .hero-image {
+        overflow: visible;
+    }
+    
+    .image-container {
+        overflow: visible;
+    }
+}
+
+/* Fix for floating elements getting cut off on mobile */
+@media (max-width: 768px) {
+    .floating-element {
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        z-index: 10;
+    }
+}
+
+/* If the issue persists, add these specific fixes: */
+
+/* Force display of hero-image on all devices */
+.hero-image {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+/* Ensure image container is visible */
+.image-container {
+    display: block !important;
+    visibility: visible !important;
+}
+
+/* Add this if the floating elements are causing layout issues */
+@media (max-width: 768px) {
+    .image-container {
+        position: relative;
+    }
+    
+    .hero-image-placeholder {
+        position: relative;
+        z-index: 1;
+    }
+    
+    .floating-element {
+        z-index: 2;
+    }
+}
+
+/* Debugging help - add colored borders to see layout */
+/*
+@media (max-width: 768px) {
+    .hero-image {
+        border: 2px solid red;
+    }
+    
+    .image-container {
+        border: 2px solid blue;
+    }
+    
+    .hero-image-placeholder {
+        border: 2px solid green;
+    }
+}
+*/
