@@ -101,42 +101,122 @@
         {% block content %}{% endblock %}
     </main>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h4>Contact</h4>
+    <!-- Modern Footer -->
+<footer class="footer">
+    <div class="container">
+        <!-- Main Footer Content -->
+        <div class="footer-main">
+            <!-- Brand/Logo Column -->
+            <div class="footer-brand">
+                <a href="{{ url_for('index') }}" class="footer-logo">
+                    <img src="{{ url_for('static', filename='images/logo/logo-512x512.png') }}" alt="Thuwala Co Logo" class="logo-image">
+                    <span class="logo-text">Thuwala Co</span>
+                </a>
+                <p class="footer-tagline">Transforming businesses with precision and excellence.</p>
+                <div class="footer-contact">
                     <p><i class="fas fa-envelope"></i> info@thuwalaco.com</p>
                     <p><i class="fas fa-phone"></i> +265 887 580 622</p>
+                    <p><i class="fas fa-map-marker-alt"></i> Malawi & Beyond</p>
                 </div>
-                <div class="footer-section">
-                    <h4>Quick Links</h4>
-                    <a href="{{ url_for('services') }}" class="footer-link">Services</a>
-                    <a href="{{ url_for('portfolio') }}" class="footer-link">Portfolio</a>
-                    <a href="{{ url_for('about') }}" class="footer-link">About Us</a>
-                    <a href="{{ url_for('contact') }}" class="footer-link">Contact</a>
-                </div>
-                <div class="footer-section">
-                    <h4>Follow Us</h4>
-                    <div class="social-links">
-                        <a href="#" class="social-link" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
-                        <a href="#" class="social-link" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
-                        <a href="#" class="social-link" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
-                        <a href="#" class="social-link" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            </div>
+
+            <!-- Quick Links -->
+            <div class="footer-links-group">
+                <h4 class="footer-heading">Quick Links</h4>
+                <ul class="footer-links-list">
+                    <li><a href="{{ url_for('index') }}" class="footer-link"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="{{ url_for('services') }}" class="footer-link"><i class="fas fa-rocket"></i> Services</a></li>
+                    <li><a href="{{ url_for('portfolio') }}" class="footer-link"><i class="fas fa-briefcase"></i> Portfolio</a></li>
+                    <li><a href="{{ url_for('about') }}" class="footer-link"><i class="fas fa-users"></i> About Us</a></li>
+                    <li><a href="{{ url_for('contact') }}" class="footer-link"><i class="fas fa-envelope"></i> Contact</a></li>
+                </ul>
+            </div>
+
+            <!-- Services Links -->
+            <div class="footer-links-group">
+                <h4 class="footer-heading">Services</h4>
+                <ul class="footer-links-list">
+                    <li><a href="{{ url_for('services') }}#consulting" class="footer-link"><i class="fas fa-chart-line"></i> Business Consulting</a></li>
+                    <li><a href="{{ url_for('services') }}#analytics" class="footer-link"><i class="fas fa-database"></i> Data Analytics</a></li>
+                    <li><a href="{{ url_for('services') }}#development" class="footer-link"><i class="fas fa-code"></i> Web Development</a></li>
+                    <li><a href="{{ url_for('services') }}#strategy" class="footer-link"><i class="fas fa-chess"></i> Digital Strategy</a></li>
+                    <li><a href="{{ url_for('services') }}#training" class="footer-link"><i class="fas fa-graduation-cap"></i> Training</a></li>
+                </ul>
+            </div>
+
+            <!-- Newsletter & Social -->
+            <div class="footer-newsletter">
+                <h4 class="footer-heading">Stay Updated</h4>
+                <p class="newsletter-text">Subscribe to our newsletter for the latest insights and updates.</p>
+                
+                <form class="newsletter-form">
+                    <div class="form-group">
+                        <input type="email" placeholder="Your email address" required class="newsletter-input">
+                        <button type="submit" class="newsletter-btn">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                    <p class="newsletter-note">We respect your privacy. Unsubscribe at any time.</p>
+                </form>
+
+                <div class="footer-social">
+                    <h5 class="social-heading">Follow Us</h5>
+                    <div class="social-links-grid">
+                        <a href="#" class="social-item" aria-label="Facebook">
+                            <i class="fab fa-facebook-f"></i>
+                            <span>Facebook</span>
+                        </a>
+                        <a href="#" class="social-item" aria-label="LinkedIn">
+                            <i class="fab fa-linkedin-in"></i>
+                            <span>LinkedIn</span>
+                        </a>
+                        <a href="#" class="social-item" aria-label="Twitter">
+                            <i class="fab fa-twitter"></i>
+                            <span>Twitter</span>
+                        </a>
+                        <a href="#" class="social-item" aria-label="Instagram">
+                            <i class="fab fa-instagram"></i>
+                            <span>Instagram</span>
+                        </a>
                     </div>
                 </div>
             </div>
-            <div class="footer-bottom">
+        </div>
+
+        <!-- Divider -->
+        <div class="footer-divider"></div>
+
+        <!-- Footer Bottom -->
+        <div class="footer-bottom">
+            <div class="footer-bottom-left">
                 <p>&copy; <span id="current-year">{{ now.year if now else "2024" }}</span> Thuwala Co. All rights reserved.</p>
-                <p class="footer-links">
-                    <a href="#" class="footer-bottom-link">Privacy Policy</a>
-                    <span>•</span>
-                    <a href="#" class="footer-bottom-link">Terms of Service</a>
+            </div>
+            
+            <div class="footer-bottom-center">
+                <p class="footer-certifications">
+                    <span class="cert-badge"><i class="fas fa-shield-alt"></i> Secure</span>
+                    <span class="cert-badge"><i class="fas fa-award"></i> Certified</span>
+                    <span class="cert-badge"><i class="fas fa-check-circle"></i> Trusted</span>
+                </p>
+            </div>
+            
+            <div class="footer-bottom-right">
+                <div class="footer-legal">
+                    <a href="#" class="legal-link">Privacy Policy</a>
+                    <span class="divider">•</span>
+                    <a href="#" class="legal-link">Terms of Service</a>
+                    <span class="divider">•</span>
+                    <a href="#" class="legal-link">Cookie Policy</a>
+                </div>
+                <p class="back-to-top">
+                    <a href="#top" class="back-top-link">
+                        <i class="fas fa-arrow-up"></i> Back to Top
+                    </a>
                 </p>
             </div>
         </div>
-    </footer>
+    </div>
+</footer>
 
     <!-- Navigation Fix Script -->
     <script>
