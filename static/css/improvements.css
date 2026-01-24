@@ -4188,11 +4188,18 @@ html {
     background: linear-gradient(90deg, transparent, var(--primary), transparent);
 }
 
+/* Desktop Layout (4 columns) */
 .footer-main {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: 1fr 1fr 1fr; /* Brand, Links Container, Newsletter */
     gap: 3rem;
     margin-bottom: 3rem;
+}
+
+.footer-links-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Quick Links & Services side by side */
+    gap: 2rem;
 }
 
 /* Brand Section */
@@ -4518,10 +4525,16 @@ html {
 
 /* ===== RESPONSIVE DESIGN ===== */
 
+/* Tablet (1024px and below) */
 @media (max-width: 1024px) {
     .footer-main {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: 1fr 1fr; /* 2 columns on tablet */
         gap: 2.5rem;
+    }
+    
+    .footer-links-container {
+        grid-template-columns: 1fr; /* Stack Quick Links & Services on tablet */
+        gap: 2rem;
     }
     
     .footer-bottom {
@@ -4543,28 +4556,34 @@ html {
     }
 }
 
+/* Mobile (768px and below) */
 @media (max-width: 768px) {
     .footer {
         padding: 4rem 0 2rem;
     }
     
     .footer-main {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr; /* Single column on mobile */
+        gap: 2.5rem;
+    }
+    
+    /* Quick Links & Services side by side on mobile */
+    .footer-links-container {
+        grid-template-columns: 1fr 1fr; /* Side by side on mobile */
         gap: 2rem;
     }
     
-    .footer-links-group,
     .footer-newsletter {
         text-align: center;
     }
     
     .footer-heading::after {
-        left: 50%;
-        transform: translateX(-50%);
+        left: 0;
+        transform: none;
     }
     
-    .footer-link {
-        justify-content: center;
+    .footer-links-group {
+        text-align: left; /* Keep left aligned for side-by-side layout */
     }
     
     .social-links-grid {
@@ -4587,13 +4606,34 @@ html {
     }
 }
 
+/* Small Mobile (480px and below) */
 @media (max-width: 480px) {
     .footer {
         padding: 3rem 0 1.5rem;
     }
     
+    /* Stack Quick Links & Services on very small screens */
+    .footer-links-container {
+        grid-template-columns: 1fr; /* Stack on very small mobile */
+        gap: 2rem;
+    }
+    
+    .footer-links-group {
+        text-align: center; /* Center align when stacked */
+    }
+    
+    .footer-heading::after {
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    
+    .footer-link {
+        justify-content: center; /* Center links when stacked */
+    }
+    
     .social-links-grid {
         grid-template-columns: 1fr;
+        max-width: 250px;
     }
     
     .form-group {

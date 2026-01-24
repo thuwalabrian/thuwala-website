@@ -109,7 +109,7 @@
             <!-- Brand/Logo Column -->
             <div class="footer-brand">
                 <a href="{{ url_for('index') }}" class="footer-logo">
-                    <img src="{{ url_for('static', filename='images/logo/logo-512x512.png') }}" alt="Thuwala Co Logo" class="logo-image">
+                    <img src="{{ url_for('static', filename='images/logo-white.png') }}" alt="Thuwala Co Logo" class="logo-image">
                     <span class="logo-text">Thuwala Co</span>
                 </a>
                 <p class="footer-tagline">Transforming businesses with precision and excellence.</p>
@@ -120,28 +120,31 @@
                 </div>
             </div>
 
-            <!-- Quick Links -->
-            <div class="footer-links-group">
-                <h4 class="footer-heading">Quick Links</h4>
-                <ul class="footer-links-list">
-                    <li><a href="{{ url_for('index') }}" class="footer-link"><i class="fas fa-home"></i> Home</a></li>
-                    <li><a href="{{ url_for('services') }}" class="footer-link"><i class="fas fa-rocket"></i> Services</a></li>
-                    <li><a href="{{ url_for('portfolio') }}" class="footer-link"><i class="fas fa-briefcase"></i> Portfolio</a></li>
-                    <li><a href="{{ url_for('about') }}" class="footer-link"><i class="fas fa-users"></i> About Us</a></li>
-                    <li><a href="{{ url_for('contact') }}" class="footer-link"><i class="fas fa-envelope"></i> Contact</a></li>
-                </ul>
-            </div>
+            <!-- Links Container for Quick Links & Services -->
+            <div class="footer-links-container">
+                <!-- Quick Links -->
+                <div class="footer-links-group">
+                    <h4 class="footer-heading">Quick Links</h4>
+                    <ul class="footer-links-list">
+                        <li><a href="{{ url_for('index') }}" class="footer-link"><i class="fas fa-home"></i> Home</a></li>
+                        <li><a href="{{ url_for('services') }}" class="footer-link"><i class="fas fa-rocket"></i> Services</a></li>
+                        <li><a href="{{ url_for('portfolio') }}" class="footer-link"><i class="fas fa-briefcase"></i> Portfolio</a></li>
+                        <li><a href="{{ url_for('about') }}" class="footer-link"><i class="fas fa-users"></i> About Us</a></li>
+                        <li><a href="{{ url_for('contact') }}" class="footer-link"><i class="fas fa-envelope"></i> Contact</a></li>
+                    </ul>
+                </div>
 
-            <!-- Services Links -->
-            <div class="footer-links-group">
-                <h4 class="footer-heading">Services</h4>
-                <ul class="footer-links-list">
-                    <li><a href="{{ url_for('services') }}#consulting" class="footer-link"><i class="fas fa-chart-line"></i> Business Consulting</a></li>
-                    <li><a href="{{ url_for('services') }}#analytics" class="footer-link"><i class="fas fa-database"></i> Data Analytics</a></li>
-                    <li><a href="{{ url_for('services') }}#development" class="footer-link"><i class="fas fa-code"></i> Web Development</a></li>
-                    <li><a href="{{ url_for('services') }}#strategy" class="footer-link"><i class="fas fa-chess"></i> Digital Strategy</a></li>
-                    <li><a href="{{ url_for('services') }}#training" class="footer-link"><i class="fas fa-graduation-cap"></i> Training</a></li>
-                </ul>
+                <!-- Services Links -->
+                <div class="footer-links-group">
+                    <h4 class="footer-heading">Services</h4>
+                    <ul class="footer-links-list">
+                        <li><a href="{{ url_for('services') }}#consulting" class="footer-link"><i class="fas fa-chart-line"></i> Business Consulting</a></li>
+                        <li><a href="{{ url_for('services') }}#analytics" class="footer-link"><i class="fas fa-database"></i> Data Analytics</a></li>
+                        <li><a href="{{ url_for('services') }}#development" class="footer-link"><i class="fas fa-code"></i> Web Development</a></li>
+                        <li><a href="{{ url_for('services') }}#strategy" class="footer-link"><i class="fas fa-chess"></i> Digital Strategy</a></li>
+                        <li><a href="{{ url_for('services') }}#training" class="footer-link"><i class="fas fa-graduation-cap"></i> Training</a></li>
+                    </ul>
+                </div>
             </div>
 
             <!-- Newsletter & Social -->
