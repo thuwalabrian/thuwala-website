@@ -101,6 +101,22 @@ class PasswordResetToken(db.Model):
     user = db.relationship("User", backref="reset_tokens")
 
 
+class Advertisement(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(200), nullable=False)
+    description = db.Column(db.Text)
+    cta_text = db.Column(db.String(100), default="Learn More")
+    cta_link = db.Column(db.String(500))
+    image_url = db.Column(db.String(500))
+    background_color = db.Column(db.String(50), default="#2563eb")
+    text_color = db.Column(db.String(50), default="#ffffff")
+    is_active = db.Column(db.Boolean, default=True)
+    start_date = db.Column(db.DateTime, default=datetime.utcnow)
+    end_date = db.Column(db.DateTime)
+    display_order = db.Column(db.Integer, default=0)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
@@ -213,6 +229,30 @@ def send_password_reset_email(user_email, reset_url):
     except Exception as e:
         print(f"Error sending email: {e}")
         return False
+
+
+# Add a custom template filter for darkening colors
+@app.template_filter("darken_color")
+def darken_color_filter(color, percent=20):
+    """Darken a hex color by given percentage"""
+    try:
+        # Remove # if present
+        color = color.lstrip("#")
+
+        # Parse to RGB
+        r = int(color[0:2], 16)
+        g = int(color[2:4], 16)
+        b = int(color[4:6], 16)
+
+        # Darken
+        r = max(0, min(255, int(r * (100 - percent) / 100)))
+        g = max(0, min(255, int(g * (100 - percent) / 100)))
+        b = max(0, min(255, int(b * (100 - percent) / 100)))
+
+        # Convert back to hex
+        return f"#{r:02x}{g:02x}{b:02x}"
+    except:
+        return color
 
 
 def init_or_migrate_database():
@@ -527,6 +567,56 @@ with app.app_context():
         else:
             print(f"Portfolio already has {Portfolio.query.count()} items")
 
+        # Add sample advertisements if none exist
+        try:
+            ad_count = Advertisement.query.count()
+            print(f"ℹ️  Advertisement count: {ad_count}")
+
+            if ad_count == 0:
+                sample_ads = [
+                    {
+                        "title": "Special Offer: 20% Off All Services",
+                        "description": "Launch your projects with our professional services at a discounted rate. Limited time offer!",
+                        "cta_text": "Claim Offer",
+                        "cta_link": "/contact",
+                        "background_color": "#dc2626",
+                        "text_color": "#ffffff",
+                        "is_active": True,
+                        "display_order": 1,
+                    },
+                    {
+                        "title": "New: Data Analytics Dashboard Solutions",
+                        "description": "Transform your raw data into actionable insights with our new dashboard solutions.",
+                        "cta_text": "Learn More",
+                        "cta_link": "/services",
+                        "background_color": "#2563eb",
+                        "text_color": "#ffffff",
+                        "is_active": True,
+                        "display_order": 2,
+                    },
+                ]
+
+                for ad_data in sample_ads:
+                    ad = Advertisement(**ad_data)
+                    db.session.add(ad)
+                    print(f"  - Adding ad: {ad_data['title']}")
+
+                db.session.commit()
+                print(f"✅ Added {len(sample_ads)} sample advertisements")
+            else:
+                # List existing ads
+                existing_ads = Advertisement.query.all()
+                print(f"ℹ️  Database already has {ad_count} advertisements:")
+                for ad in existing_ads:
+                    print(
+                        f"  - {ad.title} (Active: {ad.is_active}, Order: {ad.display_order})"
+                    )
+        except Exception as e:
+            print(f"⚠️  Error with advertisements: {e}")
+            import traceback
+
+            traceback.print_exc()
+
         # Clean up expired tokens on startup
         expired_tokens = PasswordResetToken.query.filter(
             PasswordResetToken.expires_at < datetime.utcnow()
@@ -559,11 +649,37 @@ def inject_now():
 def index():
     try:
         services = Service.query.limit(6).all()  # Show 6 services on homepage
+
+        # Get active advertisements
+        ads = []
+        try:
+            ads = (
+                Advertisement.query.filter_by(is_active=True)
+                .order_by(
+                    Advertisement.display_order,
+                    Advertisement.created_at.desc(),
+                )
+                .limit(5)
+                .all()
+            )  # Limit to 5 ads max
+            print(
+                f"DEBUG: Found {len(ads)} active advertisements for homepage"
+            )
+        except Exception as e:
+            print(f"DEBUG: Error fetching ads: {e}")
+            ads = []
+
     except Exception as e:
         print(f"Database error in index route: {e}")
-        # Fallback to empty list if database isn't ready
         services = []
-    return render_template("index.html", services=services)
+        ads = []
+
+    return render_template(
+        "index.html",
+        services=services,
+        advertisements=ads,
+        now=datetime.utcnow(),
+    )
 
 
 @app.route("/about")
@@ -1242,6 +1358,87 @@ def test_email():
     return f"Test email sent: {success}<br>Reset URL: {reset_url}"
 
 
+# Debug route to check advertisements
+@app.route("/debug/check-ads")
+def debug_check_ads():
+    """Debug route to check advertisements"""
+    try:
+        ads = Advertisement.query.all()
+        return jsonify(
+            {
+                "advertisement_table_exists": True,
+                "total_ads": len(ads),
+                "ads": [
+                    {
+                        "id": ad.id,
+                        "title": ad.title,
+                        "description": (
+                            ad.description[:50] + "..."
+                            if ad.description
+                            else ""
+                        ),
+                        "cta_text": ad.cta_text,
+                        "cta_link": ad.cta_link,
+                        "background_color": ad.background_color,
+                        "text_color": ad.text_color,
+                        "is_active": ad.is_active,
+                        "display_order": ad.display_order,
+                        "created_at": (
+                            ad.created_at.strftime("%Y-%m-%d %H:%M")
+                            if ad.created_at
+                            else ""
+                        ),
+                    }
+                    for ad in ads
+                ],
+            }
+        )
+    except Exception as e:
+        return jsonify({"error": str(e), "advertisement_table_exists": False})
+
+
+# Debug route to manually add sample ads
+@app.route("/debug/add-sample-ads")
+def debug_add_sample_ads():
+    """Manually add sample ads"""
+    try:
+        # Delete existing ads first
+        Advertisement.query.delete()
+
+        sample_ads = [
+            {
+                "title": "Special Offer: 20% Off All Services",
+                "description": "Launch your projects with our professional services at a discounted rate. Limited time offer!",
+                "cta_text": "Claim Offer",
+                "cta_link": "/contact",
+                "background_color": "#dc2626",
+                "text_color": "#ffffff",
+                "is_active": True,
+                "display_order": 1,
+            },
+            {
+                "title": "New: Data Analytics Dashboard Solutions",
+                "description": "Transform your raw data into actionable insights with our new dashboard solutions.",
+                "cta_text": "Learn More",
+                "cta_link": "/services",
+                "background_color": "#2563eb",
+                "text_color": "#ffffff",
+                "is_active": True,
+                "display_order": 2,
+            },
+        ]
+
+        for ad_data in sample_ads:
+            ad = Advertisement(**ad_data)
+            db.session.add(ad)
+
+        db.session.commit()
+
+        return f"✅ Added {len(sample_ads)} sample ads. <a href='/'>Go to homepage</a>"
+    except Exception as e:
+        return f"❌ Error: {str(e)}"
+
+
 # Add a debug route to check database status
 @app.route("/debug/db-status")
 def debug_db_status():
@@ -1263,6 +1460,9 @@ def debug_db_status():
             if "password_reset_token" in tables
             else 0
         )
+        advertisement_count = (
+            Advertisement.query.count() if "advertisement" in tables else 0
+        )
 
         # Get services with categories
         services = Service.query.all()
@@ -1279,6 +1479,7 @@ def debug_db_status():
             "message_count": message_count,
             "portfolio_count": portfolio_count,
             "reset_token_count": reset_token_count,
+            "advertisement_count": advertisement_count,
             "services": services_info,
             "status": "OK",
         }

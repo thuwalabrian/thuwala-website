@@ -3,67 +3,105 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
-<!-- Modern Hero Section -->
-<section class="modern-hero">
-    <div class="container">
-        <div class="hero-grid">
-            <div class="hero-content">
-                <h1 class="hero-title animate__animated animate__fadeInUp">
-                    <span class="gradient-text">Efficiency. Precision. Excellence.</span>
-                </h1>
-                <p class="hero-subtitle animate__animated animate__fadeInUp animate__delay-1s">
-                    Comprehensive business solutions for organizations and professionals in Malawi and beyond.
-                </p>
-                <div class="hero-stats animate__animated animate__fadeInUp animate__delay-2s">
-                    <div class="stat">
-                        <span class="stat-number" data-target="10">0</span>
-                        <span class="stat-label">Service Areas</span>
-                    </div>
-                    <div class="stat">
-                        <span class="stat-number" data-target="100">0</span>
-                        <span class="stat-label">Projects Delivered</span>
-                    </div>
-                    <div class="stat">
-                        <span class="stat-number" data-target="50">0</span>
-                        <span class="stat-label">Happy Clients</span>
-                    </div>
-                </div>
-                <div class="hero-buttons animate__animated animate__fadeInUp animate__delay-3s">
-                    <a href="{{ url_for('services') }}" class="btn btn-primary">
-                        <i class="fas fa-rocket"></i> Explore Our Services
-                    </a>
-                    <a href="{{ url_for('contact') }}" class="btn btn-secondary">
-                        <i class="fas fa-calendar-check"></i> Get Free Consultation
-                    </a>
-                </div>
-            </div>
-            <div class="hero-image">
-                <div class="image-container animate__animated animate__fadeInRight">
-                    <!-- You can replace this with your own hero image -->
-                    <div class="hero-image-placeholder">
-                        <div class="placeholder-content">
-                            <i class="fas fa-briefcase"></i>
-                            <h3>Your Business Success Starts Here</h3>
-                            <p>Professional solutions for growth and efficiency</p>
+<!-- Modern Hero Section with Interactive Ads -->
+<section class="modern-hero" id="heroSection">
+    <!-- Ad Navigation Dots (only if multiple ads) -->
+    <div class="ad-nav-dots" id="adNavDots"></div>
+    
+    <!-- Ad Play/Pause Button -->
+    <button class="ad-play-btn" id="adPlayBtn" aria-label="Play/Pause advertisements">
+        <i class="fas fa-pause" id="adPlayIcon"></i>
+    </button>
+    
+    <!-- Ad Previous/Next Buttons -->
+    <button class="ad-nav-btn prev-btn" id="prevAdBtn" aria-label="Previous advertisement">
+        <i class="fas fa-chevron-left"></i>
+    </button>
+    <button class="ad-nav-btn next-btn" id="nextAdBtn" aria-label="Next advertisement">
+        <i class="fas fa-chevron-right"></i>
+    </button>
+    
+    <!-- Ads Container -->
+    <div class="hero-ads-container">
+        {% if advertisements %}
+            {% for ad in advertisements %}
+            <div class="hero-ad {% if loop.first %}active{% endif %}" 
+                 data-ad-id="{{ ad.id }}"
+                 data-bg-color="{{ ad.background_color }}"
+                 data-text-color="{{ ad.text_color }}"
+                 {% if ad.image_url %}data-img="{{ ad.image_url }}"{% endif %}>
+                <div class="container">
+                    <div class="ad-content">
+                        <div class="ad-badge">
+                            <i class="fas fa-bullhorn"></i> Featured
+                        </div>
+                        <h1 class="ad-title">
+                            {{ ad.title }}
+                        </h1>
+                        <p class="ad-description">
+                            {{ ad.description }}
+                        </p>
+                        
+                        {% if ad.cta_text and ad.cta_link %}
+                        <div class="ad-actions">
+                            <a href="{{ ad.cta_link }}" class="btn btn-ad">
+                                <i class="fas fa-arrow-right"></i> {{ ad.cta_text }}
+                            </a>
+                            <button class="btn btn-ad-outline skip-ad-btn">
+                                Skip
+                            </button>
+                        </div>
+                        {% endif %}
+                        
+                        <!-- Ad Stats -->
+                        <div class="ad-stats">
+                            <div class="ad-stat">
+                                <i class="fas fa-eye"></i>
+                                <span>{{ loop.index }}/{{ advertisements|length }}</span>
+                            </div>
+                            {% if ad.end_date %}
+                            <div class="ad-stat">
+                                <i class="fas fa-clock"></i>
+                                <span>Ends {{ ad.end_date.strftime('%b %d') }}</span>
+                            </div>
+                            {% endif %}
                         </div>
                     </div>
                     
-                    <!-- Floating elements for visual interest -->
-                    <div class="floating-element element-1">
-                        <i class="fas fa-chart-line"></i>
-                        <span>Data Analytics</span>
+                    <!-- Optional decorative graphic -->
+                    {% if not ad.image_url %}
+                    <div class="ad-graphic">
+                        <div class="graphic-circle"></div>
+                        <div class="graphic-circle"></div>
+                        <div class="graphic-circle"></div>
                     </div>
-                    <div class="floating-element element-2">
-                        <i class="fas fa-project-diagram"></i>
-                        <span>Project Management</span>
-                    </div>
-                    <div class="floating-element element-3">
-                        <i class="fas fa-bullhorn"></i>
-                        <span>Brand Strategy</span>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+        <!-- Default hero (when no ads) -->
+        <div class="hero-ad active">
+            <div class="container">
+                <div class="hero-content">
+                    <h1 class="hero-title">
+                        <span>Efficiency. Precision. Excellence.</span>
+                    </h1>
+                    <p class="hero-subtitle">
+                        Comprehensive business solutions for organizations and professionals in Malawi and beyond.
+                    </p>
+                    <div class="hero-actions">
+                        <a href="{{ url_for('services') }}" class="btn btn-primary">
+                            <i class="fas fa-rocket"></i> Explore Services
+                        </a>
+                        <a href="{{ url_for('contact') }}" class="btn btn-secondary">
+                            <i class="fas fa-calendar-check"></i> Free Consultation
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
+        {% endif %}
     </div>
     
     <!-- Scroll indicator -->
