@@ -1,0 +1,314 @@
+{% extends "base.html" %}
+
+{% block title %}{{ 'Edit' if ad else 'Add' }} Advertisement - Thuwala Co.{% endblock %}
+
+{% block content %}
+<div class="admin-container">
+    <!-- Include the existing sidebar -->
+    {% include 'admin/sidebar.html' %}
+
+    <main class="admin-main">
+        <!-- Mobile Menu Toggle -->
+        <button class="mobile-menu-toggle" id="mobileMenuToggle">
+            <i class="fas fa-bars"></i>
+        </button>
+
+        <!-- Header -->
+        <header class="admin-header">
+            <div class="header-title">
+                <h1>{{ 'Edit' if ad else 'Create' }} Advertisement</h1>
+                <p>{{ 'Update the advertisement details' if ad else 'Create a new advertisement for the hero section' }}</p>
+            </div>
+            <div class="header-actions">
+                <a href="{{ url_for('admin_advertisements') }}" class="header-btn">
+                    <i class="fas fa-arrow-left"></i> Back to Ads
+                </a>
+            </div>
+        </header>
+
+        <div class="form-layout">
+            <!-- Left Column: Form -->
+            <div class="form-column">
+                <div class="form-card">
+                    <div class="form-card-header">
+                        <h2><i class="fas fa-edit"></i> Advertisement Details</h2>
+                        <p class="form-card-subtitle">Fill in the details for your advertisement</p>
+                    </div>
+                    <div class="form-card-body">
+                        <form method="POST" enctype="multipart/form-data" class="modern-form">
+                            <!-- Title & Order -->
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="title" class="form-label">
+                                        <i class="fas fa-heading"></i>
+                                        <span>Advertisement Title *</span>
+                                    </label>
+                                    <input type="text" id="title" name="title" 
+                                           value="{{ ad.title if ad else '' }}" 
+                                           placeholder="Enter advertisement title" 
+                                           class="form-input" required>
+                                    <div class="form-hint">This will be displayed as the main headline</div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="display_order" class="form-label">
+                                        <i class="fas fa-sort-numeric-down"></i>
+                                        <span>Display Order</span>
+                                    </label>
+                                    <input type="number" id="display_order" name="display_order" 
+                                           value="{{ ad.display_order if ad else 0 }}" 
+                                           placeholder="0" min="0" step="1"
+                                           class="form-input">
+                                    <div class="form-hint">Lower numbers appear first (0 is highest priority)</div>
+                                </div>
+                            </div>
+
+                            <!-- Description -->
+                            <div class="form-group">
+                                <label for="description" class="form-label">
+                                    <i class="fas fa-align-left"></i>
+                                    <span>Description *</span>
+                                </label>
+                                <textarea id="description" name="description" rows="4" 
+                                          placeholder="Enter advertisement description"
+                                          class="form-textarea" required>{{ ad.description if ad else '' }}</textarea>
+                                <div class="form-hint">This text appears below the title</div>
+                            </div>
+
+                            <!-- CTA Text & Link -->
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="cta_text" class="form-label">
+                                        <i class="fas fa-hand-point-right"></i>
+                                        <span>Button Text</span>
+                                    </label>
+                                    <input type="text" id="cta_text" name="cta_text" 
+                                           value="{{ ad.cta_text if ad else 'Learn More' }}" 
+                                           placeholder="Learn More"
+                                           class="form-input">
+                                    <div class="form-hint">Text for the call-to-action button</div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="cta_link" class="form-label">
+                                        <i class="fas fa-link"></i>
+                                        <span>Button Link</span>
+                                    </label>
+                                    <input type="url" id="cta_link" name="cta_link" 
+                                           value="{{ ad.cta_link if ad else '' }}" 
+                                           placeholder="https://example.com or /services"
+                                           class="form-input">
+                                    <div class="form-hint">URL where the button should link to (external or internal)</div>
+                                </div>
+                            </div>
+
+                            <!-- Colors -->
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        <i class="fas fa-fill-drip"></i>
+                                        <span>Background Color</span>
+                                    </label>
+                                    <div class="color-input-group">
+                                        <input type="color" id="background_color" name="background_color" 
+                                               value="{{ ad.background_color if ad else '#2563eb' }}"
+                                               class="form-input">
+                                        <input type="text" id="background_color_text" 
+                                               value="{{ ad.background_color if ad else '#2563eb' }}" 
+                                               placeholder="#2563eb" pattern="^#[0-9A-Fa-f]{6}$"
+                                               class="form-input">
+                                    </div>
+                                    <div class="form-hint">Background color of the advertisement</div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        <i class="fas fa-font"></i>
+                                        <span>Text Color</span>
+                                    </label>
+                                    <div class="color-input-group">
+                                        <input type="color" id="text_color" name="text_color" 
+                                               value="{{ ad.text_color if ad else '#ffffff' }}"
+                                               class="form-input">
+                                        <input type="text" id="text_color_text" 
+                                               value="{{ ad.text_color if ad else '#ffffff' }}" 
+                                               placeholder="#ffffff" pattern="^#[0-9A-Fa-f]{6}$"
+                                               class="form-input">
+                                    </div>
+                                    <div class="form-hint">Color of the text on the advertisement</div>
+                                </div>
+                            </div>
+
+                            <!-- Dates -->
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="start_date" class="form-label">
+                                        <i class="fas fa-calendar-plus"></i>
+                                        <span>Start Date</span>
+                                    </label>
+                                    <input type="datetime-local" id="start_date" name="start_date" 
+                                           value="{{ ad.start_date.strftime('%Y-%m-%dT%H:%M') if ad and ad.start_date else '' }}"
+                                           class="form-input">
+                                    <div class="form-hint">When the ad should start showing (leave empty for immediate)</div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="end_date" class="form-label">
+                                        <i class="fas fa-calendar-minus"></i>
+                                        <span>End Date</span>
+                                    </label>
+                                    <input type="datetime-local" id="end_date" name="end_date" 
+                                           value="{{ ad.end_date.strftime('%Y-%m-%dT%H:%M') if ad and ad.end_date else '' }}"
+                                           class="form-input">
+                                    <div class="form-hint">When the ad should stop showing (optional)</div>
+                                </div>
+                            </div>
+
+                            <!-- Image -->
+                            <div class="form-group">
+                                <label for="image_url" class="form-label">
+                                    <i class="fas fa-image"></i>
+                                    <span>Image URL</span>
+                                </label>
+                                <input type="url" id="image_url" name="image_url" 
+                                       value="{{ ad.image_url if ad else '' }}" 
+                                       placeholder="https://example.com/image.jpg"
+                                       class="form-input">
+                                <div class="form-hint">URL of an image to display (optional)</div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <i class="fas fa-upload"></i>
+                                    <span>Or Upload Image</span>
+                                </label>
+                                <div class="file-upload">
+                                    <input type="file" id="image_file" name="image_file" accept="image/*" class="file-input">
+                                    <label for="image_file" class="file-label">
+                                        <i class="fas fa-cloud-upload-alt"></i>
+                                        <span>Choose Image File</span>
+                                    </label>
+                                </div>
+                                <div class="file-info">JPG, PNG, GIF - max 5MB</div>
+                            </div>
+
+                            {% if ad and ad.image_url %}
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <i class="fas fa-eye"></i>
+                                    <span>Current Image</span>
+                                </label>
+                                <div class="current-image">
+                                    <img src="{{ ad.image_url }}" alt="Current advertisement image" 
+                                         style="max-width: 200px; max-height: 100px; border-radius: 8px; margin-bottom: 10px;">
+                                    <a href="{{ ad.image_url }}" target="_blank" class="btn btn-sm btn-secondary">
+                                        <i class="fas fa-external-link-alt"></i> View Full Image
+                                    </a>
+                                </div>
+                            </div>
+                            {% endif %}
+
+                            <!-- Active Status -->
+                            <div class="form-group">
+                                <div class="checkbox-group">
+                                    <input type="checkbox" id="is_active" name="is_active" value="1" 
+                                           {{ 'checked' if not ad or ad.is_active else '' }}
+                                           class="checkbox-input">
+                                    <label for="is_active" class="checkbox-label">
+                                        <span class="checkbox-box">
+                                            <i class="fas fa-check"></i>
+                                        </span>
+                                        <div class="checkbox-content">
+                                            <span class="checkbox-title">Active</span>
+                                            <span class="checkbox-description">Show this advertisement on the website</span>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Form Actions -->
+                            <div class="form-actions">
+                                <a href="{{ url_for('admin_advertisements') }}" class="btn btn-secondary">
+                                    <i class="fas fa-times"></i> Cancel
+                                </a>
+                                <button type="submit" class="btn btn-primary ml-auto">
+                                    <i class="fas fa-save"></i> {{ 'Update' if ad else 'Create' }} Advertisement
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Preview -->
+            <div class="preview-column">
+                <div class="preview-card">
+                    <div class="preview-card-header">
+                        <h3><i class="fas fa-eye"></i> Live Preview</h3>
+                        <p>See how your ad will appear on the homepage</p>
+                    </div>
+                    <div class="preview-content">
+                        <div id="adLivePreview" class="advertisement-preview">
+                            <div class="ad-content">
+                                <div class="ad-badge">
+                                    <i class="fas fa-bullhorn"></i> Featured
+                                </div>
+                                <h3 id="previewTitle">Advertisement Title</h3>
+                                <p id="previewDescription">This is a preview of how your advertisement will look on the homepage.</p>
+                                <a href="#" id="previewButton" class="btn btn-primary">Learn More</a>
+                            </div>
+                        </div>
+                        <div class="preview-tips">
+                            <h4><i class="fas fa-lightbulb"></i> Preview Tips</h4>
+                            <ul class="tips-list">
+                                <li><i class="fas fa-check-circle"></i> Changes update in real-time</li>
+                                <li><i class="fas fa-check-circle"></i> Colors automatically adjust for readability</li>
+                                <li><i class="fas fa-check-circle"></i> Images appear with gradient overlay</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Tips Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-question-circle"></i> Best Practices</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="tips-list">
+                            <div class="tip-item">
+                                <i class="fas fa-bullhorn text-primary"></i>
+                                <div>
+                                    <h5>Clear Call-to-Action</h5>
+                                    <p>Make sure your CTA button text is action-oriented and clear.</p>
+                                </div>
+                            </div>
+                            <div class="tip-item">
+                                <i class="fas fa-palette text-success"></i>
+                                <div>
+                                    <h5>Color Contrast</h5>
+                                    <p>Ensure text is readable against the background color.</p>
+                                </div>
+                            </div>
+                            <div class="tip-item">
+                                <i class="fas fa-image text-warning"></i>
+                                <div>
+                                    <h5>Image Quality</h5>
+                                    <p>Use high-quality images. Optimal size: 1200x600px.</p>
+                                </div>
+                            </div>
+                            <div class="tip-item">
+                                <i class="fas fa-calendar text-info"></i>
+                                <div>
+                                    <h5>Scheduling</h5>
+                                    <p>Use dates to automatically show/hide ads for promotions.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+{% endblock %}

@@ -1,0 +1,67 @@
+<!-- templates/admin/sidebar.html -->
+<div class="admin-sidebar" id="adminSidebar">
+    <div class="sidebar-header">
+        <h1>Thuwala Admin</h1>
+        <p>Dashboard Control Panel</p>
+    </div>
+    
+    <div class="sidebar-user">
+        <div class="user-avatar">
+            {{ current_user.username[0]|upper }}
+        </div>
+        <div class="user-info">
+            <h3>{{ current_user.username }}</h3>
+            <p>Administrator</p>
+        </div>
+    </div>
+    
+    <nav class="sidebar-nav">
+        <div class="nav-section">
+            <h3>Main</h3>
+            <a href="{{ url_for('admin_dashboard') }}" 
+               class="nav-item {% if request.endpoint == 'admin_dashboard' %}active{% endif %}">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+            </a>
+        </div>
+        
+        <div class="nav-section">
+            <h3>Content Management</h3>
+            <a href="{{ url_for('admin_services') }}" 
+               class="nav-item {% if request.endpoint == 'admin_services' %}active{% endif %}">
+                <i class="fas fa-cogs"></i>
+                <span>Services</span>
+            </a>
+            <a href="{{ url_for('admin_portfolio') }}" 
+               class="nav-item {% if request.endpoint == 'admin_portfolio' %}active{% endif %}">
+                <i class="fas fa-briefcase"></i>
+                <span>Portfolio</span>
+            </a>
+            <a href="{{ url_for('admin_advertisements') }}" 
+               class="nav-item {% if request.endpoint in ['admin_advertisements', 'add_advertisement', 'edit_advertisement'] %}active{% endif %}">
+                <i class="fas fa-ad"></i>
+                <span>Advertisements</span>
+            </a>
+        </div>
+        
+        <div class="nav-section">
+            <h3>System</h3>
+            <a href="{{ url_for('admin_users') }}" 
+               class="nav-item {% if request.endpoint == 'admin_users' %}active{% endif %}">
+                <i class="fas fa-users"></i>
+                <span>Users</span>
+            </a>
+            <a href="{{ url_for('change_password') }}" class="nav-item">
+                <i class="fas fa-key"></i>
+                <span>Change Password</span>
+            </a>
+        </div>
+        
+    </nav>
+    
+    <div class="sidebar-footer">
+        <a href="{{ url_for('admin_logout') }}" class="btn btn-danger btn-sm">
+            <i class="fas fa-sign-out-alt"></i> Logout
+        </a>
+    </div>
+</div>

@@ -18,6 +18,7 @@ class Config:
     # Upload folder configuration
     UPLOAD_FOLDER = "static/uploads"
     MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # 16MB max upload
+    ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif", "webp"}
 
     # Email configuration
     MAIL_SERVER = os.environ.get("MAIL_SERVER", "smtp.gmail.com")

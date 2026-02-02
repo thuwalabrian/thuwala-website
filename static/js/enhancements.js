@@ -1,4 +1,4 @@
-// enhancements.js - Interactive Improvements
+// enhancements.js - Minimal version (no image interference)
 
 document.addEventListener('DOMContentLoaded', function() {
     
@@ -17,13 +17,12 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    // 2. Smooth scroll for anchor links ONLY (FIXED)
+    // 2. Smooth scroll for anchor links ONLY
     document.querySelectorAll('a[href^="#"]:not([href="#"])').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
             const href = this.getAttribute('href');
             if (href === '#') return;
             
-            // Check if it's on the same page
             if (href.startsWith('#') && document.querySelector(href)) {
                 e.preventDefault();
                 const target = document.querySelector(href);
@@ -34,35 +33,119 @@ document.addEventListener('DOMContentLoaded', function() {
                     });
                 }
             }
-            // For other links (/#something), let them navigate normally
         });
     });
     
-    // 3. Form submission enhancements
-    const contactForm = document.querySelector('.contact-form form');
-    if (contactForm) {
-        // Only add if not already handled
-        if (!contactForm.dataset.enhancementsAdded) {
-            contactForm.dataset.enhancementsAdded = 'true';
+    // 3. Ad navigation functionality - 2 SECOND ROTATION
+    function setupAdNavigation() {
+        const adsContainer = document.querySelector('.hero-ads-container');
+        if (!adsContainer) return;
+        
+        const ads = adsContainer.querySelectorAll('.hero-ad');
+        if (ads.length <= 1) return;
+        
+        const prevBtn = adsContainer.querySelector('.ad-nav-btn.prev-btn');
+        const nextBtn = adsContainer.querySelector('.ad-nav-btn.next-btn');
+        const dots = adsContainer.querySelectorAll('.ad-dot');
+        const playBtn = adsContainer.querySelector('.ad-play-btn');
+        
+        let currentAd = 0;
+        let autoPlay = true;
+        let slideInterval;
+        
+        // Set rotation interval to 2 seconds (2000ms)
+        const ROTATION_INTERVAL = 2000;
+        
+        function showAd(index) {
+            // Hide all ads
+            ads.forEach(ad => {
+                ad.classList.remove('active');
+            });
             
-            contactForm.addEventListener('submit', function(e) {
-                const submitBtn = this.querySelector('button[type="submit"]');
-                if (submitBtn) {
-                    const originalText = submitBtn.innerHTML;
-                    
-                    // Show loading state
-                    submitBtn.innerHTML = '<span class="loading"></span> Sending...';
-                    submitBtn.disabled = true;
-                    
-                    // Re-enable after 5 seconds (in case of error)
-                    setTimeout(() => {
-                        submitBtn.innerHTML = originalText;
-                        submitBtn.disabled = false;
-                    }, 5000);
+            // Update dots
+            dots.forEach(dot => dot.classList.remove('active'));
+            
+            // Show selected ad
+            currentAd = index;
+            ads[currentAd].classList.add('active');
+            
+            if (dots[currentAd]) {
+                dots[currentAd].classList.add('active');
+            }
+        }
+        
+        // Set up navigation buttons
+        if (prevBtn) {
+            prevBtn.addEventListener('click', () => {
+                let newIndex = currentAd - 1;
+                if (newIndex < 0) newIndex = ads.length - 1;
+                showAd(newIndex);
+                resetAutoPlay();
+            });
+        }
+        
+        if (nextBtn) {
+            nextBtn.addEventListener('click', () => {
+                let newIndex = (currentAd + 1) % ads.length;
+                showAd(newIndex);
+                resetAutoPlay();
+            });
+        }
+        
+        // Set up dot navigation
+        dots.forEach((dot, index) => {
+            dot.addEventListener('click', () => {
+                showAd(index);
+                resetAutoPlay();
+            });
+        });
+        
+        // Set up play/pause button
+        if (playBtn) {
+            playBtn.addEventListener('click', () => {
+                autoPlay = !autoPlay;
+                playBtn.innerHTML = autoPlay ? 
+                    '<i class="fas fa-pause"></i>' : 
+                    '<i class="fas fa-play"></i>';
+                
+                if (autoPlay) {
+                    startAutoPlay();
+                } else {
+                    clearInterval(slideInterval);
                 }
             });
         }
+        
+        function startAutoPlay() {
+            if (ads.length <= 1) return;
+            
+            clearInterval(slideInterval);
+            
+            // Change ad every 2 seconds
+            slideInterval = setInterval(() => {
+                if (autoPlay) {
+                    let nextIndex = (currentAd + 1) % ads.length;
+                    showAd(nextIndex);
+                }
+            }, ROTATION_INTERVAL);
+        }
+        
+        function resetAutoPlay() {
+            if (autoPlay) {
+                clearInterval(slideInterval);
+                startAutoPlay();
+            }
+        }
+        
+        // Initialize
+        if (ads.length > 0) {
+            showAd(0);
+            startAutoPlay();
+        }
     }
+    
+    // Initialize ad navigation
+    setTimeout(setupAdNavigation, 500);
     
     // 4. Toast notification system
     window.showToast = function(message, type = 'success') {
@@ -77,35 +160,16 @@ document.addEventListener('DOMContentLoaded', function() {
         
         document.body.appendChild(toast);
         
-        // Show toast
         setTimeout(() => toast.classList.add('show'), 10);
         
-        // Hide after 5 seconds
         setTimeout(() => {
             toast.classList.remove('show');
             setTimeout(() => toast.remove(), 300);
         }, 5000);
     };
     
-    // 5. Lazy loading for images
-    const lazyImages = document.querySelectorAll('img[data-src]');
-    if (lazyImages.length > 0) {
-        const imageObserver = new IntersectionObserver((entries, observer) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const img = entry.target;
-                    img.src = img.dataset.src;
-                    img.removeAttribute('data-src');
-                    observer.unobserve(img);
-                }
-            });
-        });
-        
-        lazyImages.forEach(img => imageObserver.observe(img));
-    }
-    
-    // 6. Counter animation for stats
-    function animateCounter(element, target, duration = 2000) {
+    // 5. Counter animation for stats
+    function animateCounter(element, target, duration = 4000) {
         let start = 0;
         const increment = target / (duration / 16);
         const timer = setInterval(() => {
@@ -119,7 +183,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 16);
     }
     
-    // 7. Initialize counters when in viewport
+    // 6. Initialize counters when in viewport
     const counters = document.querySelectorAll('.counter');
     if (counters.length > 0) {
         const counterObserver = new IntersectionObserver((entries) => {
@@ -135,30 +199,13 @@ document.addEventListener('DOMContentLoaded', function() {
         counters.forEach(counter => counterObserver.observe(counter));
     }
     
-    // 8. Dynamic year in footer
+    // 7. Dynamic year in footer
     const yearElement = document.querySelector('#current-year');
     if (yearElement) {
         yearElement.textContent = new Date().getFullYear();
     }
     
-    // 9. Mobile menu improvements (SIMPLIFIED - NO CONFLICTS)
-    const menuToggle = document.getElementById('menuToggle');
-    const navMenu = document.getElementById('navMenu');
-    
-    if (menuToggle && navMenu) {
-        // Close menu with Escape key (only if main.js hasn't already)
-        if (!document.body.classList.contains('escape-handler-added')) {
-            document.body.classList.add('escape-handler-added');
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape' && navMenu.classList.contains('active')) {
-                    navMenu.classList.remove('active');
-                    menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
-                }
-            });
-        }
-    }
-    
-    // 10. Form field validation styling
+    // 8. Form field validation styling
     const formInputs = document.querySelectorAll('.form-control');
     formInputs.forEach(input => {
         input.addEventListener('blur', function() {
@@ -169,7 +216,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
         
-        // Check initial state
         if (input.value.trim() !== '') {
             input.classList.add('filled');
         }

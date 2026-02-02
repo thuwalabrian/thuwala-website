@@ -25,13 +25,20 @@
     <div class="hero-ads-container">
         {% if advertisements %}
             {% for ad in advertisements %}
-            <div class="hero-ad {% if loop.first %}active{% endif %}" 
-                 data-ad-id="{{ ad.id }}"
-                 data-bg-color="{{ ad.background_color }}"
-                 data-text-color="{{ ad.text_color }}"
-                 {% if ad.image_url %}data-img="{{ ad.image_url }}"{% endif %}>
+            <div class="hero-ad {% if loop.first %}active{% endif %} {% if ad.image_url %}has-image{% endif %}" 
+                 id="ad-{{ ad.id }}"
+                 data-bg-color="{{ ad.background_color|default('#2563eb') }}"
+                 data-text-color="{{ ad.text_color|default('#ffffff') }}"
+                 {% if ad.image_url %}data-img="{{ ad.image_url }}"{% endif %}
+                 style="{% if ad.image_url %}background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('{{ ad.image_url }}') center/cover no-repeat;{% else %}background: linear-gradient(135deg, {{ ad.background_color|default('#2563eb') }}, {{ ad.background_color|default('#2563eb')|darken_color(20) }});{% endif %}; color: {{ ad.text_color|default('#ffffff') }}">
+                
+                {% if ad.image_url %}
+                <!-- Image overlay for better text readability -->
+                <div class="ad-image-overlay" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)); z-index: 1;"></div>
+                {% endif %}
+                
                 <div class="container">
-                    <div class="ad-content">
+                    <div class="ad-content" style="position: relative; z-index: 2;">
                         <div class="ad-badge">
                             <i class="fas fa-bullhorn"></i> Featured
                         </div>
@@ -44,10 +51,12 @@
                         
                         {% if ad.cta_text and ad.cta_link %}
                         <div class="ad-actions">
-                            <a href="{{ ad.cta_link }}" class="btn btn-ad">
+                            <a href="{{ ad.cta_link }}" class="btn btn-ad" 
+                               style="background-color: {{ ad.text_color|default('#ffffff') }}; color: {{ ad.background_color|default('#2563eb') }}">
                                 <i class="fas fa-arrow-right"></i> {{ ad.cta_text }}
                             </a>
-                            <button class="btn btn-ad-outline skip-ad-btn">
+                            <button class="btn btn-ad-outline skip-ad-btn" 
+                                    style="border-color: {{ ad.text_color|default('#ffffff') }}; color: {{ ad.text_color|default('#ffffff') }}">
                                 Skip
                             </button>
                         </div>
@@ -81,7 +90,7 @@
             {% endfor %}
         {% else %}
         <!-- Default hero (when no ads) -->
-        <div class="hero-ad active">
+        <div class="hero-ad active" style="background: linear-gradient(135deg, #2563eb, #1d4ed8); color: white;">
             <div class="container">
                 <div class="hero-content">
                     <h1 class="hero-title">
@@ -164,11 +173,11 @@
 <!-- Why Choose Us Section -->
 <section class="why-choose-us">
     <div class="container">
-        <div class="section-header">
-            <h2 class="section-title">
-                <span class="highlight">Why Choose Us ?</span>
+        <div class="section-header center-header">
+            <h2 class="section-title center-title">
+                <span class="highlight center-highlight">Why Choose Us ?</span>
             </h2>
-            <p class="section-subtitle">
+            <p class="section-subtitle center-subtitle">
                 We combine expertise, innovation, and dedication to deliver exceptional results 
                 that drive your business forward.
             </p>
@@ -338,6 +347,9 @@
 {% endblock %}
 
 {% block scripts %}
+<!-- Load the hero ads script -->
+<script src="{{ url_for('static', filename='js/hero-ads.js') }}"></script>
+
 <script>
     // Animate numbers counting up
     document.addEventListener('DOMContentLoaded', function() {
@@ -369,6 +381,24 @@
             
             observer.observe(counter);
         });
+        
+        // Test function for debugging ads
+        window.debugAds = function() {
+            const ads = document.querySelectorAll('.hero-ad');
+            console.log('Total ads:', ads.length);
+            ads.forEach((ad, index) => {
+                console.log(`Ad ${index + 1}:`, {
+                    hasImage: ad.classList.contains('has-image'),
+                    bgColor: ad.dataset.bgColor,
+                    textColor: ad.dataset.textColor,
+                    imageUrl: ad.dataset.img,
+                    style: ad.getAttribute('style')
+                });
+            });
+        };
+        
+        // Run debug on page load if needed
+        // window.debugAds();
     });
 </script>
 {% endblock %}

@@ -43,6 +43,11 @@
                     <i class="fas fa-briefcase"></i>
                     <span>Portfolio</span>
                 </a>
+                <a href="{{ url_for('admin_advertisements') }}" 
+                   class="nav-item {% if request.endpoint in ['admin_advertisements', 'add_advertisement', 'edit_advertisement'] %}active{% endif %}">
+                    <i class="fas fa-ad"></i>
+                    <span>Advertisements</span>
+                </a>
             </div>
             
             <div class="nav-section">
@@ -57,6 +62,7 @@
                     <span>Change Password</span>
                 </a>
             </div>
+            
         </nav>
         
         <div class="sidebar-footer">

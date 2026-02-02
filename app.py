@@ -1287,6 +1287,333 @@ def delete_portfolio(item_id):
     return redirect(url_for("admin_portfolio"))
 
 
+# Admin Advertisement Management Routes
+@app.route("/admin/advertisements")
+@login_required
+def admin_advertisements():
+    """Manage advertisements from admin panel"""
+    try:
+        # Get filter from query parameter
+        filter_type = request.args.get("filter", "all")
+
+        # Base query
+        query = Advertisement.query
+
+        # Apply filters
+        if filter_type == "active":
+            query = query.filter_by(is_active=True)
+        elif filter_type == "inactive":
+            query = query.filter_by(is_active=False)
+        elif filter_type == "expired":
+            query = query.filter(Advertisement.end_date < datetime.utcnow())
+        elif filter_type == "upcoming":
+            query = query.filter(Advertisement.start_date > datetime.utcnow())
+
+        # Get advertisements
+        advertisements = query.order_by(
+            Advertisement.display_order, Advertisement.created_at.desc()
+        ).all()
+
+        # Calculate stats
+        total_ads = Advertisement.query.count()
+        active_ads = Advertisement.query.filter_by(is_active=True).count()
+        inactive_ads = Advertisement.query.filter_by(is_active=False).count()
+
+        expired_ads = Advertisement.query.filter(
+            Advertisement.end_date < datetime.utcnow()
+        ).count()
+
+        upcoming_ads = Advertisement.query.filter(
+            Advertisement.start_date > datetime.utcnow()
+        ).count()
+
+    except Exception as e:
+        print(f"Error in admin_advertisements: {e}")
+        advertisements = []
+        total_ads = active_ads = inactive_ads = expired_ads = upcoming_ads = 0
+        filter_type = "all"
+
+    return render_template(
+        "admin/advertisements.html",
+        advertisements=advertisements,
+        total_ads=total_ads,
+        active_ads=active_ads,
+        inactive_ads=inactive_ads,
+        expired_ads=expired_ads,
+        upcoming_ads=upcoming_ads,
+        filter=filter_type,
+        now=datetime.utcnow(),
+    )
+
+
+@app.route("/admin/advertisement/add", methods=["GET", "POST"])
+@login_required
+def add_advertisement():
+    """Add new advertisement"""
+    if request.method == "POST":
+        try:
+            # Handle file upload
+            image_url = request.form.get("image_url", "").strip()
+
+            if "image_file" in request.files:
+                file = request.files["image_file"]
+                if (
+                    file
+                    and file.filename != ""
+                    and file.filename.lower().endswith(
+                        (".png", ".jpg", ".jpeg", ".gif", ".webp")
+                    )
+                ):
+                    # Create upload directory if it doesn't exist
+                    upload_dir = os.path.join(
+                        app.config["UPLOAD_FOLDER"], "ads"
+                    )
+                    os.makedirs(upload_dir, exist_ok=True)
+
+                    # Save file with secure filename
+                    filename = secure_filename(file.filename)
+                    # Add timestamp to make filename unique
+                    from datetime import datetime
+
+                    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                    filename = f"{timestamp}_{filename}"
+
+                    filepath = os.path.join(upload_dir, filename)
+                    file.save(filepath)
+                    image_url = f"/static/uploads/ads/{filename}"
+                    print(
+                        f"DEBUG: Image saved to {filepath}, URL: {image_url}"
+                    )
+
+            # Parse dates
+            start_date_str = request.form.get("start_date")
+            end_date_str = request.form.get("end_date")
+
+            start_date = None
+            end_date = None
+
+            if start_date_str:
+                try:
+                    start_date = datetime.strptime(
+                        start_date_str, "%Y-%m-%dT%H:%M"
+                    )
+                except ValueError:
+                    start_date = datetime.utcnow()
+
+            if end_date_str:
+                try:
+                    end_date = datetime.strptime(
+                        end_date_str, "%Y-%m-%dT%H:%M"
+                    )
+                except ValueError:
+                    end_date = None
+
+            # Create new advertisement
+            ad = Advertisement(
+                title=request.form.get("title", "").strip(),
+                description=request.form.get("description", "").strip(),
+                cta_text=request.form.get("cta_text", "Learn More").strip(),
+                cta_link=request.form.get("cta_link", "").strip(),
+                image_url=image_url if image_url else None,
+                background_color=request.form.get(
+                    "background_color", "#2563eb"
+                ),
+                text_color=request.form.get("text_color", "#ffffff"),
+                is_active=bool(request.form.get("is_active")),
+                start_date=start_date,
+                end_date=end_date,
+                display_order=int(request.form.get("display_order", 0) or 0),
+            )
+
+            db.session.add(ad)
+            db.session.commit()
+
+            flash("Advertisement created successfully!", "success")
+            return redirect(url_for("admin_advertisements"))
+
+        except Exception as e:
+            db.session.rollback()
+            print(f"Error adding advertisement: {e}")
+            import traceback
+
+            traceback.print_exc()
+            flash(f"Error creating advertisement: {str(e)}", "error")
+
+    return render_template("admin/edit_advertisement.html", ad=None)
+
+
+@app.route("/admin/advertisement/<int:ad_id>/edit", methods=["GET", "POST"])
+@login_required
+def edit_advertisement(ad_id):
+    """Edit existing advertisement"""
+    ad = Advertisement.query.get_or_404(ad_id)
+
+    if request.method == "POST":
+        try:
+            # Handle file upload
+            if "image_file" in request.files:
+                file = request.files["image_file"]
+                if file and file.filename != "":
+                    # Create upload directory if it doesn't exist
+                    upload_dir = os.path.join(
+                        app.config["UPLOAD_FOLDER"], "ads"
+                    )
+                    os.makedirs(upload_dir, exist_ok=True)
+
+                    # Save file
+                    filename = secure_filename(file.filename)
+                    filepath = os.path.join(upload_dir, filename)
+                    file.save(filepath)
+                    ad.image_url = f"/static/uploads/ads/{filename}"
+            elif request.form.get("image_url"):
+                ad.image_url = request.form.get("image_url", "").strip()
+
+            # Parse dates
+            start_date_str = request.form.get("start_date")
+            end_date_str = request.form.get("end_date")
+
+            if start_date_str:
+                ad.start_date = datetime.strptime(
+                    start_date_str, "%Y-%m-%dT%H:%M"
+                )
+            else:
+                ad.start_date = None
+
+            if end_date_str:
+                ad.end_date = datetime.strptime(end_date_str, "%Y-%m-%dT%H:%M")
+            else:
+                ad.end_date = None
+
+            # Update fields
+            ad.title = request.form.get("title", "").strip()
+            ad.description = request.form.get("description", "").strip()
+            ad.cta_text = request.form.get("cta_text", "Learn More").strip()
+            ad.cta_link = request.form.get("cta_link", "").strip()
+            ad.background_color = request.form.get(
+                "background_color", "#2563eb"
+            )
+            ad.text_color = request.form.get("text_color", "#ffffff")
+            ad.is_active = bool(request.form.get("is_active"))
+            ad.display_order = int(request.form.get("display_order", 0) or 0)
+
+            db.session.commit()
+            flash("Advertisement updated successfully!", "success")
+            return redirect(url_for("admin_advertisements"))
+
+        except Exception as e:
+            db.session.rollback()
+            print(f"Error updating advertisement: {e}")
+            flash(f"Error updating advertisement: {str(e)}", "error")
+
+    return render_template("admin/edit_advertisement.html", ad=ad)
+
+
+@app.route("/admin/advertisement/<int:ad_id>/toggle", methods=["POST"])
+@login_required
+def toggle_advertisement(ad_id):
+    """Toggle advertisement active status"""
+    try:
+        ad = Advertisement.query.get_or_404(ad_id)
+        ad.is_active = not ad.is_active
+        db.session.commit()
+
+        status = "activated" if ad.is_active else "deactivated"
+        flash(f"Advertisement {status} successfully!", "success")
+    except Exception as e:
+        db.session.rollback()
+        print(f"Error toggling advertisement: {e}")
+        flash(f"Error toggling advertisement: {str(e)}", "error")
+
+    return redirect(url_for("admin_advertisements"))
+
+
+@app.route("/admin/advertisement/<int:ad_id>/delete", methods=["POST"])
+@login_required
+def delete_advertisement(ad_id):
+    """Delete advertisement"""
+    try:
+        ad = Advertisement.query.get_or_404(ad_id)
+        db.session.delete(ad)
+        db.session.commit()
+        flash("Advertisement deleted successfully!", "success")
+    except Exception as e:
+        db.session.rollback()
+        print(f"Error deleting advertisement: {e}")
+        flash(f"Error deleting advertisement: {str(e)}", "error")
+
+    return redirect(url_for("admin_advertisements"))
+
+
+@app.route("/admin/advertisement/<int:ad_id>/move_up", methods=["POST"])
+@login_required
+def move_advertisement_up(ad_id):
+    """Move advertisement up in display order"""
+    try:
+        ad = Advertisement.query.get_or_404(ad_id)
+
+        # Find previous ad
+        prev_ad = (
+            Advertisement.query.filter(
+                Advertisement.display_order < ad.display_order
+            )
+            .order_by(Advertisement.display_order.desc())
+            .first()
+        )
+
+        if prev_ad:
+            # Swap display orders
+            temp_order = ad.display_order
+            ad.display_order = prev_ad.display_order
+            prev_ad.display_order = temp_order
+
+            db.session.commit()
+            flash("Advertisement moved up successfully!", "success")
+        else:
+            flash("Advertisement is already at the top", "info")
+
+    except Exception as e:
+        db.session.rollback()
+        print(f"Error moving advertisement up: {e}")
+        flash(f"Error moving advertisement: {str(e)}", "error")
+
+    return redirect(url_for("admin_advertisements"))
+
+
+@app.route("/admin/advertisement/<int:ad_id>/move_down", methods=["POST"])
+@login_required
+def move_advertisement_down(ad_id):
+    """Move advertisement down in display order"""
+    try:
+        ad = Advertisement.query.get_or_404(ad_id)
+
+        # Find next ad
+        next_ad = (
+            Advertisement.query.filter(
+                Advertisement.display_order > ad.display_order
+            )
+            .order_by(Advertisement.display_order.asc())
+            .first()
+        )
+
+        if next_ad:
+            # Swap display orders
+            temp_order = ad.display_order
+            ad.display_order = next_ad.display_order
+            next_ad.display_order = temp_order
+
+            db.session.commit()
+            flash("Advertisement moved down successfully!", "success")
+        else:
+            flash("Advertisement is already at the bottom", "info")
+
+    except Exception as e:
+        db.session.rollback()
+        print(f"Error moving advertisement down: {e}")
+        flash(f"Error moving advertisement: {str(e)}", "error")
+
+    return redirect(url_for("admin_advertisements"))
+
+
 # User Management Routes
 @app.route("/admin/users")
 @login_required

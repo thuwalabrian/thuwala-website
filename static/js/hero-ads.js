@@ -35,42 +35,58 @@ class HeroAdCarousel {
     }
     
     setupAdStyles() {
-        this.ads.forEach(ad => {
-            const bgColor = ad.dataset.backgroundColor || '#2563eb';
+        console.log('Setting up ad styles for', this.ads.length, 'ads');
+        
+        this.ads.forEach((ad, index) => {
+            const bgColor = ad.dataset.bgColor || '#2563eb';
             const textColor = ad.dataset.textColor || '#ffffff';
-            const imageUrl = ad.dataset.imageUrl;
+            const imageUrl = ad.dataset.img;
             
-            // Darken color for gradient effect
-            const darkColor = this.darkenColor(bgColor, 20);
+            console.log(`Ad ${index + 1}:`, {
+                bgColor,
+                textColor,
+                imageUrl,
+                hasImageClass: ad.classList.contains('has-image')
+            });
             
-            // Set background with gradient and optional image
+            // Apply styles directly (backup for inline styles)
             if (imageUrl) {
-                ad.style.background = `
-                    linear-gradient(135deg, ${bgColor}e6, ${darkColor}e6),
-                    url('${imageUrl}')
-                `;
-                ad.style.backgroundSize = 'cover';
-                ad.style.backgroundPosition = 'center';
-                ad.style.backgroundBlendMode = 'overlay';
+                // Add overlay if not present
+                if (!ad.querySelector('.ad-image-overlay')) {
+                    const overlay = document.createElement('div');
+                    overlay.className = 'ad-image-overlay';
+                    overlay.style.cssText = 'position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)); z-index: 1;';
+                    ad.insertBefore(overlay, ad.firstChild);
+                }
+                
+                // Ensure background is set
+                if (!ad.style.background.includes('url')) {
+                    ad.style.background = `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('${imageUrl}') center/cover no-repeat`;
+                }
             } else {
+                // Darken color for gradient effect
+                const darkColor = this.darkenColor(bgColor, 20);
                 ad.style.background = `linear-gradient(135deg, ${bgColor}, ${darkColor})`;
             }
             
-            // Set text color
             ad.style.color = textColor;
             
             // Style buttons
             const primaryButtons = ad.querySelectorAll('.btn-ad');
             primaryButtons.forEach(btn => {
-                btn.style.backgroundColor = textColor;
-                btn.style.color = bgColor;
+                if (!btn.style.backgroundColor) {
+                    btn.style.backgroundColor = textColor;
+                    btn.style.color = bgColor;
+                }
             });
             
             const outlineButtons = ad.querySelectorAll('.btn-ad-outline');
             outlineButtons.forEach(btn => {
-                btn.style.borderColor = textColor;
-                btn.style.color = textColor;
-                btn.style.backgroundColor = 'transparent';
+                if (!btn.style.borderColor) {
+                    btn.style.borderColor = textColor;
+                    btn.style.color = textColor;
+                    btn.style.backgroundColor = 'transparent';
+                }
             });
         });
     }
@@ -372,12 +388,22 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Check if there are ads
     const ads = document.querySelectorAll('.hero-ad');
-    if (ads.length === 0) return;
+    if (ads.length === 0) {
+        console.log('No ads found, using default hero');
+        return;
+    }
+    
+    console.log('Found', ads.length, 'ads, initializing carousel');
     
     // Initialize carousel
-    window.heroAdCarousel = new HeroAdCarousel();
+    try {
+        window.heroAdCarousel = new HeroAdCarousel();
+        console.log('Hero ad carousel initialized successfully');
+    } catch (error) {
+        console.error('Error initializing hero ad carousel:', error);
+    }
     
-    // Add loading animation for stats
+    // Add loading animation for stats (optional)
     const statNumbers = document.querySelectorAll('.stat-number');
     if (statNumbers.length > 0) {
         statNumbers.forEach(stat => {

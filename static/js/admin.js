@@ -709,6 +709,278 @@ function getToastColor(type) {
     return colors[type] || '#3b82f6';
 }
 
+// Advertisement Form Functions
+function initAdvertisementForm() {
+    const adForm = document.querySelector('.modern-form');
+    if (!adForm) return;
+    
+    // Initialize live preview
+    initAdPreview();
+    
+    // Initialize color pickers
+    initColorPickers();
+    
+    // Form validation
+    initAdFormValidation();
+    
+    // Handle image preview
+    initImagePreview();
+}
+
+function initAdPreview() {
+    const preview = document.getElementById('adLivePreview');
+    if (!preview) return;
+    
+    const formElements = {
+        title: document.getElementById('title'),
+        description: document.getElementById('description'),
+        ctaText: document.getElementById('cta_text'),
+        ctaLink: document.getElementById('cta_link'),
+        bgColor: document.getElementById('background_color'),
+        bgColorText: document.getElementById('background_color_text'),
+        textColor: document.getElementById('text_color'),
+        textColorText: document.getElementById('text_color_text')
+    };
+    
+    const previewElements = {
+        title: document.getElementById('previewTitle'),
+        description: document.getElementById('previewDescription'),
+        button: document.getElementById('previewButton')
+    };
+    
+    // Update preview function
+    function updatePreview() {
+        // Update text content
+        if (previewElements.title) {
+            previewElements.title.textContent = formElements.title.value || 'Advertisement Title';
+        }
+        
+        if (previewElements.description) {
+            previewElements.description.textContent = formElements.description.value || 
+                'This is a preview of how your advertisement will look on the homepage.';
+        }
+        
+        if (previewElements.button) {
+            previewElements.button.textContent = formElements.ctaText.value || 'Learn More';
+            previewElements.button.href = formElements.ctaLink.value || '#';
+        }
+        
+        // Update colors
+        const bgColor = formElements.bgColor.value || '#2563eb';
+        const textColor = formElements.textColor.value || '#ffffff';
+        
+        // Darken color for gradient
+        const darkColor = darkenColor(bgColor, 20);
+        
+        if (preview) {
+            preview.style.background = `linear-gradient(135deg, ${bgColor}, ${darkColor})`;
+            preview.style.color = textColor;
+        }
+        
+        if (previewElements.button) {
+            previewElements.button.style.backgroundColor = textColor;
+            previewElements.button.style.color = bgColor;
+        }
+        
+        // Update text inputs
+        if (formElements.bgColorText) {
+            formElements.bgColorText.value = bgColor;
+        }
+        if (formElements.textColorText) {
+            formElements.textColorText.value = textColor;
+        }
+    }
+    
+    // Add event listeners
+    Object.values(formElements).forEach(element => {
+        if (element) {
+            element.addEventListener('input', updatePreview);
+            element.addEventListener('change', updatePreview);
+        }
+    });
+    
+    // Initialize preview
+    updatePreview();
+}
+
+function initColorPickers() {
+    const bgColorInput = document.getElementById('background_color');
+    const bgColorText = document.getElementById('background_color_text');
+    const textColorInput = document.getElementById('text_color');
+    const textColorText = document.getElementById('text_color_text');
+    
+    if (bgColorInput && bgColorText) {
+        bgColorText.addEventListener('change', function() {
+            bgColorInput.value = this.value;
+            triggerEvent(bgColorInput, 'change');
+        });
+    }
+    
+    if (textColorInput && textColorText) {
+        textColorText.addEventListener('change', function() {
+            textColorInput.value = this.value;
+            triggerEvent(textColorInput, 'change');
+        });
+    }
+}
+
+function initAdFormValidation() {
+    const form = document.querySelector('.modern-form');
+    if (!form) return;
+    
+    form.addEventListener('submit', function(e) {
+        let isValid = true;
+        
+        // Validate required fields
+        const requiredFields = form.querySelectorAll('[required]');
+        requiredFields.forEach(field => {
+            if (!field.value.trim()) {
+                field.classList.add('error');
+                isValid = false;
+                
+                if (!field.nextElementSibling?.classList.contains('error-message')) {
+                    const errorMsg = document.createElement('div');
+                    errorMsg.className = 'error-message';
+                    errorMsg.textContent = 'This field is required';
+                    field.parentNode.appendChild(errorMsg);
+                }
+            } else {
+                field.classList.remove('error');
+                const errorMsg = field.parentNode.querySelector('.error-message');
+                if (errorMsg) {
+                    errorMsg.remove();
+                }
+            }
+        });
+        
+        // Validate hex colors
+        const hexRegex = /^#[0-9A-Fa-f]{6}$/;
+        const bgColorText = document.getElementById('background_color_text');
+        const textColorText = document.getElementById('text_color_text');
+        
+        if (bgColorText && !hexRegex.test(bgColorText.value)) {
+            bgColorText.classList.add('error');
+            isValid = false;
+            if (!bgColorText.nextElementSibling?.classList.contains('error-message')) {
+                const errorMsg = document.createElement('div');
+                errorMsg.className = 'error-message';
+                errorMsg.textContent = 'Please enter a valid hex color (e.g., #2563eb)';
+                bgColorText.parentNode.appendChild(errorMsg);
+            }
+        }
+        
+        if (textColorText && !hexRegex.test(textColorText.value)) {
+            textColorText.classList.add('error');
+            isValid = false;
+            if (!textColorText.nextElementSibling?.classList.contains('error-message')) {
+                const errorMsg = document.createElement('div');
+                errorMsg.className = 'error-message';
+                errorMsg.textContent = 'Please enter a valid hex color (e.g., #ffffff)';
+                textColorText.parentNode.appendChild(errorMsg);
+            }
+        }
+        
+        // Validate dates if both are provided
+        const startDate = document.getElementById('start_date');
+        const endDate = document.getElementById('end_date');
+        
+        if (startDate && endDate && startDate.value && endDate.value) {
+            const start = new Date(startDate.value);
+            const end = new Date(endDate.value);
+            
+            if (end <= start) {
+                endDate.classList.add('error');
+                isValid = false;
+                if (!endDate.nextElementSibling?.classList.contains('error-message')) {
+                    const errorMsg = document.createElement('div');
+                    errorMsg.className = 'error-message';
+                    errorMsg.textContent = 'End date must be after start date';
+                    endDate.parentNode.appendChild(errorMsg);
+                }
+            }
+        }
+        
+        if (!isValid) {
+            e.preventDefault();
+            showToast('Please fix the errors in the form', 'error');
+        }
+    });
+}
+
+function initImagePreview() {
+    const imageFileInput = document.getElementById('image_file');
+    const imageUrlInput = document.getElementById('image_url');
+    
+    if (imageFileInput) {
+        imageFileInput.addEventListener('change', function() {
+            if (this.files && this.files[0]) {
+                // Clear URL input
+                if (imageUrlInput) {
+                    imageUrlInput.value = '';
+                }
+                
+                // Validate file size (5MB max)
+                const maxSize = 5 * 1024 * 1024; // 5MB in bytes
+                if (this.files[0].size > maxSize) {
+                    showToast('File size must be less than 5MB', 'error');
+                    this.value = '';
+                    return;
+                }
+                
+                // Validate file type
+                const validTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+                if (!validTypes.includes(this.files[0].type)) {
+                    showToast('Please upload a valid image file (JPG, PNG, GIF, WebP)', 'error');
+                    this.value = '';
+                    return;
+                }
+                
+                showToast('Image selected successfully', 'success');
+            }
+        });
+    }
+}
+
+// Helper functions
+function darkenColor(hex, percent) {
+    hex = hex.replace('#', '');
+    
+    let r = parseInt(hex.substring(0, 2), 16);
+    let g = parseInt(hex.substring(2, 4), 16);
+    let b = parseInt(hex.substring(4, 6), 16);
+    
+    r = Math.floor(r * (100 - percent) / 100);
+    g = Math.floor(g * (100 - percent) / 100);
+    b = Math.floor(b * (100 - percent) / 100);
+    
+    return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+}
+
+function triggerEvent(element, eventName) {
+    if (element.fireEvent) {
+        element.fireEvent('on' + eventName);
+    } else {
+        const event = new Event(eventName, { bubbles: true });
+        element.dispatchEvent(event);
+    }
+}
+
+// Initialize advertisement form when on edit page
+function initAdvertisementFeatures() {
+    const adForm = document.querySelector('.modern-form');
+    if (adForm && document.getElementById('title')) {
+        initAdvertisementForm();
+    }
+}
+
+// Add to your existing initialization
+document.addEventListener('DOMContentLoaded', function() {
+    // ... your existing initialization code ...
+    
+    // Initialize advertisement features
+    initAdvertisementFeatures();
+});
+
 // Export functions for use in templates
 window.viewMessage = viewMessage;
 window.openModal = openModal;
