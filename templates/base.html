@@ -40,6 +40,7 @@
     <!-- CSS Files -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/improvements.css') }}">
+    <script src="{{ url_for('static', filename='js/ui-enhancements.js') }}" defer></script>
     
     <!-- Admin CSS (only loads on admin pages) -->
     {% if request.path.startswith('/admin') %}
@@ -54,22 +55,25 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     
     {% block head %}{% endblock %}
+    <style>[x-cloak]{display:none!important}</style>
 </head>
 <body>
+    <!-- Skip link for keyboard users -->
+    <a class="skip-link" href="#main-content">Skip to content</a>
     <!-- Only show main site navigation on non-admin pages -->
     {% if not request.path.startswith('/admin') %}
-    <!-- Navigation -->
-    <nav class="navbar">
+    <!-- Navigation (Alpine.js) -->
+    <nav x-data="{ open: false }" class="navbar" x-cloak>
         <div class="container">
             <a href="{{ url_for('index') }}" class="logo">
-                <!-- Logo Image -->
                 <img src="{{ url_for('static', filename='images/logo/Thuwalaco first logo.png') }}" 
                      alt="Thuwala Co. Logo - Efficiency. Precision. Excellence."
                      class="logo-image"
                      width="180"
                      height="60">
             </a>
-            <div class="nav-menu" id="navMenu">
+
+            <div class="nav-menu" id="navMenu" :class="open ? 'active' : ''" @click.away="open = false">
                 <a href="{{ url_for('index') }}" class="nav-link" data-nav-link="true">Home</a>
                 <a href="{{ url_for('about') }}" class="nav-link" data-nav-link="true">About</a>
                 <a href="{{ url_for('services') }}" class="nav-link" data-nav-link="true">Services</a>
@@ -80,8 +84,10 @@
                 <a href="{{ url_for('admin_logout') }}" class="btn logout-btn">Logout</a>
                 {% endif %}
             </div>
-            <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation menu">
-                <i class="fas fa-bars"></i>
+
+            <button class="menu-toggle" id="menuToggle" @click="open = !open" :aria-expanded="open.toString()" aria-controls="navMenu" aria-label="Toggle navigation menu">
+                <span x-show="!open"><i class="fas fa-bars"></i></span>
+                <span x-show="open"><i class="fas fa-times"></i></span>
             </button>
         </div>
     </nav>
@@ -105,7 +111,7 @@
     {% endwith %}
 
     <!-- Main Content -->
-    <main id="top">
+    <main id="top" role="main" aria-label="Main content" tabindex="-1" data-main id="main-content">
         {% block content %}{% endblock %}
     </main>
 
@@ -277,6 +283,7 @@
     {% endif %}
 
     <!-- JavaScript Files -->
+    <script src="https://unpkg.com/alpinejs@3.12.0/dist/cdn.min.js" defer></script>
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
     <script src="{{ url_for('static', filename='js/enhancements.js') }}"></script>
     

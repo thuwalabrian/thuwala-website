@@ -89,27 +89,35 @@
             </div>
             {% endfor %}
         {% else %}
-        <!-- Default hero (when no ads) -->
-        <div class="hero-ad active" style="background: linear-gradient(135deg, #2563eb, #1d4ed8); color: white;">
+        <!-- Default hero (when no ads) - wired to new hero layout -->
+        <section class="hero">
             <div class="container">
-                <div class="hero-content">
-                    <h1 class="hero-title">
-                        <span>Efficiency. Precision. Excellence.</span>
-                    </h1>
-                    <p class="hero-subtitle">
-                        Comprehensive business solutions for organizations and professionals in Malawi and beyond.
-                    </p>
-                    <div class="hero-actions">
-                        <a href="{{ url_for('services') }}" class="btn btn-primary">
-                            <i class="fas fa-rocket"></i> Explore Services
-                        </a>
-                        <a href="{{ url_for('contact') }}" class="btn btn-secondary">
-                            <i class="fas fa-calendar-check"></i> Free Consultation
-                        </a>
+                <div class="hero-inner">
+                    <div class="hero-copy">
+                        <h1 class="hero-title">Efficiency. Precision. Excellence.</h1>
+                        <p class="hero-lead">Comprehensive business solutions for organizations and professionals in Malawi and beyond.</p>
+                        <div class="hero-cta">
+                            <a href="{{ url_for('services') }}" class="btn btn-primary">
+                                <i class="fas fa-rocket"></i> Explore Services
+                            </a>
+                            <a href="{{ url_for('contact') }}" class="btn btn-outline">
+                                <i class="fas fa-calendar-check"></i> Free Consultation
+                            </a>
+                        </div>
+                    </div>
+                    <div class="hero-media">
+                        <img
+                            src="{{ url_for('static', filename='images/hero/hero-default.jpg') }}"
+                            srcset="{{ url_for('static', filename='images/hero/hero-default-sm.jpg') }} 600w, {{ url_for('static', filename='images/hero/hero-default.jpg') }} 1600w"
+                            sizes="(max-width: 767px) 100vw, 50vw"
+                            alt="Thuwala Co - Business Solutions"
+                            class="hero-image"
+                            loading="lazy"
+                        >
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
         {% endif %}
     </div>
     

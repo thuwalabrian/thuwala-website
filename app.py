@@ -36,6 +36,9 @@ db = SQLAlchemy(app)
 login_manager = LoginManager(app)
 login_manager.login_view = "admin_login"
 
+
+# Note: developer debug hooks removed to avoid noisy logs and accidental info leaks.
+
 # Create URL safe serializer for tokens
 s = URLSafeTimedSerializer(app.config["SECRET_KEY"])
 
@@ -129,11 +132,20 @@ def generate_reset_token():
 
 def send_password_reset_email(user_email, reset_url):
     """Send password reset email to user"""
-    if not app.config["MAIL_USERNAME"] or not app.config["MAIL_PASSWORD"]:
-        print(
-            f"DEBUG: Email credentials not configured. Would send reset link to {user_email}: {reset_url}"
-        )
-        return True  # Return True for development
+    # If mail credentials are not configured, behave differently in dev vs production.
+    missing_creds = not app.config.get("MAIL_USERNAME") or not app.config.get(
+        "MAIL_PASSWORD"
+    )
+
+    if missing_creds:
+        msg = f"Email credentials not configured. Would send reset link to {user_email}: {reset_url}"
+        print(f"DEBUG: {msg}")
+        # In debug/development keep the previous shortcut behavior to avoid blocking local dev.
+        # In production fail loudly so an operator notices and fixes mail settings.
+        is_dev = app.debug or os.environ.get("FLASK_ENV", "").lower() == "development"
+        if is_dev:
+            return True
+        raise RuntimeError("MAIL_USERNAME and MAIL_PASSWORD must be set in production to send emails")
 
     try:
         msg = MIMEMultipart("alternative")
@@ -227,7 +239,10 @@ def send_password_reset_email(user_email, reset_url):
         return True
 
     except Exception as e:
+        import traceback
+
         print(f"Error sending email: {e}")
+        traceback.print_exc()
         return False
 
 
@@ -296,8 +311,8 @@ def init_or_migrate_database():
         return False
 
 
-# Initialize database on app startup
-with app.app_context():
+def init_db():
+    """Initialize or seed the database. Call inside an application context."""
     try:
         print("=" * 50)
         print("Initializing database...")
@@ -963,12 +978,21 @@ def admin_login():
         password = request.form.get("password")
 
         user = User.query.filter_by(username=username).first()
+        if not user:
+            flash("Invalid credentials", "error")
+            return render_template("admin/login.html")
 
-        if user and check_password_hash(user.password_hash, password):
-            login_user(user)
-            return redirect(url_for("admin_dashboard"))
+        try:
+            pw_ok = check_password_hash(user.password_hash, password)
+        except Exception:
+            pw_ok = False
 
-        flash("Invalid credentials", "error")
+        if not pw_ok:
+            flash("Invalid credentials", "error")
+            return render_template("admin/login.html")
+
+        login_user(user)
+        return redirect(url_for("admin_dashboard"))
 
     return render_template("admin/login.html")
 
@@ -1826,6 +1850,13 @@ if __name__ == "__main__":
     os.makedirs("templates/admin", exist_ok=True)
     os.makedirs("static/images/portfolio", exist_ok=True)
 
+    # Initialize database (only when running directly)
+    with app.app_context():
+        try:
+            init_db()
+        except Exception as e:
+            print(f"⚠️  init_db() failed during startup: {e}")
+
     # Get port from environment
     port = int(os.environ.get("PORT", 10000))
-    app.run(host="0.0.0.0", port=5000, debug=False)
+    app.run(host="0.0.0.0", port=port, debug=False)

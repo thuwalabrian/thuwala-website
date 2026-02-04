@@ -75,6 +75,51 @@ html {
     }
 }
 
+/* Gentle fade-in utility */
+.fade-in {
+    animation: fadeInUp var(--motion-duration-medium) var(--motion-ease) both;
+}
+
+/* Skip link styling */
+.skip-link {
+    position: absolute;
+    left: 12px;
+    top: -40px;
+    background: var(--primary);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 6px;
+    z-index: 2000;
+    transition: top 180ms ease, opacity 180ms ease;
+    text-decoration: none;
+}
+.skip-link:focus {
+    top: 12px;
+    outline: none;
+}
+
+/* Soft elevation for cards */
+.soft-card {
+    border-radius: var(--radius);
+    transition: box-shadow var(--motion-duration-medium) var(--motion-ease), transform var(--motion-duration-medium) var(--motion-ease);
+}
+.soft-card:hover { box-shadow: 0 20px 40px rgba(2,6,23,0.12); transform: translateY(-6px); }
+
+/* Form input subtle styling */
+.form-control {
+    border: 1px solid var(--gray-300);
+    padding: 12px 14px;
+    border-radius: calc(var(--radius) - 4px);
+    background: white;
+}
+.form-control::placeholder { color: var(--gray-400); }
+
+/* Simple utility to fade between pages (progressive enhancement) */
+.ui-fade-enter { opacity: 0; transform: translateY(6px); }
+.ui-fade-enter-active { opacity: 1; transform: translateY(0); transition: opacity var(--motion-duration-medium) var(--motion-ease), transform var(--motion-duration-medium) var(--motion-ease); }
+.ui-fade-exit { opacity: 1; }
+.ui-fade-exit-active { opacity: 0; transition: opacity var(--motion-duration-short) var(--motion-ease); }
+
 /* 5. Form Improvements */
 .form-control {
     transition: all 0.3s;
@@ -1983,6 +2028,50 @@ html {
 }
 
 .hero-stat .stat-number {
+
+/* Custom overrides for main site hero to improve spacing and typography */
+.hero {
+    padding: var(--spacing-12) 0;
+    background: linear-gradient(180deg, rgba(37,99,235,0.03), transparent);
+}
+.hero .hero-inner {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-6);
+    align-items: center;
+}
+.hero .hero-title {
+    font-size: clamp(1.8rem, 5.5vw, 3.75rem);
+    color: var(--dark);
+    margin-bottom: var(--spacing-4);
+    line-height: 1.02;
+}
+.hero .hero-lead {
+    font-size: clamp(1rem, 2.2vw, 1.125rem);
+    color: var(--gray-500);
+    max-width: 65ch;
+}
+.hero-media .hero-image {
+    width: 100%;
+    height: auto;
+    border-radius: calc(var(--radius) + 6px);
+    box-shadow: var(--shadow-lg);
+}
+
+/* Featured badge visual feedback when toggled */
+.featured-badge.filtered {
+    box-shadow: 0 6px 20px rgba(245,158,11,0.15);
+    transform: scale(1.02);
+}
+
+/* Muted filter buttons while featured-only view is active */
+.filter-btn.muted {
+    opacity: 0.6;
+}
+
+@media (min-width: 768px) {
+    .hero .hero-inner { grid-template-columns: 1fr 1fr; }
+}
     display: block;
     font-size: 2.5rem;
     font-weight: 700;

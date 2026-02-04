@@ -5,9 +5,15 @@ load_dotenv()
 
 
 class Config:
-    SECRET_KEY = os.environ.get("SECRET_KEY", "dev-secret-key-change-this")
+    # Require SECRET_KEY in production; allow a development fallback locally.
+    SECRET_KEY = os.environ.get("SECRET_KEY")
+    if not SECRET_KEY:
+        if os.environ.get("FLASK_ENV", "").lower() == "production":
+            raise RuntimeError("SECRET_KEY must be set in production (see .env.example)")
+        # Development fallback (safe only on local machines)
+        SECRET_KEY = "dev-secret-key-change-this"
 
-    # Use SQLite with full path for Render
+    # Database URL (use DATABASE_URL env var when provided)
     SQLALCHEMY_DATABASE_URI = os.environ.get(
         "DATABASE_URL",
         "sqlite:///" + os.path.join(os.path.dirname(__file__), "thuwala.db"),
@@ -16,9 +22,9 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     # Upload folder configuration
-    UPLOAD_FOLDER = "static/uploads"
-    MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # 16MB max upload
-    ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif", "webp"}
+    UPLOAD_FOLDER = os.environ.get("UPLOAD_FOLDER", "static/uploads")
+    MAX_CONTENT_LENGTH = int(os.environ.get("MAX_CONTENT_LENGTH", 16 * 1024 * 1024))
+    ALLOWED_EXTENSIONS = set(os.environ.get("ALLOWED_EXTENSIONS", "png,jpg,jpeg,gif,webp").split(","))
 
     # Email configuration
     MAIL_SERVER = os.environ.get("MAIL_SERVER", "smtp.gmail.com")
@@ -26,12 +32,12 @@ class Config:
     MAIL_USE_TLS = os.environ.get("MAIL_USE_TLS", "True").lower() == "true"
     MAIL_USERNAME = os.environ.get("MAIL_USERNAME", "")
     MAIL_PASSWORD = os.environ.get("MAIL_PASSWORD", "")
-    MAIL_DEFAULT_SENDER = os.environ.get(
-        "MAIL_DEFAULT_SENDER", "noreply@thuwalaco.com"
-    )
+    MAIL_DEFAULT_SENDER = os.environ.get("MAIL_DEFAULT_SENDER", "noreply@thuwalaco.com")
 
     # Password reset settings
-    PASSWORD_RESET_TOKEN_EXPIRE_HOURS = 24
-    SECURITY_PASSWORD_SALT = os.environ.get(
-        "SECURITY_PASSWORD_SALT", "password-reset-salt-change-this"
-    )
+    PASSWORD_RESET_TOKEN_EXPIRE_HOURS = int(os.environ.get("PASSWORD_RESET_TOKEN_EXPIRE_HOURS", 24))
+    SECURITY_PASSWORD_SALT = os.environ.get("SECURITY_PASSWORD_SALT")
+    if not SECURITY_PASSWORD_SALT:
+        if os.environ.get("FLASK_ENV", "").lower() == "production":
+            raise RuntimeError("SECURITY_PASSWORD_SALT must be set in production (see .env.example)")
+        SECURITY_PASSWORD_SALT = "password-reset-salt-change-this"

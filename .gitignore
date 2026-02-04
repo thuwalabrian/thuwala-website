@@ -1,3 +1,56 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environments
+venv/
+.venv/
+thuwala/
+
+# OS files
+.DS_Store
+
+# Database and uploads
+thuwala.db
+instance/
+static/uploads/
+
+# Editor and IDE
+.vscode/
+.idea/
+
+# Python test caches
+.pytest_cache/
+
+# env files
+.env
+.env.local
+# Virtual environment
+thuwala/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Database
+thuwala.db
+instance/
+
+# Uploads and user generated content
+static/uploads/
+
+# IDE/editor
+.vscode/
+.idea/
+
+# Environment files
+.env
+
+# OS files
+.DS_Store
+Thumbs.db
 # Virtual Environment
 thuwala/
 venv/

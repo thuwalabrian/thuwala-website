@@ -43,6 +43,7 @@ Werkzeug==2.3.7
 python-dotenv==1.0.0
 gunicorn==20.1.0
 psycopg2-binary==2.9.9
+alembic==1.11.1
 """
 
 with open("requirements.txt", "w", encoding="utf-8") as f:
@@ -50,48 +51,19 @@ with open("requirements.txt", "w", encoding="utf-8") as f:
 print("✓ Updated requirements.txt")
 
 # 3. Update app.py - add proper initialization
-print("\n📝 Now you need to update app.py manually:")
+print("\n📝 Now you need to update app.py manually or use Alembic for migrations:")
 print(
-    "\nIn app.py, make sure the database initialization is INSIDE app context:"
+    "\nRecommended steps:\n"
+    "1) Do NOT run destructive schema SQL from application import. Ensure your DB init is behind an `if __name__ == '__main__'` guard (app.py already updated by helper).\n"
+    "2) Use Alembic (included in requirements) to manage schema changes. Run `alembic revision --autogenerate -m \"desc\"` then `alembic upgrade head`.\n"
+    "3) If you cannot use Alembic, apply manual ALTER TABLE statements on your Postgres instance.\n"
 )
-print(
-    """
-# Add this at the end of app.py (replace the existing if __name__ block):
 
-if __name__ == '__main__':
-    with app.app_context():
-        # Create tables
-        db.create_all()
-        print("Database tables created")
-        
-        # Create admin user if not exists
-        if not User.query.filter_by(username='admin').first():
-            admin = User(
-                username='admin',
-                email='admin@thuwalaco.com',
-                password_hash=generate_password_hash('Admin@2024')
-            )
-            db.session.add(admin)
-            print("Admin user created")
-        
-        # Add sample services
-        if not Service.query.first():
-            services = [
-                Service(title='Administrative Support', description='Virtual assistant services', icon='fas fa-briefcase'),
-                Service(title='Project Support', description='Proposal writing', icon='fas fa-project-diagram'),
-                Service(title='Data Analytics', description='Data cleaning', icon='fas fa-chart-bar'),
-                Service(title='Communications', description='Corporate profiles', icon='fas fa-comments'),
-            ]
-            for service in services:
-                db.session.add(service)
-            print("Sample services added")
-        
-        db.session.commit()
-    
-    # Run app
-    port = int(os.environ.get('PORT', 10000))
-    app.run(host='0.0.0.0', port=port, debug=False)
-"""
+print(
+    "If you will use Alembic, initialize the local environment once:\n"
+    "  pip install -r requirements.txt\n"
+    "  alembic revision --autogenerate -m \"init\"\n"
+    "  alembic upgrade head\n"
 )
 
 print("\n✅ Updates ready!")

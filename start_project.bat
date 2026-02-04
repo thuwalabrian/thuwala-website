@@ -38,7 +38,7 @@ echo.
 echo 🌐 Website:    http://localhost:5000
 echo 🔐 Admin:      http://localhost:5000/admin/login
 echo 📝 Username:   admin
-echo 🔑 Password:   admin123
+echo 🔑 Password:   Admin@2024
 echo.
 echo Press Ctrl+C to stop the server
 echo ========================================

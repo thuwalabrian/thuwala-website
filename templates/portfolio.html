@@ -63,11 +63,14 @@
         {% if portfolio_items %}
         <div class="grid">
             {% for item in portfolio_items %}
-            <div class="portfolio-card {% if item.featured %}featured{% endif %}">
-                <div class="card-image">
+            <article class="portfolio-card soft-card fade-in {% if item.featured %}featured{% endif %}" data-category="{{ item.category }}" data-featured="{{ 'true' if item.featured else 'false' }}">
+                <a href="{{ item.project_url or url_for('portfolio') }}" class="thumb-link">
                     <img src="{{ item.image_url }}" 
+                         srcset="{{ item.image_url_sm if item.image_url_sm else item.image_url }} 400w, {{ item.image_url_md if item.image_url_md else item.image_url }} 800w, {{ item.image_url_lg if item.image_url_lg else item.image_url }} 1200w"
+                         sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                          alt="{{ item.title }}" 
-                         class="portfolio-img"
+                         class="thumb"
+                         loading="lazy"
                          onerror="this.src='https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'">
                     {% if item.featured %}
                     <span class="featured-badge">
@@ -77,38 +80,12 @@
                     <div class="category-badge">
                         {{ item.category|title }}
                     </div>
-                </div>
-                <div class="card-content">
-                    <div class="card-header">
-                        <h3 class="card-title">{{ item.title }}</h3>
-                        <p class="card-client"><i class="fas fa-building"></i> {{ item.client }}</p>
-                    </div>
-                    
-                    <p class="card-description">{{ item.description }}</p>
-                    
-                    <div class="card-tech">
-                        <h4><i class="fas fa-tools"></i> Technologies Used:</h4>
-                        <div class="tech-tags">
-                            {% for tech in item.technologies.split(',') %}
-                            <span class="tech-tag">{{ tech.strip() }}</span>
-                            {% endfor %}
-                        </div>
-                    </div>
-                    
-                    {% if item.testimonial %}
-                    <div class="card-testimonial">
-                        <div class="testimonial-content">
-                            <i class="fas fa-quote-left"></i>
-                            <p>"{{ item.testimonial }}"</p>
-                        </div>
-                        <div class="testimonial-author">
-                            <strong>{{ item.client_name }}</strong>
-                            <span>{{ item.client_role }}</span>
-                        </div>
-                    </div>
-                    {% endif %}
-                    
-                    <div class="card-actions">
+                </a>
+                <div class="card-body">
+                    <h3 class="card-title">{{ item.title }}</h3>
+                    <p class="card-excerpt">{{ item.description[:140] }}{% if item.description|length > 140 %}...{% endif %}</p>
+                    <p class="card-client"><i class="fas fa-building"></i> {{ item.client }}</p>
+                    <div class="card-actions" style="margin-top: var(--spacing-3); display:flex; gap:var(--spacing-2);">
                         {% if item.project_url %}
                         <a href="{{ item.project_url }}" target="_blank" class="btn btn-outline">
                             <i class="fas fa-external-link-alt"></i> View Project
@@ -119,7 +96,7 @@
                         </button>
                     </div>
                 </div>
-            </div>
+            </article>
             {% endfor %}
         </div>
         {% else %}
@@ -136,9 +113,9 @@
 </section>
 
 <!-- Portfolio Modal -->
-<div id="portfolioModal" class="modal">
+<div id="portfolioModal" class="modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="modalTitle">
     <div class="modal-content portfolio-modal-content">
-        <span class="close-modal">&times;</span>
+        <button class="close-modal" aria-label="Close portfolio details">&times;</button>
         <div id="modalContent"></div>
     </div>
 </div>
@@ -169,7 +146,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Portfolio modal functionality
     const modal = document.getElementById('portfolioModal');
-    const closeBtn = document.querySelector('.close-modal');
+    const closeBtn = modal.querySelector('.close-modal');
     const modalContent = document.getElementById('modalContent');
     const viewButtons = document.querySelectorAll('.view-details');
     
@@ -244,7 +221,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 `;
                 
                 modal.style.display = 'block';
+                modal.setAttribute('aria-hidden', 'false');
                 document.body.style.overflow = 'hidden';
+                // move focus to close button for accessibility
+                closeBtn.focus();
             }
         });
     });
@@ -252,6 +232,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Close modal
     closeBtn.addEventListener('click', function() {
         modal.style.display = 'none';
+        modal.setAttribute('aria-hidden', 'true');
         document.body.style.overflow = 'auto';
     });
     
@@ -259,6 +240,7 @@ document.addEventListener('DOMContentLoaded', function() {
     window.addEventListener('click', function(e) {
         if (e.target === modal) {
             modal.style.display = 'none';
+            modal.setAttribute('aria-hidden', 'true');
             document.body.style.overflow = 'auto';
         }
     });
@@ -267,6 +249,7 @@ document.addEventListener('DOMContentLoaded', function() {
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape' && modal.style.display === 'block') {
             modal.style.display = 'none';
+            modal.setAttribute('aria-hidden', 'true');
             document.body.style.overflow = 'auto';
         }
     });
@@ -284,6 +267,48 @@ document.addEventListener('DOMContentLoaded', function() {
     }, { threshold: 0.5 });
     
     counters.forEach(counter => counterObserver.observe(counter));
+    
+    // Client-side category filtering & featured toggle
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const portfolioCards = document.querySelectorAll('.portfolio-card');
+
+    function filterByCategory(category) {
+        portfolioCards.forEach(card => {
+            const cardCat = (card.getAttribute('data-category') || '').toLowerCase();
+            const matches = (category === 'all') || (cardCat === category.toLowerCase());
+            card.style.display = matches ? '' : 'none';
+        });
+    }
+
+    filterButtons.forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            // If the button is a normal anchor, prevent navigation for client-side filter
+            e.preventDefault();
+            filterButtons.forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            const href = this.getAttribute('href') || '';
+            const url = new URL(href, window.location.origin);
+            const category = url.searchParams.get('category') || this.textContent.trim();
+            // normalize known 'All Projects' label
+            const catKey = (category && category.toLowerCase() !== 'all projects') ? category : 'all';
+            filterByCategory(catKey);
+        });
+    });
+
+    // Featured badge click => toggle show featured only
+    document.querySelectorAll('.featured-badge').forEach(b => {
+        b.style.cursor = 'pointer';
+        b.addEventListener('click', function(e) {
+            e.preventDefault();
+            const showing = this.classList.toggle('filtered');
+            portfolioCards.forEach(card => {
+                const featured = card.getAttribute('data-featured') === 'true';
+                card.style.display = showing ? (featured ? '' : 'none') : '';
+            });
+            // toggle active class on filter buttons when filtering featured
+            filterButtons.forEach(b => b.classList.toggle('muted', showing));
+        });
+    });
     
     function animateCounter(element, target, duration = 2000) {
         let start = 0;

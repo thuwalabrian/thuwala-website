@@ -1,3 +1,23 @@
+"""Alembic-friendly models shim.
+
+Import model classes here so Alembic can access SQLAlchemy metadata
+without triggering application startup code that should only run when
+the app is executed.
+"""
+from app import db
+
+# Import models to ensure metadata is populated
+from app import (
+    User,
+    ContactMessage,
+    Service,
+    Portfolio,
+    PasswordResetToken,
+    Advertisement,
+)
+
+# Expose metadata for Alembic
+target_metadata = db.metadata
 # -*- coding: utf-8 -*-
 """
 Created on Fri Jan 16 15:50:44 2026
