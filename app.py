@@ -77,13 +77,9 @@ class Portfolio(db.Model):
     title = db.Column(db.String(200), nullable=False)
     client = db.Column(db.String(200))
     description = db.Column(db.Text)
-    category = db.Column(
-        db.String(100)
-    )  # e.g., 'branding', 'data', 'administrative'
+    category = db.Column(db.String(100))  # e.g., 'branding', 'data', 'administrative'
     image_url = db.Column(db.String(500))
-    project_url = db.Column(
-        db.String(500)
-    )  # Link to live project if available
+    project_url = db.Column(db.String(500))  # Link to live project if available
     completion_date = db.Column(db.Date)
     technologies = db.Column(db.String(500))  # Comma-separated tech/tools used
     testimonial = db.Column(db.Text)
@@ -145,7 +141,9 @@ def send_password_reset_email(user_email, reset_url):
         is_dev = app.debug or os.environ.get("FLASK_ENV", "").lower() == "development"
         if is_dev:
             return True
-        raise RuntimeError("MAIL_USERNAME and MAIL_PASSWORD must be set in production to send emails")
+        raise RuntimeError(
+            "MAIL_USERNAME and MAIL_PASSWORD must be set in production to send emails"
+        )
 
     try:
         msg = MIMEMultipart("alternative")
@@ -226,13 +224,9 @@ def send_password_reset_email(user_email, reset_url):
         msg.attach(part2)
 
         # Send email
-        with smtplib.SMTP(
-            app.config["MAIL_SERVER"], app.config["MAIL_PORT"]
-        ) as server:
+        with smtplib.SMTP(app.config["MAIL_SERVER"], app.config["MAIL_PORT"]) as server:
             server.starttls()
-            server.login(
-                app.config["MAIL_USERNAME"], app.config["MAIL_PASSWORD"]
-            )
+            server.login(app.config["MAIL_USERNAME"], app.config["MAIL_PASSWORD"])
             server.send_message(msg)
 
         print(f"Password reset email sent to {user_email}")
@@ -295,9 +289,7 @@ def init_or_migrate_database():
                         "ALTER TABLE service ADD COLUMN category VARCHAR(100)"
                     )
                     db.session.commit()
-                    print(
-                        "✅ Added 'category' column to service table (PostgreSQL)"
-                    )
+                    print("✅ Added 'category' column to service table (PostgreSQL)")
                 except Exception as e2:
                     print(f"⚠️ PostgreSQL syntax also failed: {e2}")
                     print(
@@ -342,9 +334,7 @@ def init_db():
         ).all()
 
         if services_without_category:
-            print(
-                f"Found {len(services_without_category)} services without categories"
-            )
+            print(f"Found {len(services_without_category)} services without categories")
             # Define category mapping based on title
             category_mapping = {
                 "administrative": "administrative",
@@ -677,22 +667,35 @@ def index():
                 .limit(5)
                 .all()
             )  # Limit to 5 ads max
-            print(
-                f"DEBUG: Found {len(ads)} active advertisements for homepage"
-            )
+            print(f"DEBUG: Found {len(ads)} active advertisements for homepage")
         except Exception as e:
             print(f"DEBUG: Error fetching ads: {e}")
             ads = []
+
+        # Query a few portfolio items for homepage preview
+        try:
+            portfolio_items = (
+                Portfolio.query.order_by(
+                    Portfolio.featured.desc(), Portfolio.created_at.desc()
+                )
+                .limit(6)
+                .all()
+            )
+        except Exception as e:
+            print(f"DEBUG: Error fetching portfolio items: {e}")
+            portfolio_items = []
 
     except Exception as e:
         print(f"Database error in index route: {e}")
         services = []
         ads = []
+        portfolio_items = []
 
     return render_template(
         "index.html",
         services=services,
         advertisements=ads,
+        portfolio_items=portfolio_items,
         now=datetime.utcnow(),
     )
 
@@ -726,9 +729,7 @@ def portfolio():
         else:
             portfolio_items = (
                 Portfolio.query.filter_by(category=category_filter)
-                .order_by(
-                    Portfolio.featured.desc(), Portfolio.created_at.desc()
-                )
+                .order_by(Portfolio.featured.desc(), Portfolio.created_at.desc())
                 .all()
             )
 
@@ -821,9 +822,7 @@ def forgot_password():
                 db.session.commit()
 
                 # Generate reset URL
-                reset_url = url_for(
-                    "reset_password", token=token, _external=True
-                )
+                reset_url = url_for("reset_password", token=token, _external=True)
 
                 # Send email
                 if send_password_reset_email(user.email, reset_url):
@@ -832,9 +831,7 @@ def forgot_password():
                         "success",
                     )
                 else:
-                    flash(
-                        "Error sending email. Please contact support.", "error"
-                    )
+                    flash("Error sending email. Please contact support.", "error")
 
             except Exception as e:
                 db.session.rollback()
@@ -859,9 +856,7 @@ def reset_password(token):
         return redirect(url_for("admin_dashboard"))
 
     # Validate token
-    reset_token = PasswordResetToken.query.filter_by(
-        token=token, is_used=False
-    ).first()
+    reset_token = PasswordResetToken.query.filter_by(token=token, is_used=False).first()
 
     if not reset_token:
         flash("Invalid or expired reset token.", "error")
@@ -926,17 +921,13 @@ def change_password():
             return redirect(url_for("change_password"))
 
         # Verify current password
-        if not check_password_hash(
-            current_user.password_hash, current_password
-        ):
+        if not check_password_hash(current_user.password_hash, current_password):
             flash("Current password is incorrect", "error")
             return redirect(url_for("change_password"))
 
         # Check if new password is different
         if check_password_hash(current_user.password_hash, new_password):
-            flash(
-                "New password must be different from current password", "error"
-            )
+            flash("New password must be different from current password", "error")
             return redirect(url_for("change_password"))
 
         # Validate new password
@@ -1001,9 +992,7 @@ def admin_login():
 @login_required
 def admin_dashboard():
     try:
-        messages = ContactMessage.query.order_by(
-            ContactMessage.created_at.desc()
-        ).all()
+        messages = ContactMessage.query.order_by(ContactMessage.created_at.desc()).all()
         unread_count = ContactMessage.query.filter_by(is_read=False).count()
         service_count = Service.query.count()
         portfolio_count = Portfolio.query.count()
@@ -1040,9 +1029,7 @@ def view_message(message_id):
                     "phone": message.phone,
                     "subject": message.subject,
                     "message": message.message,
-                    "created_at": message.created_at.strftime(
-                        "%Y-%m-%d %H:%M"
-                    ),
+                    "created_at": message.created_at.strftime("%Y-%m-%d %H:%M"),
                 },
             }
         )
@@ -1183,9 +1170,7 @@ def admin_portfolio():
         print(f"Database error in admin portfolio: {e}")
         portfolio_items = []
 
-    return render_template(
-        "admin/portfolio.html", portfolio_items=portfolio_items
-    )
+    return render_template("admin/portfolio.html", portfolio_items=portfolio_items)
 
 
 @app.route("/admin/portfolio/add", methods=["GET", "POST"])
@@ -1389,9 +1374,7 @@ def add_advertisement():
                     )
                 ):
                     # Create upload directory if it doesn't exist
-                    upload_dir = os.path.join(
-                        app.config["UPLOAD_FOLDER"], "ads"
-                    )
+                    upload_dir = os.path.join(app.config["UPLOAD_FOLDER"], "ads")
                     os.makedirs(upload_dir, exist_ok=True)
 
                     # Save file with secure filename
@@ -1405,9 +1388,7 @@ def add_advertisement():
                     filepath = os.path.join(upload_dir, filename)
                     file.save(filepath)
                     image_url = f"/static/uploads/ads/{filename}"
-                    print(
-                        f"DEBUG: Image saved to {filepath}, URL: {image_url}"
-                    )
+                    print(f"DEBUG: Image saved to {filepath}, URL: {image_url}")
 
             # Parse dates
             start_date_str = request.form.get("start_date")
@@ -1418,17 +1399,13 @@ def add_advertisement():
 
             if start_date_str:
                 try:
-                    start_date = datetime.strptime(
-                        start_date_str, "%Y-%m-%dT%H:%M"
-                    )
+                    start_date = datetime.strptime(start_date_str, "%Y-%m-%dT%H:%M")
                 except ValueError:
                     start_date = datetime.utcnow()
 
             if end_date_str:
                 try:
-                    end_date = datetime.strptime(
-                        end_date_str, "%Y-%m-%dT%H:%M"
-                    )
+                    end_date = datetime.strptime(end_date_str, "%Y-%m-%dT%H:%M")
                 except ValueError:
                     end_date = None
 
@@ -1439,9 +1416,7 @@ def add_advertisement():
                 cta_text=request.form.get("cta_text", "Learn More").strip(),
                 cta_link=request.form.get("cta_link", "").strip(),
                 image_url=image_url if image_url else None,
-                background_color=request.form.get(
-                    "background_color", "#2563eb"
-                ),
+                background_color=request.form.get("background_color", "#2563eb"),
                 text_color=request.form.get("text_color", "#ffffff"),
                 is_active=bool(request.form.get("is_active")),
                 start_date=start_date,
@@ -1479,9 +1454,7 @@ def edit_advertisement(ad_id):
                 file = request.files["image_file"]
                 if file and file.filename != "":
                     # Create upload directory if it doesn't exist
-                    upload_dir = os.path.join(
-                        app.config["UPLOAD_FOLDER"], "ads"
-                    )
+                    upload_dir = os.path.join(app.config["UPLOAD_FOLDER"], "ads")
                     os.makedirs(upload_dir, exist_ok=True)
 
                     # Save file
@@ -1497,9 +1470,7 @@ def edit_advertisement(ad_id):
             end_date_str = request.form.get("end_date")
 
             if start_date_str:
-                ad.start_date = datetime.strptime(
-                    start_date_str, "%Y-%m-%dT%H:%M"
-                )
+                ad.start_date = datetime.strptime(start_date_str, "%Y-%m-%dT%H:%M")
             else:
                 ad.start_date = None
 
@@ -1513,9 +1484,7 @@ def edit_advertisement(ad_id):
             ad.description = request.form.get("description", "").strip()
             ad.cta_text = request.form.get("cta_text", "Learn More").strip()
             ad.cta_link = request.form.get("cta_link", "").strip()
-            ad.background_color = request.form.get(
-                "background_color", "#2563eb"
-            )
+            ad.background_color = request.form.get("background_color", "#2563eb")
             ad.text_color = request.form.get("text_color", "#ffffff")
             ad.is_active = bool(request.form.get("is_active"))
             ad.display_order = int(request.form.get("display_order", 0) or 0)
@@ -1577,9 +1546,7 @@ def move_advertisement_up(ad_id):
 
         # Find previous ad
         prev_ad = (
-            Advertisement.query.filter(
-                Advertisement.display_order < ad.display_order
-            )
+            Advertisement.query.filter(Advertisement.display_order < ad.display_order)
             .order_by(Advertisement.display_order.desc())
             .first()
         )
@@ -1612,9 +1579,7 @@ def move_advertisement_down(ad_id):
 
         # Find next ad
         next_ad = (
-            Advertisement.query.filter(
-                Advertisement.display_order > ad.display_order
-            )
+            Advertisement.query.filter(Advertisement.display_order > ad.display_order)
             .order_by(Advertisement.display_order.asc())
             .first()
         )
@@ -1701,9 +1666,7 @@ def test_email():
     if app.config.get("FLASK_ENV") == "production":
         return "Not available in production", 403
 
-    reset_url = url_for(
-        "reset_password", token="test-token-123", _external=True
-    )
+    reset_url = url_for("reset_password", token="test-token-123", _external=True)
     success = send_password_reset_email("test@example.com", reset_url)
 
     return f"Test email sent: {success}<br>Reset URL: {reset_url}"
@@ -1724,9 +1687,7 @@ def debug_check_ads():
                         "id": ad.id,
                         "title": ad.title,
                         "description": (
-                            ad.description[:50] + "..."
-                            if ad.description
-                            else ""
+                            ad.description[:50] + "..." if ad.description else ""
                         ),
                         "cta_text": ad.cta_text,
                         "cta_link": ad.cta_link,
@@ -1803,13 +1764,9 @@ def debug_db_status():
         message_count = (
             ContactMessage.query.count() if "contact_message" in tables else 0
         )
-        portfolio_count = (
-            Portfolio.query.count() if "portfolio" in tables else 0
-        )
+        portfolio_count = Portfolio.query.count() if "portfolio" in tables else 0
         reset_token_count = (
-            PasswordResetToken.query.count()
-            if "password_reset_token" in tables
-            else 0
+            PasswordResetToken.query.count() if "password_reset_token" in tables else 0
         )
         advertisement_count = (
             Advertisement.query.count() if "advertisement" in tables else 0
@@ -1818,8 +1775,7 @@ def debug_db_status():
         # Get services with categories
         services = Service.query.all()
         services_info = [
-            {"title": s.title, "category": s.category, "id": s.id}
-            for s in services
+            {"title": s.title, "category": s.category, "id": s.id} for s in services
         ]
 
         return {

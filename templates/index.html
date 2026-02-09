@@ -1,412 +1,111 @@
 {% extends "base.html" %}
 
-{% block title %}Home{% endblock %}
+{% block title %}Home - Thuwala Co.{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/homepage.css') }}">
+{% endblock %}
 
 {% block content %}
-<!-- Modern Hero Section with Interactive Ads -->
-<section class="modern-hero" id="heroSection">
-    <!-- Ad Navigation Dots (only if multiple ads) -->
-    <div class="ad-nav-dots" id="adNavDots"></div>
-    
-    <!-- Ad Play/Pause Button -->
-    <button class="ad-play-btn" id="adPlayBtn" aria-label="Play/Pause advertisements">
-        <i class="fas fa-pause" id="adPlayIcon"></i>
-    </button>
-    
-    <!-- Ad Previous/Next Buttons -->
-    <button class="ad-nav-btn prev-btn" id="prevAdBtn" aria-label="Previous advertisement">
-        <i class="fas fa-chevron-left"></i>
-    </button>
-    <button class="ad-nav-btn next-btn" id="nextAdBtn" aria-label="Next advertisement">
-        <i class="fas fa-chevron-right"></i>
-    </button>
-    
-    <!-- Ads Container -->
-    <div class="hero-ads-container">
-        {% if advertisements %}
-            {% for ad in advertisements %}
-            <div class="hero-ad {% if loop.first %}active{% endif %} {% if ad.image_url %}has-image{% endif %}" 
-                 id="ad-{{ ad.id }}"
-                 data-bg-color="{{ ad.background_color|default('#2563eb') }}"
-                 data-text-color="{{ ad.text_color|default('#ffffff') }}"
-                 {% if ad.image_url %}data-img="{{ ad.image_url }}"{% endif %}
-                 style="{% if ad.image_url %}background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('{{ ad.image_url }}') center/cover no-repeat;{% else %}background: linear-gradient(135deg, {{ ad.background_color|default('#2563eb') }}, {{ ad.background_color|default('#2563eb')|darken_color(20) }});{% endif %}; color: {{ ad.text_color|default('#ffffff') }}">
-                
-                {% if ad.image_url %}
-                <!-- Image overlay for better text readability -->
-                <div class="ad-image-overlay" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)); z-index: 1;"></div>
-                {% endif %}
-                
-                <div class="container">
-                    <div class="ad-content" style="position: relative; z-index: 2;">
-                        <div class="ad-badge">
-                            <i class="fas fa-bullhorn"></i> Featured
-                        </div>
-                        <h1 class="ad-title">
-                            {{ ad.title }}
-                        </h1>
-                        <p class="ad-description">
-                            {{ ad.description }}
-                        </p>
-                        
-                        {% if ad.cta_text and ad.cta_link %}
-                        <div class="ad-actions">
-                            <a href="{{ ad.cta_link }}" class="btn btn-ad" 
-                               style="background-color: {{ ad.text_color|default('#ffffff') }}; color: {{ ad.background_color|default('#2563eb') }}">
-                                <i class="fas fa-arrow-right"></i> {{ ad.cta_text }}
-                            </a>
-                            <button class="btn btn-ad-outline skip-ad-btn" 
-                                    style="border-color: {{ ad.text_color|default('#ffffff') }}; color: {{ ad.text_color|default('#ffffff') }}">
-                                Skip
-                            </button>
-                        </div>
-                        {% endif %}
-                        
-                        <!-- Ad Stats -->
-                        <div class="ad-stats">
-                            <div class="ad-stat">
-                                <i class="fas fa-eye"></i>
-                                <span>{{ loop.index }}/{{ advertisements|length }}</span>
-                            </div>
-                            {% if ad.end_date %}
-                            <div class="ad-stat">
-                                <i class="fas fa-clock"></i>
-                                <span>Ends {{ ad.end_date.strftime('%b %d') }}</span>
-                            </div>
-                            {% endif %}
-                        </div>
-                    </div>
-                    
-                    <!-- Optional decorative graphic -->
-                    {% if not ad.image_url %}
-                    <div class="ad-graphic">
-                        <div class="graphic-circle"></div>
-                        <div class="graphic-circle"></div>
-                        <div class="graphic-circle"></div>
-                    </div>
-                    {% endif %}
-                </div>
-            </div>
-            {% endfor %}
-        {% else %}
-        <!-- Default hero (when no ads) - wired to new hero layout -->
-        <section class="hero">
-            <div class="container">
-                <div class="hero-inner">
-                    <div class="hero-copy">
-                        <h1 class="hero-title">Efficiency. Precision. Excellence.</h1>
-                        <p class="hero-lead">Comprehensive business solutions for organizations and professionals in Malawi and beyond.</p>
-                        <div class="hero-cta">
-                            <a href="{{ url_for('services') }}" class="btn btn-primary">
-                                <i class="fas fa-rocket"></i> Explore Services
-                            </a>
-                            <a href="{{ url_for('contact') }}" class="btn btn-outline">
-                                <i class="fas fa-calendar-check"></i> Free Consultation
-                            </a>
-                        </div>
-                    </div>
-                    <div class="hero-media">
-                        <img
-                            src="{{ url_for('static', filename='images/hero/hero-default.jpg') }}"
-                            srcset="{{ url_for('static', filename='images/hero/hero-default-sm.jpg') }} 600w, {{ url_for('static', filename='images/hero/hero-default.jpg') }} 1600w"
-                            sizes="(max-width: 767px) 100vw, 50vw"
-                            alt="Thuwala Co - Business Solutions"
-                            class="hero-image"
-                            loading="lazy"
-                        >
-                    </div>
-                </div>
-            </div>
-        </section>
-        {% endif %}
+<!-- Hero (split layout) -->
+{% from "_components.html" import responsive_picture %}
+<section class="hp-hero">
+  <div class="container hp-hero-inner">
+    <div class="hp-hero-copy">
+      <h1 class="hp-hero-title">We make organizations work better — fast.</h1>
+      <p class="hp-hero-sub">Integrated services in administration, data, operations and branding — tailored for results.</p>
+      <div class="hp-hero-ctas">
+        <a href="{{ url_for('services') }}" class="btn btn-primary">Explore Services</a>
+        <a href="{{ url_for('portfolio') }}" class="btn btn-outline">See Our Work</a>
+      </div>
+
+      <ul class="hp-hero-benefits">
+        <li><i class="fas fa-clock"></i> Faster delivery</li>
+        <li><i class="fas fa-chart-line"></i> Data-driven decisions</li>
+        <li><i class="fas fa-users"></i> Client-focused support</li>
+      </ul>
     </div>
-    
-    <!-- Scroll indicator -->
-    <div class="scroll-indicator animate__animated animate__fadeIn animate__delay-4s">
-        <span>Scroll to explore</span>
-        <div class="mouse">
-            <div class="wheel"></div>
-        </div>
+
+    <div class="hp-hero-media">
+      {{ responsive_picture('images/hero/hero-default.jpg', 'Thuwala Co hero', 'hp-hero-image', '(max-width: 767px) 100vw, 50vw') }}
     </div>
+  </div>
 </section>
 
-<!-- Trusted By Section -->
-<section class="trusted-by">
-    <div class="container">
-        <p class="trusted-label">Trusted by organizations across sectors</p>
-        <div class="trusted-logos">
-            <div class="logo-item">
-                <i class="fas fa-hands-helping"></i>
-                <span>NGO Sector</span>
-            </div>
-            <div class="logo-item">
-                <i class="fas fa-building"></i>
-                <span>Corporate</span>
-            </div>
-            <div class="logo-item">
-                <i class="fas fa-lightbulb"></i>
-                <span>Startups</span>
-            </div>
-            <div class="logo-item">
-                <i class="fas fa-landmark"></i>
-                <span>Government</span>
-            </div>
-            <div class="logo-item">
-                <i class="fas fa-graduation-cap"></i>
-                <span>Education</span>
-            </div>
-        </div>
+<!-- Featured Services -->
+<section class="hp-features">
+  <div class="container">
+    <h2 class="section-title">What we do</h2>
+    <p class="section-subtitle">End-to-end solutions that let you focus on impact.</p>
+    <div class="features-grid">
+      {% for s in services[:6] %}
+      <article class="feature-card soft-card">
+        <div class="feature-icon"><i class="{{ s.icon }}"></i></div>
+        <h3>{{ s.title }}</h3>
+        <p>{{ s.description[:120] }}{% if s.description|length > 120 %}...{% endif %}</p>
+        <a href="{{ url_for('services') }}#service-{{ s.id }}" class="btn btn-outline">Learn more</a>
+      </article>
+      {% endfor %}
     </div>
+  </div>
 </section>
 
-<!-- Services Preview -->
-<section class="services-preview">
-    <div class="container">
-        <h2 class="section-title">Our Core Services</h2>
-        <div class="services-grid">
-            {% for service in services[:4] %}
-            <div class="service-card">
-                <div class="service-icon">
-                    <i class="{{ service.icon }}"></i>
-                </div>
-                <h3>{{ service.title }}</h3>
-                <p>{{ service.description[:100] }}...</p>
-                <a href="{{ url_for('services') }}#service-{{ service.id }}" class="btn-link">Learn More →</a>
-            </div>
-            {% endfor %}
-        </div>
+<!-- Portfolio Preview -->
+<section class="hp-portfolio">
+  <div class="container">
+    <div class="hp-portfolio-header">
+      <h2>Selected projects</h2>
+      <a href="{{ url_for('portfolio') }}" class="btn btn-outline">View all</a>
     </div>
+    <div class="portfolio-grid">
+      {% for item in portfolio_items[:6] %}
+      <article class="portfolio-card soft-card">
+        <a href="{{ item.project_url or url_for('portfolio') }}" class="thumb-link">
+          {{ responsive_picture(item.image_url, item.title, 'thumb', '(max-width: 640px) 100vw, 33vw') }}
+        </a>
+        <div class="card-body">
+          <h3 class="card-title">{{ item.title }}</h3>
+          <p class="card-excerpt">{{ item.description[:100] }}{% if item.description|length > 100 %}...{% endif %}</p>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </div>
 </section>
 
-<!-- Why Choose Us Section -->
-<section class="why-choose-us">
-    <div class="container">
-        <div class="section-header center-header">
-            <h2 class="section-title center-title">
-                <span class="highlight center-highlight">Why Choose Us ?</span>
-            </h2>
-            <p class="section-subtitle center-subtitle">
-                We combine expertise, innovation, and dedication to deliver exceptional results 
-                that drive your business forward.
-            </p>
-        </div>
-        
-        <div class="why-grid">
-            <!-- Feature 1 -->
-            <div class="why-feature">
-                <div class="feature-number">01</div>
-                <div class="feature-icon">
-                    <i class="fas fa-bullseye"></i>
-                </div>
-                <div class="feature-content">
-                    <h3>Precision & Excellence</h3>
-                    <p>Every detail matters. We deliver work that exceeds expectations with meticulous attention to quality.</p>
-                    <div class="feature-points">
-                        <div class="feature-point">
-                            <i class="fas fa-check-circle"></i>
-                            <span>Meticulous quality control</span>
-                        </div>
-                        <div class="feature-point">
-                            <i class="fas fa-check-circle"></i>
-                            <span>Industry best practices</span>
-                        </div>
-                        <div class="feature-point">
-                            <i class="fas fa-check-circle"></i>
-                            <span>Continuous improvement</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Feature 2 -->
-            <div class="why-feature">
-                <div class="feature-number">02</div>
-                <div class="feature-icon">
-                    <i class="fas fa-clock"></i>
-                </div>
-                <div class="feature-content">
-                    <h3>Efficiency First</h3>
-                    <p>Streamlined processes that save you time and resources while maximizing output and value.</p>
-                    <div class="feature-points">
-                        <div class="feature-point">
-                            <i class="fas fa-check-circle"></i>
-                            <span>Optimized workflows</span>
-                        </div>
-                        <div class="feature-point">
-                            <i class="fas fa-check-circle"></i>
-                            <span>Time-saving solutions</span>
-                        </div>
-                        <div class="feature-point">
-                            <i class="fas fa-check-circle"></i>
-                            <span>Resource optimization</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Feature 3 -->
-            <div class="why-feature">
-                <div class="feature-number">03</div>
-                <div class="feature-icon">
-                    <i class="fas fa-handshake"></i>
-                </div>
-                <div class="feature-content">
-                    <h3>Client-Centric Approach</h3>
-                    <p>Your success is our priority. We work closely with you to understand and achieve your goals.</p>
-                    <div class="feature-points">
-                        <div class="feature-point">
-                            <i class="fas fa-check-circle"></i>
-                            <span>Personalized solutions</span>
-                        </div>
-                        <div class="feature-point">
-                            <i class="fas fa-check-circle"></i>
-                            <span>Regular communication</span>
-                        </div>
-                        <div class="feature-point">
-                            <i class="fas fa-check-circle"></i>
-                            <span>Results-driven partnership</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Feature 4 -->
-            <div class="why-feature">
-                <div class="feature-number">04</div>
-                <div class="feature-icon">
-                    <i class="fas fa-chart-line"></i>
-                </div>
-                <div class="feature-content">
-                    <h3>Proven Results</h3>
-                    <p>Track record of delivering measurable impact and growth for businesses of all sizes.</p>
-                    <div class="feature-points">
-                        <div class="feature-point">
-                            <i class="fas fa-check-circle"></i>
-                            <span>Measurable outcomes</span>
-                        </div>
-                        <div class="feature-point">
-                            <i class="fas fa-check-circle"></i>
-                            <span>Data-driven decisions</span>
-                        </div>
-                        <div class="feature-point">
-                            <i class="fas fa-check-circle"></i>
-                            <span>Growth-focused strategies</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- CTA -->
-        <div class="why-cta">
-            <h3>Ready to Experience the Difference?</h3>
-            <p>Join dozens of satisfied clients who have transformed their operations with our services.</p>
-            <a href="{{ url_for('contact') }}" class="btn btn-primary">
-                <i class="fas fa-calendar-check"></i> Book a Free Consultation
-            </a>
-        </div>
+<!-- Testimonials -->
+<section class="hp-testimonials">
+  <div class="container">
+    <h2 class="section-title">Client stories</h2>
+    <div class="testimonials-carousel">
+      {% for p in portfolio_items if p.testimonial %}
+      <blockquote class="testimonial">
+        <p class="quote">"{{ p.testimonial }}"</p>
+        <footer class="cite">— {{ p.client_name }}, {{ p.client_role }}</footer>
+      </blockquote>
+      {% endfor %}
     </div>
+  </div>
 </section>
 
-<!-- Process Section -->
-<section class="process-section">
-    <div class="container">
-        <div class="section-header">
-            <h2 class="section-title">Our Proven Process</h2>
-            <p class="section-subtitle">Delivering results through structured methodology</p>
-        </div>
-        
-        <div class="process-steps">
-            <div class="process-step">
-                <div class="step-number">01</div>
-                <h3>Discovery</h3>
-                <p>Understanding your needs and objectives</p>
-            </div>
-            
-            <div class="process-step">
-                <div class="step-number">02</div>
-                <h3>Strategy</h3>
-                <p>Developing a customized solution plan</p>
-            </div>
-            
-            <div class="process-step">
-                <div class="step-number">03</div>
-                <h3>Execution</h3>
-                <p>Implementing with precision and care</p>
-            </div>
-            
-            <div class="process-step">
-                <div class="step-number">04</div>
-                <h3>Delivery</h3>
-                <p>Providing results and ongoing support</p>
-            </div>
-        </div>
+<!-- CTA -->
+<section class="hp-cta">
+  <div class="container">
+    <div class="hp-cta-inner soft-card">
+      <div>
+        <h2>Ready to transform operations?</h2>
+        <p>Book a free consultation and get a practical plan within 48 hours.</p>
+      </div>
+      <div class="hp-cta-actions">
+        <a href="{{ url_for('contact') }}" class="btn btn-primary">Get started</a>
+        <a href="{{ url_for('services') }}" class="btn btn-outline">Our services</a>
+      </div>
     </div>
+  </div>
 </section>
 
-<!-- CTA Section -->
-<section class="cta">
-    <div class="container">
-        <h2>Ready to Streamline Your Operations?</h2>
-        <p>Contact us today for a free consultation</p>
-        <a href="{{ url_for('contact') }}" class="btn btn-primary">Start a Conversation</a>
-    </div>
-</section>
 {% endblock %}
 
 {% block scripts %}
-<!-- Load the hero ads script -->
-<script src="{{ url_for('static', filename='js/hero-ads.js') }}"></script>
-
-<script>
-    // Animate numbers counting up
-    document.addEventListener('DOMContentLoaded', function() {
-        const counters = document.querySelectorAll('.stat-number');
-        
-        counters.forEach(counter => {
-            const updateCount = () => {
-                const target = +counter.getAttribute('data-target');
-                const count = +counter.innerText;
-                const increment = target / 100;
-                
-                if (count < target) {
-                    counter.innerText = Math.ceil(count + increment);
-                    setTimeout(updateCount, 20);
-                } else {
-                    counter.innerText = target;
-                }
-            };
-            
-            // Start counting when element is in viewport
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        updateCount();
-                        observer.unobserve(entry.target);
-                    }
-                });
-            }, { threshold: 0.5 });
-            
-            observer.observe(counter);
-        });
-        
-        // Test function for debugging ads
-        window.debugAds = function() {
-            const ads = document.querySelectorAll('.hero-ad');
-            console.log('Total ads:', ads.length);
-            ads.forEach((ad, index) => {
-                console.log(`Ad ${index + 1}:`, {
-                    hasImage: ad.classList.contains('has-image'),
-                    bgColor: ad.dataset.bgColor,
-                    textColor: ad.dataset.textColor,
-                    imageUrl: ad.dataset.img,
-                    style: ad.getAttribute('style')
-                });
-            });
-        };
-        
-        // Run debug on page load if needed
-        // window.debugAds();
-    });
-</script>
+<script src="{{ url_for('static', filename='js/homepage.js') }}" defer></script>
 {% endblock %}

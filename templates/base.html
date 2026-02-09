@@ -17,7 +17,7 @@
     <!-- Theme Color -->
     <meta name="theme-color" content="#2563eb">
     <meta name="msapplication-TileColor" content="#2563eb">
-    <meta name="msapplication-TileImage" content="{{ url_for('static', filename='images/logo/logo-144x144.png') }}">
+    <meta name="msapplication-TileImage" content="{{ url_for('static', filename='images/logo/logo-192x192.png') }}">
     
     <!-- SEO Meta Tags -->
     <meta name="description" content="Thuwala Co. provides comprehensive business solutions with efficiency, precision, and excellence. Based in Lilongwe, Malawi.">
@@ -40,6 +40,7 @@
     <!-- CSS Files -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/improvements.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/components.css') }}">
     <script src="{{ url_for('static', filename='js/ui-enhancements.js') }}" defer></script>
     
     <!-- Admin CSS (only loads on admin pages) -->
@@ -111,7 +112,8 @@
     {% endwith %}
 
     <!-- Main Content -->
-    <main id="top" role="main" aria-label="Main content" tabindex="-1" data-main id="main-content">
+    <div id="top"></div>
+    <main role="main" aria-label="Main content" tabindex="-1" id="main-content">
         {% block content %}{% endblock %}
     </main>
 
@@ -290,10 +292,8 @@
     <!-- Admin JS (only loads on admin pages) -->
     {% if request.path.startswith('/admin') %}
     <script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/admin-enhancements.js') }}" defer></script>
     {% endif %}
-    
-    <!-- Hero Ads JavaScript -->
-    <script src="{{ url_for('static', filename='js/hero-ads.js') }}"></script>
     
     {% block scripts %}{% endblock %}
 </body>

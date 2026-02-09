@@ -65,13 +65,8 @@
             {% for item in portfolio_items %}
             <article class="portfolio-card soft-card fade-in {% if item.featured %}featured{% endif %}" data-category="{{ item.category }}" data-featured="{{ 'true' if item.featured else 'false' }}">
                 <a href="{{ item.project_url or url_for('portfolio') }}" class="thumb-link">
-                    <img src="{{ item.image_url }}" 
-                         srcset="{{ item.image_url_sm if item.image_url_sm else item.image_url }} 400w, {{ item.image_url_md if item.image_url_md else item.image_url }} 800w, {{ item.image_url_lg if item.image_url_lg else item.image_url }} 1200w"
-                         sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                         alt="{{ item.title }}" 
-                         class="thumb"
-                         loading="lazy"
-                         onerror="this.src='https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'">
+                    {% from "_components.html" import responsive_picture %}
+                    {{ responsive_picture(item.image_url, item.title, 'thumb', '(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw') }}
                     {% if item.featured %}
                     <span class="featured-badge">
                         <i class="fas fa-star"></i> Featured

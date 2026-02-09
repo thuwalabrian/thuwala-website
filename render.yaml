@@ -5,27 +5,16 @@ services:
     plan: free
     buildCommand: |
       pip install -r requirements.txt
-      python -c "frservices:
-  - type: web
-    name: thuwala-co
-    env: python
-    plan: free
-    buildCommand: |
-      pip install -r requirements.txt
       python -c "from app import app, db; app.app_context().push(); db.create_all()"
     startCommand: gunicorn app:app
     envVars:
       - key: SECRET_KEY
         generateValue: true
-      - key: SECURITY_PASSWORD_SALT  # Add this
+      - key: SECURITY_PASSWORD_SALT
         generateValue: true
-      - key: MAIL_SERVER  # Optional, add if using email
+      - key: MAIL_SERVER
         value: smtp.gmail.com
       - key: MAIL_PORT
         value: 587
       - key: MAIL_USE_TLS
-        value: trueom app import app, db; app.app_context().push(); db.create_all()"
-    startCommand: gunicorn app:app
-    envVars:
-      - key: SECRET_KEY
-        generateValue: true
+        value: true

@@ -34,18 +34,16 @@ Notes
 - Default seeded admin user: username `admin`, password `Admin@2024` (created on first run if missing).
 - Upload folder: `static/uploads` (configurable via `UPLOAD_FOLDER` env).
 
-Database migrations (recommended)
-- Alembic is included for migrations. Workflow:
-```powershell
-# generate migration (autogenerate reads models from app)
-alembic revision --autogenerate -m "describe change"
-# apply
-alembic upgrade head
-```
-- If not using Alembic, apply manual ALTER statements on your DB. The app contains a fragile `init_or_migrate_database()` helper but prefer explicit migrations for production.
+Database Schema Changes
+- The app uses `db.create_all()` on startup for automatic table creation.
+- For schema changes in development: delete `thuwala.db` and restart to recreate fresh.
+- For production schema changes: apply manual `ALTER TABLE` SQL statements directly to your database.
+- The app includes `init_or_migrate_database()` helper that attempts simple migrations automatically.
 
-Postgres deployment notes
-- `update_for_postgres.py` can update `config.py` and `requirements.txt` to include `psycopg2-binary` and `alembic`. Ensure `DATABASE_URL` uses the `postgresql://` scheme.
+Postgres Deployment
+- Run `scripts/update_for_postgres.py` to add PostgreSQL support to `config.py` and `requirements.txt`.
+- Ensure `DATABASE_URL` environment variable uses the `postgresql://` scheme.
+- The script will add `psycopg2-binary` to dependencies automatically.
 
 Common commands
 - Run health check: open `http://localhost:5000/health`
@@ -68,6 +66,15 @@ gunicorn app:app --bind 0.0.0.0:5000 --workers 4
 ```
 - For systemd, create a service that activates the venv and runs the Gunicorn command, exposing the `PORT` via environment.
 
-CI tips:
+CI Tips:
 - Run `pytest` (if tests added) and `flake8`/`black` as desired before deploy.
-- Run Alembic migrations during deploy: `alembic upgrade head` after the app dependencies are installed and env vars are set.
+- Database tables are created automatically on first run via `db.create_all()`.
+- Use `scripts/smoke_test.py` for basic health checks after deployment.
+
+Utility Scripts (in `scripts/` folder):
+- `check_admin.py` - Verify admin user credentials
+- `smoke_test.py` - Test all public pages are accessible
+- `generate_favicon.py` - Generate favicon files from logo
+- `generate_webp.py` - Convert images to WebP format
+- `update_for_postgres.py` - Add PostgreSQL support
+- `setup.py` - Initial project folder setup

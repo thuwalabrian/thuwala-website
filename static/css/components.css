@@ -1,0 +1,54 @@
+/* Component primitives: buttons, cards, inputs, modals, toasts */
+:root {
+    --component-bg: #ffffff;
+    --component-muted: #f7fafc;
+    --component-border: #e6eef8;
+}
+
+/* Buttons */
+.btn { 
+    background: var(--primary);
+    color: #fff;
+    border-radius: calc(var(--radius) - 2px);
+    padding: 0.65rem 1rem;
+    font-weight: 600;
+    border: 1px solid transparent;
+}
+.btn.btn-outline { 
+    background: transparent;
+    color: var(--primary);
+    border-color: var(--primary);
+}
+.btn:active { transform: translateY(0); }
+
+/* Inputs */
+.input, .form-control, input[type="text"], input[type="email"], textarea {
+    width: 100%;
+    padding: 0.6rem 0.75rem;
+    border: 1px solid var(--component-border);
+    border-radius: calc(var(--radius) - 4px);
+    background: var(--component-bg);
+}
+
+/* Cards */
+.card, .soft-card {
+    background: var(--component-bg);
+    border-radius: var(--radius);
+    border: 1px solid var(--component-border);
+    padding: 1rem;
+}
+
+/* Modal */
+.modal { display: none; position: fixed; inset: 0; z-index: 2000; background: rgba(2,6,23,0.6); }
+.modal .modal-content { max-width: 900px; margin: 6vh auto; background: var(--component-bg); padding: 1.25rem; border-radius: calc(var(--radius) + 4px); box-shadow: var(--shadow-xl); }
+
+/* Toasts */
+.toast { position: fixed; right: 24px; bottom: 24px; background: #111827; color: white; padding: 12px 16px; border-radius: 10px; box-shadow: 0 10px 30px rgba(2,6,23,0.2); }
+
+/* Utility */
+.u-center { text-align: center; }
+
+/* Responsive helpers */
+@media (max-width: 640px) {
+    .modal .modal-content { margin: 4vh 12px; width: auto; }
+}
