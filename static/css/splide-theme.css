@@ -1,0 +1,43 @@
+/* Splide premium theme overrides */
+.splide__track {
+    overflow: visible;
+}
+
+.splide__slide {
+    padding: 0.25rem;
+}
+
+.splide__arrow {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(37, 99, 235, 0.2);
+    box-shadow: 0 10px 30px rgba(2, 6, 23, 0.15);
+    width: 42px;
+    height: 42px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.splide__arrow:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 16px 40px rgba(2, 6, 23, 0.2);
+}
+
+.splide__arrow svg {
+    fill: #2563eb;
+}
+
+.splide__pagination__page {
+    background: rgba(37, 99, 235, 0.25);
+    width: 10px;
+    height: 10px;
+    margin: 0 4px;
+    transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.splide__pagination__page.is-active {
+    background: #2563eb;
+    transform: scale(1.2);
+}
+
+.testimonial {
+    border: 1px solid rgba(37, 99, 235, 0.15);
+}

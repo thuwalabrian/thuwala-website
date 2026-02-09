@@ -4,84 +4,73 @@
 
 {% block content %}
 <!-- Modern Page Header -->
-<section class="modern-page-header">
-    <div class="container">
-        <div class="page-header-content">
-            <h1 class="page-title animate__animated animate__fadeInUp">About Thuwala Co.</h1>
-            <p class="page-subtitle animate__animated animate__fadeInUp animate__delay-1s">
+<section class="relative py-20 lg:py-32 bg-gradient-to-b from-gray-50 to-white overflow-hidden gsap-fade-in" data-aos="fade-up">
+    <div class="container mx-auto px-4">
+        <div class="max-w-5xl mx-auto backdrop-blur-xl bg-white/95 rounded-3xl p-8 md:p-12 border border-white/30 shadow-smooth hover:shadow-smooth-lg transition-all duration-500" data-aos="fade-up">
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold font-display text-center mb-6 bg-gradient-to-r from-primary via-purple-600 to-secondary bg-[length:200%_auto] animate-gradient bg-clip-text text-transparent" data-aos="fade-up" data-aos-delay="100">
+                About Thuwala Co.
+            </h1>
+            <p class="text-lg md:text-xl text-gray-900 text-center leading-relaxed max-w-3xl mx-auto" data-aos="fade-up" data-aos-delay="200">
                 Driving business excellence through efficiency, precision, and innovation
             </p>
-            <div class="header-stats animate__animated animate__fadeInUp animate__delay-2s">
-                <div class="header-stat">
-                    <span class="stat-number" data-target="3">0</span>
-                    <span class="stat-label">Years of Excellence</span>
-                </div>
-                <div class="header-stat">
-                    <span class="stat-number" data-target="50">0</span>
-                    <span class="stat-label">Happy Clients</span>
-                </div>
-                <div class="header-stat">
-                    <span class="stat-number" data-target="100">0</span>
-                    <span class="stat-label">Projects Delivered</span>
-                </div>
-                <div class="header-stat">
-                    <span class="stat-number" data-target="10">0</span>
-                    <span class="stat-label">Service Areas</span>
-                </div>
-            </div>
         </div>
     </div>
-    <div class="header-wave">
-        <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
-            <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z"></path>
+    
+    <div class="absolute bottom-0 left-0 right-0 text-primary/10">
+        <svg viewBox="0 0 1200 120" preserveAspectRatio="none" class="w-full h-20 md:h-32">
+            <path fill="currentColor" d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z"></path>
         </svg>
     </div>
 </section>
 
 <!-- Mission & Vision -->
-<section class="mission-vision-section">
-    <div class="container">
-        <div class="mission-vision-grid">
-            <div class="mission-card animate__animated animate__fadeInLeft">
-                <div class="card-icon">
-                    <i class="fas fa-rocket"></i>
+<section class="py-20 lg:py-32 bg-white gsap-fade-in" data-aos="fade-up">
+    <div class="container mx-auto px-4">
+        <div class="grid md:grid-cols-2 gap-8 lg:gap-12 gsap-stagger-grid" data-aos="fade-up">
+            <div class="group backdrop-blur-xl bg-gradient-to-br from-primary/5 to-secondary/5 rounded-3xl p-8 md:p-10 border border-white/30 shadow-smooth hover:shadow-smooth-lg transition-all duration-500 hover:-translate-y-2 gsap-scale-card grid-item" data-aos="fade-right">
+                <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                    <i class="fas fa-rocket text-white text-3xl"></i>
                 </div>
-                <h2>Our Mission</h2>
-                <p>To empower organizations and professionals in Malawi and beyond with comprehensive, reliable, and innovative support services that enhance efficiency, drive productivity, and enable sustainable growth.</p>
-                <div class="mission-highlights">
-                    <div class="highlight">
-                        <i class="fas fa-check-circle"></i>
-                        <span>Streamlined Operations</span>
+                <h2 class="text-3xl font-bold mb-6 text-gray-900">Our Mission</h2>
+                <p class="text-gray-900 leading-relaxed mb-8">
+                    To empower organizations and professionals in Malawi and beyond with comprehensive, reliable, and innovative support services that enhance efficiency, drive productivity, and enable sustainable growth.
+                </p>
+                <div class="space-y-3">
+                    <div class="flex items-center gap-3 text-gray-900">
+                        <i class="fas fa-check-circle text-secondary text-xl flex-shrink-0"></i>
+                        <span class="font-medium">Streamlined Operations</span>
                     </div>
-                    <div class="highlight">
-                        <i class="fas fa-check-circle"></i>
-                        <span>Data-Driven Solutions</span>
+                    <div class="flex items-center gap-3 text-gray-900">
+                        <i class="fas fa-check-circle text-secondary text-xl flex-shrink-0"></i>
+                        <span class="font-medium">Data-Driven Solutions</span>
                     </div>
-                    <div class="highlight">
-                        <i class="fas fa-check-circle"></i>
-                        <span>Professional Excellence</span>
+                    <div class="flex items-center gap-3 text-gray-900">
+                        <i class="fas fa-check-circle text-secondary text-xl flex-shrink-0"></i>
+                        <span class="font-medium">Professional Excellence</span>
                     </div>
                 </div>
             </div>
             
-            <div class="vision-card animate__animated animate__fadeInRight">
-                <div class="card-icon">
-                    <i class="fas fa-eye"></i>
+            <div class="group backdrop-blur-xl bg-gradient-to-br from-secondary/5 to-primary/5 rounded-3xl p-8 md:p-10 border border-white/30 shadow-smooth hover:shadow-smooth-lg transition-all duration-500 hover:-translate-y-2 gsap-scale-card grid-item" data-aos="fade-left">
+                <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-secondary to-primary flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                    <i class="fas fa-eye text-white text-3xl"></i>
                 </div>
-                <h2>Our Vision</h2>
-                <p>To become Malawi's premier integrated business solutions partner, recognized across Africa for our commitment to quality, innovation, and exceptional client success in every project we undertake.</p>
-                <div class="vision-highlights">
-                    <div class="highlight">
-                        <i class="fas fa-star"></i>
-                        <span>Regional Leadership</span>
+                <h2 class="text-3xl font-bold mb-6 text-gray-900">Our Vision</h2>
+                <p class="text-gray-900 leading-relaxed mb-8">
+                    To become Malawi's premier integrated business solutions partner, recognized across Africa for our commitment to quality, innovation, and exceptional client success in every project we undertake.
+                </p>
+                <div class="space-y-3">
+                    <div class="flex items-center gap-3 text-gray-900">
+                        <i class="fas fa-star text-primary text-xl flex-shrink-0"></i>
+                        <span class="font-medium">Regional Leadership</span>
                     </div>
-                    <div class="highlight">
-                        <i class="fas fa-star"></i>
-                        <span>Innovation Hub</span>
+                    <div class="flex items-center gap-3 text-gray-900">
+                        <i class="fas fa-star text-primary text-xl flex-shrink-0"></i>
+                        <span class="font-medium">Innovation Hub</span>
                     </div>
-                    <div class="highlight">
-                        <i class="fas fa-star"></i>
-                        <span>Client Success Focus</span>
+                    <div class="flex items-center gap-3 text-gray-900">
+                        <i class="fas fa-star text-primary text-xl flex-shrink-0"></i>
+                        <span class="font-medium">Client Success Focus</span>
                     </div>
                 </div>
             </div>
@@ -90,211 +79,173 @@
 </section>
 
 <!-- Our Story -->
-<section class="story-section">
-    <div class="container">
-        <div class="section-header">
-            <h2 class="section-title">Our Story</h2>
-            <p class="section-subtitle">From vision to reality - Our journey of empowering businesses</p>
+<section class="py-20 lg:py-32 bg-gradient-to-b from-white to-gray-50 gsap-fade-in" data-aos="fade-up">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-16" data-aos="fade-up">
+            <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">Our Story</h2>
+            <p class="text-lg md:text-xl text-gray-900 max-w-2xl mx-auto">From vision to reality - Our journey of empowering businesses</p>
         </div>
         
-        <div class="story-timeline">
-            <div class="timeline-item">
-                <div class="timeline-year">2021</div>
-                <div class="timeline-content">
-                    <h3>The Beginning</h3>
-                    <p>Founded with a vision to provide comprehensive business support services in Malawi, focusing on administrative excellence and project management.</p>
-                </div>
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8 gsap-stagger-grid" data-aos="fade-up">
+            <div class="group backdrop-blur-xl bg-white/95 rounded-2xl p-8 border border-white/30 shadow-smooth hover:shadow-smooth-lg transition-all duration-500 hover:-translate-y-2 gsap-scale-card grid-item">
+                <div class="text-6xl font-bold text-primary/20 mb-4 group-hover:text-primary/30 transition-colors duration-300">2021</div>
+                <h3 class="text-xl font-bold mb-3 text-gray-900">The Beginning</h3>
+                <p class="text-gray-900 leading-relaxed">Founded with a vision to provide comprehensive business support services in Malawi, focusing on administrative excellence and project management.</p>
             </div>
             
-            <div class="timeline-item">
-                <div class="timeline-year">2022</div>
-                <div class="timeline-content">
-                    <h3>Expansion & Growth</h3>
-                    <p>Expanded service portfolio to include data analytics, branding, and digital solutions, serving clients across corporate, NGO, and government sectors.</p>
-                </div>
+            <div class="group backdrop-blur-xl bg-white/95 rounded-2xl p-8 border border-white/30 shadow-smooth hover:shadow-smooth-lg transition-all duration-500 hover:-translate-y-2 gsap-scale-card grid-item">
+                <div class="text-6xl font-bold text-primary/20 mb-4 group-hover:text-primary/30 transition-colors duration-300">2022</div>
+                <h3 class="text-xl font-bold mb-3 text-gray-900">Expansion & Growth</h3>
+                <p class="text-gray-900 leading-relaxed">Expanded service portfolio to include data analytics, branding, and digital solutions, serving clients across corporate, NGO, and government sectors.</p>
             </div>
             
-            <div class="timeline-item">
-                <div class="timeline-year">2023</div>
-                <div class="timeline-content">
-                    <h3>Digital Transformation</h3>
-                    <p>Introduced advanced digital solutions and process automation services, helping clients navigate the evolving business landscape.</p>
-                </div>
+            <div class="group backdrop-blur-xl bg-white/95 rounded-2xl p-8 border border-white/30 shadow-smooth hover:shadow-smooth-lg transition-all duration-500 hover:-translate-y-2 gsap-scale-card grid-item">
+                <div class="text-6xl font-bold text-primary/20 mb-4 group-hover:text-primary/30 transition-colors duration-300">2023</div>
+                <h3 class="text-xl font-bold mb-3 text-gray-900">Digital Transformation</h3>
+                <p class="text-gray-900 leading-relaxed">Introduced advanced digital solutions and process automation services, helping clients navigate the evolving business landscape.</p>
             </div>
             
-            <div class="timeline-item">
-                <div class="timeline-year">2024</div>
-                <div class="timeline-content">
-                    <h3>Regional Recognition</h3>
-                    <p>Recognized for excellence in service delivery, expanding our reach and impact across Southern Africa with innovative solutions.</p>
-                </div>
+            <div class="group backdrop-blur-xl bg-white/95 rounded-2xl p-8 border border-white/30 shadow-smooth hover:shadow-smooth-lg transition-all duration-500 hover:-translate-y-2 gsap-scale-card grid-item">
+                <div class="text-6xl font-bold text-primary/20 mb-4 group-hover:text-primary/30 transition-colors duration-300">2024</div>
+                <h3 class="text-xl font-bold mb-3 text-gray-900">Regional Recognition</h3>
+                <p class="text-gray-900 leading-relaxed">Recognized for excellence in service delivery, expanding our reach and impact across Southern Africa with innovative solutions.</p>
             </div>
         </div>
     </div>
 </section>
 
 <!-- Core Values -->
-<section class="values-section">
-    <div class="container">
-        <div class="section-header">
-            <h2 class="section-title">Our Core Values</h2>
-            <p class="section-subtitle">The principles that guide everything we do</p>
+<section class="py-20 lg:py-32 bg-white gsap-fade-in" data-aos="fade-up">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-16" data-aos="fade-up">
+            <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">Our Core Values</h2>
+            <p class="text-lg md:text-xl text-gray-900 max-w-2xl mx-auto">The principles that guide everything we do</p>
         </div>
         
-        <div class="values-grid">
-            <div class="value-card">
-                <div class="value-icon">
-                    <i class="fas fa-bolt"></i>
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8 gsap-stagger-grid" data-aos="fade-up">
+            <div class="group backdrop-blur-xl bg-white/95 rounded-2xl p-8 border border-white/30 shadow-smooth hover:shadow-smooth-lg transition-all duration-500 hover:-translate-y-2 gsap-scale-card grid-item">
+                <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
+                    <i class="fas fa-bolt text-white text-2xl"></i>
                 </div>
-                <h3>Efficiency</h3>
-                <p>We optimize processes and systems to deliver maximum productivity and value for our clients.</p>
-                <div class="value-points">
-                    <span>Process Optimization</span>
-                    <span>Time Management</span>
-                    <span>Resource Efficiency</span>
-                </div>
-            </div>
-            
-            <div class="value-card">
-                <div class="value-icon">
-                    <i class="fas fa-bullseye"></i>
-                </div>
-                <h3>Precision</h3>
-                <p>Attention to detail and accuracy in every task ensures quality results that exceed expectations.</p>
-                <div class="value-points">
-                    <span>Accuracy</span>
-                    <span>Attention to Detail</span>
-                    <span>Quality Assurance</span>
+                <h3 class="text-2xl font-bold mb-4 text-gray-900">Efficiency</h3>
+                <p class="text-gray-900 mb-6 leading-relaxed">We optimize processes and systems to deliver maximum productivity and value for our clients.</p>
+                <div class="flex flex-wrap gap-2">
+                    <span class="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm font-medium">Process Optimization</span>
+                    <span class="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm font-medium">Time Management</span>
+                    <span class="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm font-medium">Value Delivery</span>
                 </div>
             </div>
             
-            <div class="value-card">
-                <div class="value-icon">
-                    <i class="fas fa-award"></i>
+            <div class="group backdrop-blur-xl bg-white/95 rounded-2xl p-8 border border-white/30 shadow-smooth hover:shadow-smooth-lg transition-all duration-500 hover:-translate-y-2 gsap-scale-card grid-item">
+                <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-secondary to-primary flex items-center justify-center mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
+                    <i class="fas fa-shield-alt text-white text-2xl"></i>
                 </div>
-                <h3>Excellence</h3>
-                <p>We pursue the highest standards of quality and professionalism in all our services and interactions.</p>
-                <div class="value-points">
-                    <span>Quality Standards</span>
-                    <span>Professionalism</span>
-                    <span>Continuous Improvement</span>
-                </div>
-            </div>
-            
-            <div class="value-card">
-                <div class="value-icon">
-                    <i class="fas fa-handshake"></i>
-                </div>
-                <h3>Integrity</h3>
-                <p>Honest, ethical, and transparent business practices build lasting trust with our clients and partners.</p>
-                <div class="value-points">
-                    <span>Transparency</span>
-                    <span>Ethical Conduct</span>
-                    <span>Accountability</span>
+                <h3 class="text-2xl font-bold mb-4 text-gray-900">Integrity</h3>
+                <p class="text-gray-900 mb-6 leading-relaxed">Operating with transparency, honesty, and ethical standards in all our client relationships.</p>
+                <div class="flex flex-wrap gap-2">
+                    <span class="px-3 py-1 bg-secondary/10 text-secondary rounded-full text-sm font-medium">Transparency</span>
+                    <span class="px-3 py-1 bg-secondary/10 text-secondary rounded-full text-sm font-medium">Accountability</span>
+                    <span class="px-3 py-1 bg-secondary/10 text-secondary rounded-full text-sm font-medium">Trust</span>
                 </div>
             </div>
             
-            <div class="value-card">
-                <div class="value-icon">
-                    <i class="fas fa-lightbulb"></i>
+            <div class="group backdrop-blur-xl bg-white/95 rounded-2xl p-8 border border-white/30 shadow-smooth hover:shadow-smooth-lg transition-all duration-500 hover:-translate-y-2 gsap-scale-card grid-item">
+                <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-600 to-primary flex items-center justify-center mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
+                    <i class="fas fa-lightbulb text-white text-2xl"></i>
                 </div>
-                <h3>Innovation</h3>
-                <p>We embrace new technologies and creative approaches to solve complex business challenges.</p>
-                <div class="value-points">
-                    <span>Creative Solutions</span>
-                    <span>Technology Adoption</span>
-                    <span>Forward Thinking</span>
+                <h3 class="text-2xl font-bold mb-4 text-gray-900">Innovation</h3>
+                <p class="text-gray-900 mb-6 leading-relaxed">We embrace new technologies and creative approaches to solve complex business challenges.</p>
+                <div class="flex flex-wrap gap-2">
+                    <span class="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm font-medium">Creative Solutions</span>
+                    <span class="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm font-medium">Technology Adoption</span>
+                    <span class="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm font-medium">Forward Thinking</span>
                 </div>
             </div>
             
-            <div class="value-card">
-                <div class="value-icon">
-                    <i class="fas fa-users"></i>
+            <div class="group backdrop-blur-xl bg-white/95 rounded-2xl p-8 border border-white/30 shadow-smooth hover:shadow-smooth-lg transition-all duration-500 hover:-translate-y-2 gsap-scale-card grid-item">
+                <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
+                    <i class="fas fa-users text-white text-2xl"></i>
                 </div>
-                <h3>Collaboration</h3>
-                <p>Working closely with clients as partners to achieve shared goals and mutual success.</p>
-                <div class="value-points">
-                    <span>Partnership</span>
-                    <span>Teamwork</span>
-                    <span>Client Focus</span>
+                <h3 class="text-2xl font-bold mb-4 text-gray-900">Collaboration</h3>
+                <p class="text-gray-900 mb-6 leading-relaxed">Working closely with clients as partners to achieve shared goals and mutual success.</p>
+                <div class="flex flex-wrap gap-2">
+                    <span class="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm font-medium">Partnership</span>
+                    <span class="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm font-medium">Teamwork</span>
+                    <span class="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm font-medium">Client Focus</span>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Why Choose Us -->
-<section class="why-choose-section">
-    <div class="container">
-        <div class="section-header">
-            <h2 class="section-title">Why Organizations Choose Thuwala Co.</h2>
-            <p class="section-subtitle">Comprehensive solutions backed by proven expertise</p>
+<!-- Why Choose Us & Testimonials -->
+<section class="py-20 lg:py-32 bg-gradient-to-b from-white to-gray-50 gsap-fade-in" data-aos="fade-up">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-16" data-aos="fade-up">
+            <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">Why Organizations Choose Thuwala Co.</h2>
+            <p class="text-lg md:text-xl text-gray-900 max-w-2xl mx-auto">Comprehensive solutions backed by proven expertise</p>
         </div>
         
-        <div class="why-choose-grid">
-            <div class="why-card">
-                <div class="why-number">01</div>
-                <div class="why-content">
-                    <h3>End-to-End Solutions</h3>
-                    <p>From administrative support to full-scale digital transformation, we provide comprehensive services under one roof.</p>
-                </div>
+        <div class="grid md:grid-cols-2 gap-8 mb-20 gsap-stagger-grid" data-aos="fade-up">
+            <div class="group relative backdrop-blur-xl bg-white/95 rounded-2xl p-8 border border-white/30 shadow-smooth hover:shadow-smooth-lg transition-all duration-500 hover:-translate-y-2 gsap-scale-card grid-item">
+                <div class="absolute top-6 right-6 text-7xl font-bold text-primary/10 group-hover:text-primary/20 transition-colors duration-300">01</div>
+                <h3 class="text-2xl font-bold mb-4 text-gray-900 relative z-10">End-to-End Solutions</h3>
+                <p class="text-gray-900 leading-relaxed relative z-10">From administrative support to full-scale digital transformation, we provide comprehensive services under one roof.</p>
             </div>
             
-            <div class="why-card">
-                <div class="why-number">02</div>
-                <div class="why-content">
-                    <h3>Sector-Specific Expertise</h3>
-                    <p>Experience across corporate, humanitarian, tech, government, and educational sectors.</p>
-                </div>
+            <div class="group relative backdrop-blur-xl bg-white/95 rounded-2xl p-8 border border-white/30 shadow-smooth hover:shadow-smooth-lg transition-all duration-500 hover:-translate-y-2 gsap-scale-card grid-item">
+                <div class="absolute top-6 right-6 text-7xl font-bold text-primary/10 group-hover:text-primary/20 transition-colors duration-300">02</div>
+                <h3 class="text-2xl font-bold mb-4 text-gray-900 relative z-10">Sector-Specific Expertise</h3>
+                <p class="text-gray-900 leading-relaxed relative z-10">Experience across corporate, humanitarian, tech, government, and educational sectors.</p>
             </div>
             
-            <div class="why-card">
-                <div class="why-number">03</div>
-                <div class="why-content">
-                    <h3>Technology-Driven Approach</h3>
-                    <p>Leveraging modern tools and platforms to deliver efficient, scalable solutions.</p>
-                </div>
+            <div class="group relative backdrop-blur-xl bg-white/95 rounded-2xl p-8 border border-white/30 shadow-smooth hover:shadow-smooth-lg transition-all duration-500 hover:-translate-y-2 gsap-scale-card grid-item">
+                <div class="absolute top-6 right-6 text-7xl font-bold text-primary/10 group-hover:text-primary/20 transition-colors duration-300">03</div>
+                <h3 class="text-2xl font-bold mb-4 text-gray-900 relative z-10">Technology-Driven Approach</h3>
+                <p class="text-gray-900 leading-relaxed relative z-10">Leveraging modern tools and platforms to deliver efficient, scalable solutions.</p>
             </div>
             
-            <div class="why-card">
-                <div class="why-number">04</div>
-                <div class="why-content">
-                    <h3>Proven Methodology</h3>
-                    <p>Structured processes and quality assurance systems ensure consistent, reliable results.</p>
-                </div>
+            <div class="group relative backdrop-blur-xl bg-white/95 rounded-2xl p-8 border border-white/30 shadow-smooth hover:shadow-smooth-lg transition-all duration-500 hover:-translate-y-2 gsap-scale-card grid-item">
+                <div class="absolute top-6 right-6 text-7xl font-bold text-primary/10 group-hover:text-primary/20 transition-colors duration-300">04</div>
+                <h3 class="text-2xl font-bold mb-4 text-gray-900 relative z-10">Proven Methodology</h3>
+                <p class="text-gray-900 leading-relaxed relative z-10">Structured processes and quality assurance systems ensure consistent, reliable results.</p>
             </div>
         </div>
         
-        <div class="client-testimonials">
-            <h3>What Our Clients Say</h3>
-            <div class="testimonials-grid">
-                <div class="testimonial-card">
-                    <div class="testimonial-content">
-                        <p>"Thuwala Co. transformed our administrative processes, saving us 20+ hours per week."</p>
-                    </div>
-                    <div class="testimonial-author">
-                        <strong>NGO Director</strong>
-                        <span>Lilongwe-based Organization</span>
-                    </div>
-                </div>
-                
-                <div class="testimonial-card">
-                    <div class="testimonial-content">
-                        <p>"Their data analytics services provided insights that revolutionized our decision-making."</p>
-                    </div>
-                    <div class="testimonial-author">
-                        <strong>Corporate CEO</strong>
-                        <span>Financial Services Sector</span>
+        <!-- Client Testimonials -->
+        <div class="text-center mb-12" data-aos="fade-up">
+            <h3 class="text-3xl md:text-4xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">What Our Clients Say</h3>
+        </div>
+        <div class="grid md:grid-cols-3 gap-8 gsap-stagger-grid" data-aos="fade-up">
+            <div class="backdrop-blur-xl bg-white/95 rounded-2xl p-8 border border-white/30 shadow-smooth hover:shadow-smooth-lg transition-all duration-500 hover:-translate-y-2 gsap-scale-card grid-item">
+                <p class="text-gray-900 text-lg mb-6 italic leading-relaxed">"Thuwala Co. transformed our administrative processes, saving us 20+ hours per week."</p>
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-bold text-lg flex-shrink-0">N</div>
+                    <div>
+                        <div class="font-bold text-gray-900">NGO Director</div>
+                        <div class="text-sm text-gray-900">Lilongwe-based Organization</div>
                     </div>
                 </div>
-                
-                <div class="testimonial-card">
-                    <div class="testimonial-content">
-                        <p>"Professional, precise, and efficient - exactly what our startup needed to scale."</p>
+            </div>
+            
+            <div class="backdrop-blur-xl bg-white/95 rounded-2xl p-8 border border-white/30 shadow-smooth hover:shadow-smooth-lg transition-all duration-500 hover:-translate-y-2 gsap-scale-card grid-item">
+                <p class="text-gray-900 text-lg mb-6 italic leading-relaxed">"Their data analytics services provided insights that revolutionized our decision-making."</p>
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-full bg-gradient-to-br from-secondary to-primary flex items-center justify-center text-white font-bold text-lg flex-shrink-0">C</div>
+                    <div>
+                        <div class="font-bold text-gray-900">Corporate CEO</div>
+                        <div class="text-sm text-gray-900">Financial Services Sector</div>
                     </div>
-                    <div class="testimonial-author">
-                        <strong>Tech Founder</strong>
-                        <span>Malawi Startup Ecosystem</span>
+                </div>
+            </div>
+            
+            <div class="backdrop-blur-xl bg-white/95 rounded-2xl p-8 border border-white/30 shadow-smooth hover:shadow-smooth-lg transition-all duration-500 hover:-translate-y-2 gsap-scale-card grid-item">
+                <p class="text-gray-900 text-lg mb-6 italic leading-relaxed">"Professional, precise, and efficient - exactly what our startup needed to scale."</p>
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-full bg-gradient-to-br from-purple-600 to-primary flex items-center justify-center text-white font-bold text-lg flex-shrink-0">T</div>
+                    <div>
+                        <div class="font-bold text-gray-900">Tech Founder</div>
+                        <div class="text-sm text-gray-900">Malawi Startup Ecosystem</div>
                     </div>
                 </div>
             </div>
@@ -303,56 +254,31 @@
 </section>
 
 <!-- CTA Section -->
-<section class="about-cta">
-    <div class="container">
-        <div class="cta-content">
-            <h2>Ready to Transform Your Business?</h2>
-            <p>Join the growing list of organizations that trust Thuwala Co. for their business support needs.</p>
-            <div class="cta-buttons">
-                <a href="{{ url_for('services') }}" class="btn btn-primary">
-                    <i class="fas fa-rocket"></i> Explore Our Services
-                </a>
-                <a href="{{ url_for('contact') }}" class="btn btn-secondary">
-                    <i class="fas fa-comments"></i> Schedule Consultation
-                </a>
+<section class="py-20 lg:py-32 bg-white gsap-fade-in" data-aos="fade-up">
+    <div class="container mx-auto px-4">
+        <div class="relative overflow-hidden backdrop-blur-xl bg-gradient-to-br from-primary/10 via-purple-500/10 to-secondary/10 rounded-3xl p-8 md:p-12 lg:p-16 border border-white/30 shadow-smooth-lg hover:shadow-smooth-xl transition-all duration-500 max-w-5xl mx-auto" data-aos="zoom-in">
+            <div class="absolute inset-0 bg-gradient-mesh opacity-50"></div>
+            
+            <div class="relative z-10 text-center">
+                <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 bg-gradient-to-r from-primary via-purple-600 to-secondary bg-clip-text text-transparent">
+                    Ready to Transform Your Business?
+                </h2>
+                <p class="text-lg md:text-xl text-gray-900 mb-10 leading-relaxed max-w-2xl mx-auto">
+                    Join the growing list of organizations that trust Thuwala Co. for their business support needs.
+                </p>
+                
+                <div class="flex flex-wrap justify-center gap-4">
+                    <a href="{{ url_for('services') }}" class="inline-flex items-center gap-2 px-8 py-4 bg-primary text-white font-semibold rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-1 hover:scale-105 transition-all duration-300">
+                        <i class="fas fa-rocket"></i> Explore Our Services
+                    </a>
+                    <a href="{{ url_for('contact') }}" class="inline-flex items-center gap-2 px-8 py-4 bg-white/80 backdrop-blur-sm text-primary font-semibold rounded-xl border-2 border-primary/20 hover:border-primary hover:-translate-y-1 transition-all duration-300">
+                        <i class="fas fa-comments"></i> Schedule Consultation
+                    </a>
+                </div>
             </div>
         </div>
     </div>
 </section>
 {% endblock %}
 
-{% block scripts %}
-<script>
-    // Animate numbers counting up
-    document.addEventListener('DOMContentLoaded', function() {
-        const counters = document.querySelectorAll('.stat-number');
-        
-        counters.forEach(counter => {
-            const updateCount = () => {
-                const target = +counter.getAttribute('data-target');
-                const count = +counter.innerText;
-                const increment = target / 100;
-                
-                if (count < target) {
-                    counter.innerText = Math.ceil(count + increment);
-                    setTimeout(updateCount, 20);
-                } else {
-                    counter.innerText = target;
-                }
-            };
-            
-            // Start counting when element is in viewport
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        updateCount();
-                        observer.unobserve(entry.target);
-                    }
-                });
-            }, { threshold: 0.5 });
-            
-            observer.observe(counter);
-        });
-    });
-</script>
-{% endblock %}
+{% block scripts %}{% endblock %}

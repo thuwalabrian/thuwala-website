@@ -1,5 +1,5 @@
 {# Reusable template components and macros #}
-{% macro responsive_picture(src, alt='', cls='', sizes='100vw') -%}
+{% macro responsive_picture(src, alt='', cls='', sizes='100vw', loading='lazy', decoding='async', fetchpriority='auto') -%}
 {# Normalize src so callers can pass '/static/images/...' or 'images/...' #}
 {%- if src is string and src.startswith('/static/') -%}
     {%- set filename = src[8:] -%}
@@ -10,7 +10,7 @@
 {%- endif -%}
 {%- set webp = filename.rsplit('.', 1)[0] + '.webp' -%}
 <picture class="responsive-picture {{ cls }}">
-        <source srcset="{{ url_for('static', filename=webp) }}" type="image/webp" sizes="{{ sizes }}">
-        <img src="{{ url_for('static', filename=filename) }}" alt="{{ alt }}" loading="lazy" sizes="{{ sizes }}" class="{{ cls }}">
+    <source srcset="{{ url_for('static', filename=webp) }}" type="image/webp" sizes="{{ sizes }}">
+    <img src="{{ url_for('static', filename=filename) }}" alt="{{ alt }}" loading="{{ loading }}" decoding="{{ decoding }}" fetchpriority="{{ fetchpriority }}" sizes="{{ sizes }}" class="{{ cls }}">
 </picture>
 {%- endmacro %}

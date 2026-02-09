@@ -11,6 +11,10 @@ thuwala/
 
 # OS files
 .DS_Store
+Thumbs.db
+
+# Node
+node_modules/
 
 # Database and uploads
 thuwala.db

@@ -1,0 +1,10 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom component layer for project-specific tweaks */
+@layer components {
+  .tw-container {
+    @apply mx-auto px-4;
+  }
+}

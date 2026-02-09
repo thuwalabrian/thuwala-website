@@ -31,6 +31,15 @@ from itsdangerous import URLSafeTimedSerializer
 
 app = Flask(__name__)
 app.config.from_object("config.Config")
+app.config["SEND_FILE_MAX_AGE_DEFAULT"] = 60 * 60 * 24 * 30  # 30 days
+
+
+@app.after_request
+def add_static_cache_headers(response):
+    if request.path.startswith("/static/"):
+        response.headers["Cache-Control"] = "public, max-age=2592000"
+    return response
+
 
 db = SQLAlchemy(app)
 login_manager = LoginManager(app)
@@ -658,7 +667,7 @@ def index():
         # Get active advertisements
         ads = []
         try:
-            ads = (
+            ads_query = (
                 Advertisement.query.filter_by(is_active=True)
                 .order_by(
                     Advertisement.display_order,
@@ -667,6 +676,20 @@ def index():
                 .limit(5)
                 .all()
             )  # Limit to 5 ads max
+            # Convert to dictionaries for JSON serialization
+            ads = [
+                {
+                    "id": ad.id,
+                    "title": ad.title,
+                    "description": ad.description,
+                    "cta_text": ad.cta_text,
+                    "cta_link": ad.cta_link,
+                    "image_url": ad.image_url,
+                    "background_color": ad.background_color,
+                    "text_color": ad.text_color,
+                }
+                for ad in ads_query
+            ]
             print(f"DEBUG: Found {len(ads)} active advertisements for homepage")
         except Exception as e:
             print(f"DEBUG: Error fetching ads: {e}")
@@ -681,21 +704,34 @@ def index():
                 .limit(6)
                 .all()
             )
+            # Extract testimonials from portfolio items
+            testimonials = [
+                {
+                    "testimonial": p.testimonial,
+                    "client_name": p.client_name,
+                    "client_role": p.client_role,
+                }
+                for p in portfolio_items
+                if p.testimonial
+            ]
         except Exception as e:
             print(f"DEBUG: Error fetching portfolio items: {e}")
             portfolio_items = []
+            testimonials = []
 
     except Exception as e:
         print(f"Database error in index route: {e}")
         services = []
         ads = []
         portfolio_items = []
+        testimonials = []
 
     return render_template(
         "index.html",
         services=services,
         advertisements=ads,
         portfolio_items=portfolio_items,
+        testimonials=testimonials,
         now=datetime.utcnow(),
     )
 

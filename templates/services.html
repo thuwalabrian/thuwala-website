@@ -4,81 +4,85 @@
 
 {% block content %}
 <!-- Services Hero -->
-<section class="services-hero">
-    <div class="container">
-        <div class="hero-content">
-            <h1 class="hero-title animate__animated animate__fadeInUp">
+<section class="relative py-20 lg:py-32 bg-gradient-to-b from-gray-50 to-white overflow-hidden gsap-fade-in" data-aos="fade-up">
+    <div class="container mx-auto px-4">
+        <div class="max-w-4xl mx-auto backdrop-blur-xl bg-white/95 rounded-3xl p-8 md:p-12 border border-white/30 shadow-smooth hover:shadow-smooth-lg transition-all duration-500 hover:-translate-y-2" data-aos="fade-right">
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold font-display mb-6 text-center bg-gradient-to-r from-primary via-purple-600 to-secondary bg-[length:200%_auto] animate-gradient bg-clip-text text-transparent" data-aos="fade-up" data-aos-delay="100">
                 Comprehensive Business Solutions
             </h1>
-            <p class="hero-subtitle animate__animated animate__fadeInUp animate__delay-1s">
+            <p class="text-lg md:text-xl text-gray-900 text-center mb-12 leading-relaxed" data-aos="fade-up" data-aos-delay="200">
                 10 specialized service areas designed to optimize your operations, enhance productivity, and drive growth.
             </p>
-            <div class="hero-stats animate__animated animate__fadeInUp animate__delay-2s">
-                <div class="stat">
-                    <span class="stat-number" data-target="10">0</span>
-                    <span class="stat-label">Service Areas</span>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8" data-aos="fade-up" data-aos-delay="300">
+                <div class="text-center" x-data="{ count: 0, target: 10, init() { setInterval(() => { if (this.count < this.target) this.count += Math.ceil(this.target / 30); }, 50); } }" x-init="init()">
+                    <div class="text-5xl font-bold text-primary mb-2" x-text="count">0</div>
+                    <div class="text-gray-900 font-medium">Service Areas</div>
                 </div>
-                <div class="stat">
-                    <span class="stat-number" data-target="100">0</span>
-                    <span class="stat-label">Projects Delivered</span>
+                <div class="text-center" x-data="{ count: 0, target: 100, init() { setInterval(() => { if (this.count < this.target) this.count += Math.ceil(this.target / 30); }, 50); } }" x-init="init()">
+                    <div class="text-5xl font-bold text-primary mb-2" x-text="count">0</div>
+                    <div class="text-gray-900 font-medium">Projects Delivered</div>
                 </div>
-                <div class="stat">
-                    <span class="stat-number" data-target="95">0</span>
-                    <span class="stat-label">Client Satisfaction</span>
+                <div class="text-center" x-data="{ count: 0, target: 95, init() { setInterval(() => { if (this.count < this.target) this.count += Math.ceil(this.target / 30); }, 50); } }" x-init="init()">
+                    <div class="text-5xl font-bold text-primary mb-2" x-text="count">0</div>
+                    <div class="text-gray-900 font-medium">Client Satisfaction</div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="hero-wave">
-        <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
-            <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z"></path>
+    
+    <!-- Decorative wave -->
+    <div class="absolute bottom-0 left-0 right-0 text-white opacity-10">
+        <svg viewBox="0 0 1200 120" preserveAspectRatio="none" class="w-full h-20 md:h-32">
+            <path fill="currentColor" d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z"></path>
         </svg>
     </div>
 </section>
 
 <!-- Services Navigation -->
-<section class="services-nav">
-    <div class="container">
-        <div class="nav-container">
-            <div class="nav-label">Jump to:</div>
-            <div class="nav-links">
-                <a href="#administrative" class="nav-link active" data-category="administrative">
+<section class="sticky top-20 z-40 py-6 bg-white/80 backdrop-blur-xl border-b border-gray-200/50 gsap-fade-in" data-aos="fade-up">
+    <div class="container mx-auto px-4">
+        <div class="backdrop-blur-xl bg-white/95 rounded-2xl p-4 shadow-smooth border border-white/30" data-aos="fade-up">
+            <div class="text-sm font-semibold text-gray-900 mb-3">Jump to:</div>
+            <div class="flex flex-wrap gap-3">
+            <div class="flex flex-wrap gap-3">
+                <a href="#administrative" class="group flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg font-medium hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 active" data-category="administrative">
                     <i class="fas fa-clipboard-check"></i>
                     <span>Administrative</span>
                 </a>
-                <a href="#operations" class="nav-link" data-category="operations">
+                <a href="#operations" class="group flex items-center gap-2 px-4 py-2 bg-gray-100 text-primary rounded-lg font-medium hover:bg-primary hover:text-white hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300" data-category="operations">
                     <i class="fas fa-project-diagram"></i>
                     <span>Operations</span>
                 </a>
-                <a href="#data" class="nav-link" data-category="data">
+                <a href="#data" class="group flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-900 rounded-lg font-medium hover:bg-primary hover:text-white hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300" data-category="data">
                     <i class="fas fa-chart-bar"></i>
                     <span>Data & Analytics</span>
                 </a>
-                <a href="#communications" class="nav-link" data-category="communications">
+                <a href="#communications" class="group flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-900 rounded-lg font-medium hover:bg-primary hover:text-white hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300" data-category="communications">
                     <i class="fas fa-bullhorn"></i>
                     <span>Communications</span>
                 </a>
-                <a href="#branding" class="nav-link" data-category="branding">
+                <a href="#branding" class="group flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-900 rounded-lg font-medium hover:bg-primary hover:text-white hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300" data-category="branding">
                     <i class="fas fa-palette"></i>
                     <span>Branding</span>
                 </a>
-                <a href="#business" class="nav-link" data-category="business">
+                <a href="#business" class="group flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-900 rounded-lg font-medium hover:bg-primary hover:text-white hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300" data-category="business">
                     <i class="fas fa-briefcase"></i>
                     <span>Business Support</span>
                 </a>
-                <a href="#systems" class="nav-link" data-category="systems">
+                <a href="#systems" class="group flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-900 rounded-lg font-medium hover:bg-primary hover:text-white hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300" data-category="systems">
                     <i class="fas fa-cogs"></i>
                     <span>Systems</span>
                 </a>
-                <a href="#training" class="nav-link" data-category="training">
+                <a href="#training" class="group flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-900 rounded-lg font-medium hover:bg-primary hover:text-white hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300" data-category="training">
                     <i class="fas fa-graduation-cap"></i>
                     <span>Training</span>
                 </a>
-                <a href="#creative" class="nav-link" data-category="creative">
+                <a href="#creative" class="group flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-900 rounded-lg font-medium hover:bg-primary hover:text-white hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300" data-category="creative">
                     <i class="fas fa-lightbulb"></i>
                     <span>Creative</span>
                 </a>
-                <a href="#consulting" class="nav-link" data-category="consulting">
+                <a href="#consulting" class="group flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-900 rounded-lg font-medium hover:bg-primary hover:text-white hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300" data-category="consulting">
                     <i class="fas fa-chess"></i>
                     <span>Consulting</span>
                 </a>
@@ -88,45 +92,41 @@
 </section>
 
 <!-- Service Categories -->
-<section class="service-categories">
-    <div class="container">
+<section class="py-20 lg:py-32">
+    <div class="container mx-auto px-4">
         <!-- Administrative Services -->
-        <div class="category-section" id="administrative">
-            <div class="category-header">
-                <div class="category-icon">
-                    <i class="fas fa-clipboard-check"></i>
-                </div>
-                <div class="category-title">
-                    <h2>Administrative & Executive Support</h2>
-                    <p>Seamless virtual and on-site administrative solutions to keep organizations operating with order and professionalism.</p>
-                </div>
-            </div>
-            
-            <div class="services-cards">
+        <div class="mb-24" id="administrative">
+            <div class="grid md:grid-cols-2 gap-8 gsap-stagger-grid" data-aos="fade-up">
                 {% for service in services if service.category == 'administrative' %}
-                <div class="service-card-enhanced" id="service-{{ service.id }}">
-                    <div class="service-card-header">
-                        <div class="service-icon">
-                            <i class="{{ service.icon }}"></i>
+                <div class="group relative backdrop-blur-xl bg-white/95 rounded-2xl p-8 border border-white/30 shadow-smooth hover:shadow-smooth-lg transition-all duration-500 hover:-translate-y-2 gsap-scale-card grid-item" id="service-{{ service.id }}">
+                    <div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/10 via-purple-500/10 to-secondary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10 blur-xl"></div>
+                    
+                    <div class="flex items-start gap-4 mb-6">
+                        <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                            <i class="{{ service.icon }} text-white text-xl"></i>
                         </div>
-                        <h3>{{ service.title }}</h3>
+                        <h3 class="text-xl font-bold text-gray-900 group-hover:text-primary transition-colors duration-300">{{ service.title }}</h3>
                     </div>
-                    <div class="service-card-body">
-                        <p>{{ service.description }}</p>
-                        {% if service.details %}
-                        <div class="service-features">
-                            <h4>Key Services:</h4>
-                            <ul>
-                                {% for detail in service.details.split(', ') %}
-                                <li><i class="fas fa-check"></i> {{ detail }}</li>
-                                {% endfor %}
-                            </ul>
-                        </div>
-                        {% endif %}
+                    
+                    <p class="text-gray-900 mb-6 leading-relaxed">{{ service.description }}</p>
+                    
+                    {% if service.details %}
+                    <div class="mb-6">
+                        <h4 class="font-semibold text-gray-900 mb-3">Key Services:</h4>
+                        <ul class="space-y-2">
+                            {% for detail in service.details.split(', ') %}
+                            <li class="flex items-start gap-2 text-gray-900">
+                                <i class="fas fa-check text-secondary mt-1 flex-shrink-0"></i>
+                                <span>{{ detail }}</span>
+                            </li>
+                            {% endfor %}
+                        </ul>
                     </div>
-                    <div class="service-card-footer">
-                        <span class="outcome">Outcome: Increased productivity and structure through reliable administrative systems.</span>
-                        <button class="service-inquire" data-service="{{ service.title }}">
+                    {% endif %}
+                    
+                    <div class="pt-6 border-t border-gray-200">
+                        <p class="text-sm text-gray-900 italic mb-4">Outcome: Increased productivity and structure through reliable administrative systems.</p>
+                        <button class="w-full flex items-center justify-center gap-2 px-6 py-3 bg-primary text-white font-semibold rounded-xl hover:shadow-lg hover:-translate-y-1 transition-all duration-300" data-service="{{ service.title }}">
                             <i class="fas fa-envelope"></i> Inquire About This Service
                         </button>
                     </div>
@@ -136,42 +136,38 @@
         </div>
 
         <!-- Operations Support -->
-        <div class="category-section" id="operations">
-            <div class="category-header">
-                <div class="category-icon">
-                    <i class="fas fa-project-diagram"></i>
-                </div>
-                <div class="category-title">
-                    <h2>Project & Operations Support</h2>
-                    <p>Plan, execute, and report on projects with precision and transparency.</p>
-                </div>
-            </div>
-            
-            <div class="services-cards">
+        <div class="mb-24" id="operations">
+            <div class="grid md:grid-cols-2 gap-8 gsap-stagger-grid" data-aos="fade-up">
                 {% for service in services if service.category == 'operations' %}
-                <div class="service-card-enhanced" id="service-{{ service.id }}">
-                    <div class="service-card-header">
-                        <div class="service-icon">
-                            <i class="{{ service.icon }}"></i>
+                <div class="group relative backdrop-blur-xl bg-white/95 rounded-2xl p-8 border border-white/30 shadow-smooth hover:shadow-smooth-lg transition-all duration-500 hover:-translate-y-2 grid-item" id="service-{{ service.id }}">
+                    <div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/10 via-purple-500/10 to-secondary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10 blur-xl"></div>
+                    
+                    <div class="flex items-start gap-4 mb-6">
+                        <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                            <i class="{{ service.icon }} text-white text-xl"></i>
                         </div>
-                        <h3>{{ service.title }}</h3>
+                        <h3 class="text-xl font-bold text-gray-900 group-hover:text-primary transition-colors duration-300">{{ service.title }}</h3>
                     </div>
-                    <div class="service-card-body">
-                        <p>{{ service.description }}</p>
-                        {% if service.details %}
-                        <div class="service-features">
-                            <h4>Key Services:</h4>
-                            <ul>
-                                {% for detail in service.details.split(', ') %}
-                                <li><i class="fas fa-check"></i> {{ detail }}</li>
-                                {% endfor %}
-                            </ul>
-                        </div>
-                        {% endif %}
+                    
+                    <p class="text-gray-900 mb-6 leading-relaxed">{{ service.description }}</p>
+                    
+                    {% if service.details %}
+                    <div class="mb-6">
+                        <h4 class="font-semibold text-gray-900 mb-3">Key Services:</h4>
+                        <ul class="space-y-2">
+                            {% for detail in service.details.split(', ') %}
+                            <li class="flex items-start gap-2 text-gray-900">
+                                <i class="fas fa-check text-secondary mt-1 flex-shrink-0"></i>
+                                <span>{{ detail }}</span>
+                            </li>
+                            {% endfor %}
+                        </ul>
                     </div>
-                    <div class="service-card-footer">
-                        <span class="outcome">Outcome: Projects stay organized, compliant, and deliver measurable results.</span>
-                        <button class="service-inquire" data-service="{{ service.title }}">
+                    {% endif %}
+                    
+                    <div class="pt-6 border-t border-gray-200">
+                        <p class="text-sm text-gray-900 italic mb-4">Outcome: Projects stay organized, compliant, and deliver measurable results.</p>
+                        <button class="w-full flex items-center justify-center gap-2 px-6 py-3 bg-primary text-white font-semibold rounded-xl hover:shadow-lg hover:-translate-y-1 transition-all duration-300" data-service="{{ service.title }}">
                             <i class="fas fa-envelope"></i> Inquire About This Service
                         </button>
                     </div>
@@ -181,42 +177,38 @@
         </div>
 
         <!-- Data & Analytics -->
-        <div class="category-section" id="data">
-            <div class="category-header">
-                <div class="category-icon">
-                    <i class="fas fa-chart-bar"></i>
-                </div>
-                <div class="category-title">
-                    <h2>Data Management & Analytics</h2>
-                    <p>Transform raw data into actionable insights for smarter decisions.</p>
-                </div>
-            </div>
-            
-            <div class="services-cards">
+        <div class="mb-24" id="data">
+            <div class="grid md:grid-cols-2 gap-8 gsap-stagger-grid" data-aos="fade-up">
                 {% for service in services if service.category == 'data' %}
-                <div class="service-card-enhanced" id="service-{{ service.id }}">
-                    <div class="service-card-header">
-                        <div class="service-icon">
-                            <i class="{{ service.icon }}"></i>
+                <div class="group relative backdrop-blur-xl bg-white/95 rounded-2xl p-8 border border-white/30 shadow-smooth hover:shadow-smooth-lg transition-all duration-500 hover:-translate-y-2 grid-item" id="service-{{ service.id }}">
+                    <div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/10 via-purple-500/10 to-secondary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10 blur-xl"></div>
+                    
+                    <div class="flex items-start gap-4 mb-6">
+                        <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                            <i class="{{ service.icon }} text-white text-xl"></i>
                         </div>
-                        <h3>{{ service.title }}</h3>
+                        <h3 class="text-xl font-bold text-gray-900 group-hover:text-primary transition-colors duration-300">{{ service.title }}</h3>
                     </div>
-                    <div class="service-card-body">
-                        <p>{{ service.description }}</p>
-                        {% if service.details %}
-                        <div class="service-features">
-                            <h4>Key Services:</h4>
-                            <ul>
-                                {% for detail in service.details.split(', ') %}
-                                <li><i class="fas fa-check"></i> {{ detail }}</li>
-                                {% endfor %}
-                            </ul>
-                        </div>
-                        {% endif %}
+                    
+                    <p class="text-gray-900 mb-6 leading-relaxed">{{ service.description }}</p>
+                    
+                    {% if service.details %}
+                    <div class="mb-6">
+                        <h4 class="font-semibold text-gray-900 mb-3">Key Services:</h4>
+                        <ul class="space-y-2">
+                            {% for detail in service.details.split(', ') %}
+                            <li class="flex items-start gap-2 text-gray-900">
+                                <i class="fas fa-check text-secondary mt-1 flex-shrink-0"></i>
+                                <span>{{ detail }}</span>
+                            </li>
+                            {% endfor %}
+                        </ul>
                     </div>
-                    <div class="service-card-footer">
-                        <span class="outcome">Outcome: Clean, clear, and visual data insights that inform smarter decisions.</span>
-                        <button class="service-inquire" data-service="{{ service.title }}">
+                    {% endif %}
+                    
+                    <div class="pt-6 border-t border-gray-200">
+                        <p class="text-sm text-gray-900 italic mb-4">Outcome: Clean, clear, and visual data insights that inform smarter decisions.</p>
+                        <button class="w-full flex items-center justify-center gap-2 px-6 py-3 bg-primary text-white font-semibold rounded-xl hover:shadow-lg hover:-translate-y-1 transition-all duration-300" data-service="{{ service.title }}">
                             <i class="fas fa-envelope"></i> Inquire About This Service
                         </button>
                     </div>
@@ -226,42 +218,38 @@
         </div>
 
         <!-- Communications -->
-        <div class="category-section" id="communications">
-            <div class="category-header">
-                <div class="category-icon">
-                    <i class="fas fa-bullhorn"></i>
-                </div>
-                <div class="category-title">
-                    <h2>Communications & Documentation</h2>
-                    <p>Communicate your story, impact, and value clearly to your audience.</p>
-                </div>
-            </div>
-            
-            <div class="services-cards">
+        <div class="mb-24" id="communications">
+            <div class="grid md:grid-cols-2 gap-8 gsap-stagger-grid" data-aos="fade-up">
                 {% for service in services if service.category == 'communications' %}
-                <div class="service-card-enhanced" id="service-{{ service.id }}">
-                    <div class="service-card-header">
-                        <div class="service-icon">
-                            <i class="{{ service.icon }}"></i>
+                <div class="group relative backdrop-blur-xl bg-white/95 rounded-2xl p-8 border border-white/30 shadow-smooth hover:shadow-smooth-lg transition-all duration-500 hover:-translate-y-2 grid-item" id="service-{{ service.id }}">
+                    <div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/10 via-purple-500/10 to-secondary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10 blur-xl"></div>
+                    
+                    <div class="flex items-start gap-4 mb-6">
+                        <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                            <i class="{{ service.icon }} text-white text-xl"></i>
                         </div>
-                        <h3>{{ service.title }}</h3>
+                        <h3 class="text-xl font-bold text-gray-900 group-hover:text-primary transition-colors duration-300">{{ service.title }}</h3>
                     </div>
-                    <div class="service-card-body">
-                        <p>{{ service.description }}</p>
-                        {% if service.details %}
-                        <div class="service-features">
-                            <h4>Key Services:</h4>
-                            <ul>
-                                {% for detail in service.details.split(', ') %}
-                                <li><i class="fas fa-check"></i> {{ detail }}</li>
-                                {% endfor %}
-                            </ul>
-                        </div>
-                        {% endif %}
+                    
+                    <p class="text-gray-900 mb-6 leading-relaxed">{{ service.description }}</p>
+                    
+                    {% if service.details %}
+                    <div class="mb-6">
+                        <h4 class="font-semibold text-gray-900 mb-3">Key Services:</h4>
+                        <ul class="space-y-2">
+                            {% for detail in service.details.split(', ') %}
+                            <li class="flex items-start gap-2 text-gray-900">
+                                <i class="fas fa-check text-secondary mt-1 flex-shrink-0"></i>
+                                <span>{{ detail }}</span>
+                            </li>
+                            {% endfor %}
+                        </ul>
                     </div>
-                    <div class="service-card-footer">
-                        <span class="outcome">Outcome: Your message looks, sounds, and feels professional at every level.</span>
-                        <button class="service-inquire" data-service="{{ service.title }}">
+                    {% endif %}
+                    
+                    <div class="pt-6 border-t border-gray-200">
+                        <p class="text-sm text-gray-900 italic mb-4">Outcome: Your message looks, sounds, and feels professional at every level.</p>
+                        <button class="w-full flex items-center justify-center gap-2 px-6 py-3 bg-primary text-white font-semibold rounded-xl hover:shadow-lg hover:-translate-y-1 transition-all duration-300" data-service="{{ service.title }}">
                             <i class="fas fa-envelope"></i> Inquire About This Service
                         </button>
                     </div>
@@ -271,42 +259,38 @@
         </div>
 
         <!-- Branding -->
-        <div class="category-section" id="branding">
-            <div class="category-header">
-                <div class="category-icon">
-                    <i class="fas fa-palette"></i>
-                </div>
-                <div class="category-title">
-                    <h2>Branding, Design & Marketing</h2>
-                    <p>Build brands that command attention and credibility.</p>
-                </div>
-            </div>
-            
-            <div class="services-cards">
+        <div class="mb-24" id="branding">
+            <div class="grid md:grid-cols-2 gap-8 gsap-stagger-grid" data-aos="fade-up">
                 {% for service in services if service.category == 'branding' %}
-                <div class="service-card-enhanced" id="service-{{ service.id }}">
-                    <div class="service-card-header">
-                        <div class="service-icon">
-                            <i class="{{ service.icon }}"></i>
+                <div class="group relative backdrop-blur-xl bg-white/95 rounded-2xl p-8 border border-white/30 shadow-smooth hover:shadow-smooth-lg transition-all duration-500 hover:-translate-y-2 grid-item" id="service-{{ service.id }}">
+                    <div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/10 via-purple-500/10 to-secondary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10 blur-xl"></div>
+                    
+                    <div class="flex items-start gap-4 mb-6">
+                        <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                            <i class="{{ service.icon }} text-white text-xl"></i>
                         </div>
-                        <h3>{{ service.title }}</h3>
+                        <h3 class="text-xl font-bold text-gray-900 group-hover:text-primary transition-colors duration-300">{{ service.title }}</h3>
                     </div>
-                    <div class="service-card-body">
-                        <p>{{ service.description }}</p>
-                        {% if service.details %}
-                        <div class="service-features">
-                            <h4>Key Services:</h4>
-                            <ul>
-                                {% for detail in service.details.split(', ') %}
-                                <li><i class="fas fa-check"></i> {{ detail }}</li>
-                                {% endfor %}
-                            </ul>
-                        </div>
-                        {% endif %}
+                    
+                    <p class="text-gray-900 mb-6 leading-relaxed">{{ service.description }}</p>
+                    
+                    {% if service.details %}
+                    <div class="mb-6">
+                        <h4 class="font-semibold text-gray-900 mb-3">Key Services:</h4>
+                        <ul class="space-y-2">
+                            {% for detail in service.details.split(', ') %}
+                            <li class="flex items-start gap-2 text-gray-900">
+                                <i class="fas fa-check text-secondary mt-1 flex-shrink-0"></i>
+                                <span>{{ detail }}</span>
+                            </li>
+                            {% endfor %}
+                        </ul>
                     </div>
-                    <div class="service-card-footer">
-                        <span class="outcome">Outcome: A consistent, attractive, and persuasive brand presence online and offline.</span>
-                        <button class="service-inquire" data-service="{{ service.title }}">
+                    {% endif %}
+                    
+                    <div class="pt-6 border-t border-gray-200">
+                        <p class="text-sm text-gray-900 italic mb-4">Outcome: A consistent, attractive, and persuasive brand presence online and offline.</p>
+                        <button class="w-full flex items-center justify-center gap-2 px-6 py-3 bg-primary text-white font-semibold rounded-xl hover:shadow-lg hover:-translate-y-1 transition-all duration-300" data-service="{{ service.title }}">
                             <i class="fas fa-envelope"></i> Inquire About This Service
                         </button>
                     </div>
@@ -316,42 +300,38 @@
         </div>
 
         <!-- Business Support -->
-        <div class="category-section" id="business">
-            <div class="category-header">
-                <div class="category-icon">
-                    <i class="fas fa-briefcase"></i>
-                </div>
-                <div class="category-title">
-                    <h2>Business & Startup Support</h2>
-                    <p>All the foundational tools needed to launch, formalize, and grow.</p>
-                </div>
-            </div>
-            
-            <div class="services-cards">
+        <div class="mb-24" id="business">
+            <div class="grid md:grid-cols-2 gap-8 gsap-stagger-grid" data-aos="fade-up">
                 {% for service in services if service.category == 'business' %}
-                <div class="service-card-enhanced" id="service-{{ service.id }}">
-                    <div class="service-card-header">
-                        <div class="service-icon">
-                            <i class="{{ service.icon }}"></i>
+                <div class="group relative backdrop-blur-xl bg-white/95 rounded-2xl p-8 border border-white/30 shadow-smooth hover:shadow-smooth-lg transition-all duration-500 hover:-translate-y-2 grid-item" id="service-{{ service.id }}">
+                    <div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/10 via-purple-500/10 to-secondary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10 blur-xl"></div>
+                    
+                    <div class="flex items-start gap-4 mb-6">
+                        <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                            <i class="{{ service.icon }} text-white text-xl"></i>
                         </div>
-                        <h3>{{ service.title }}</h3>
+                        <h3 class="text-xl font-bold text-gray-900 group-hover:text-primary transition-colors duration-300">{{ service.title }}</h3>
                     </div>
-                    <div class="service-card-body">
-                        <p>{{ service.description }}</p>
-                        {% if service.details %}
-                        <div class="service-features">
-                            <h4>Key Services:</h4>
-                            <ul>
-                                {% for detail in service.details.split(', ') %}
-                                <li><i class="fas fa-check"></i> {{ detail }}</li>
-                                {% endfor %}
-                            </ul>
-                        </div>
-                        {% endif %}
+                    
+                    <p class="text-gray-900 mb-6 leading-relaxed">{{ service.description }}</p>
+                    
+                    {% if service.details %}
+                    <div class="mb-6">
+                        <h4 class="font-semibold text-gray-900 mb-3">Key Services:</h4>
+                        <ul class="space-y-2">
+                            {% for detail in service.details.split(', ') %}
+                            <li class="flex items-start gap-2 text-gray-900">
+                                <i class="fas fa-check text-secondary mt-1 flex-shrink-0"></i>
+                                <span>{{ detail }}</span>
+                            </li>
+                            {% endfor %}
+                        </ul>
                     </div>
-                    <div class="service-card-footer">
-                        <span class="outcome">Outcome: Businesses start and scale with professionalism and strategic direction.</span>
-                        <button class="service-inquire" data-service="{{ service.title }}">
+                    {% endif %}
+                    
+                    <div class="pt-6 border-t border-gray-200">
+                        <p class="text-sm text-gray-900 italic mb-4">Outcome: Businesses start and scale with professionalism and strategic direction.</p>
+                        <button class="w-full flex items-center justify-center gap-2 px-6 py-3 bg-primary text-white font-semibold rounded-xl hover:shadow-lg hover:-translate-y-1 transition-all duration-300" data-service="{{ service.title }}">
                             <i class="fas fa-envelope"></i> Inquire About This Service
                         </button>
                     </div>
@@ -366,141 +346,163 @@
 </section>
 
 <!-- Process Section -->
-<section class="services-process">
-    <div class="container">
-        <div class="section-header">
-            <h2 class="section-title">Our Service Delivery Process</h2>
-            <p class="section-subtitle">A structured approach to ensure quality and success</p>
+<section class="py-20 lg:py-32 bg-white" data-aos="fade-up">
+    <div class="container mx-auto px-4">
+        <div class="max-w-2xl mx-auto text-center mb-16" data-aos="fade-up">
+            <h2 class="text-3xl md:text-4xl font-bold font-display text-gray-900 mb-4">Our Service Delivery Process</h2>
+            <p class="text-gray-900">A structured approach to ensure quality and success</p>
         </div>
         
-        <div class="process-timeline">
-            <div class="process-step">
-                <div class="step-icon">
-                    <i class="fas fa-search"></i>
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8" data-aos="fade-up">
+            <div class="group relative backdrop-blur-xl bg-white/95 rounded-2xl p-8 border border-white/30 shadow-smooth hover:shadow-smooth-lg transition-all duration-500 hover:-translate-y-2">
+                <div class="absolute top-4 right-4 text-6xl font-bold text-primary/10 group-hover:text-primary/20 transition-colors duration-300">01</div>
+                <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center mb-6 relative z-10 group-hover:scale-110 transition-transform duration-300">
+                    <i class="fas fa-search text-white text-2xl"></i>
                 </div>
-                <div class="step-content">
-                    <h3>Discovery & Analysis</h3>
-                    <p>We begin by understanding your specific needs, challenges, and objectives.</p>
-                </div>
-                <div class="step-number">01</div>
+                <h3 class="text-xl font-bold mb-3 text-gray-900 relative z-10">Discovery & Analysis</h3>
+                <p class="text-gray-900 relative z-10">We begin by understanding your specific needs, challenges, and objectives.</p>
             </div>
             
-            <div class="process-step">
-                <div class="step-icon">
-                    <i class="fas fa-clipboard-list"></i>
+            <div class="group relative backdrop-blur-xl bg-white/95 rounded-2xl p-8 border border-white/30 shadow-smooth hover:shadow-smooth-lg transition-all duration-500 hover:-translate-y-2">
+                <div class="absolute top-4 right-4 text-6xl font-bold text-primary/10 group-hover:text-primary/20 transition-colors duration-300">02</div>
+                <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center mb-6 relative z-10 group-hover:scale-110 transition-transform duration-300">
+                    <i class="fas fa-clipboard-list text-white text-2xl"></i>
                 </div>
-                <div class="step-content">
-                    <h3>Solution Design</h3>
-                    <p>Customized strategy and plan development tailored to your requirements.</p>
-                </div>
-                <div class="step-number">02</div>
+                <h3 class="text-xl font-bold mb-3 text-gray-900 relative z-10">Solution Design</h3>
+                <p class="text-gray-900 relative z-10">Customized strategy and plan development tailored to your requirements.</p>
             </div>
             
-            <div class="process-step">
-                <div class="step-icon">
-                    <i class="fas fa-cogs"></i>
+            <div class="group relative backdrop-blur-xl bg-white/95 rounded-2xl p-8 border border-white/30 shadow-smooth hover:shadow-smooth-lg transition-all duration-500 hover:-translate-y-2">
+                <div class="absolute top-4 right-4 text-6xl font-bold text-primary/10 group-hover:text-primary/20 transition-colors duration-300">03</div>
+                <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center mb-6 relative z-10 group-hover:scale-110 transition-transform duration-300">
+                    <i class="fas fa-cogs text-white text-2xl"></i>
                 </div>
-                <div class="step-content">
-                    <h3>Implementation</h3>
-                    <p>Expert execution with regular updates and transparent communication.</p>
-                </div>
-                <div class="step-number">03</div>
+                <h3 class="text-xl font-bold mb-3 text-gray-900 relative z-10">Implementation</h3>
+                <p class="text-gray-900 relative z-10">Expert execution with regular updates and transparent communication.</p>
             </div>
             
-            <div class="process-step">
-                <div class="step-icon">
-                    <i class="fas fa-chart-line"></i>
+            <div class="group relative backdrop-blur-xl bg-white/95 rounded-2xl p-8 border border-white/30 shadow-smooth hover:shadow-smooth-lg transition-all duration-500 hover:-translate-y-2">
+                <div class="absolute top-4 right-4 text-6xl font-bold text-primary/10 group-hover:text-primary/20 transition-colors duration-300">04</div>
+                <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center mb-6 relative z-10 group-hover:scale-110 transition-transform duration-300">
+                    <i class="fas fa-chart-line text-white text-2xl"></i>
                 </div>
-                <div class="step-content">
-                    <h3>Review & Optimization</h3>
-                    <p>Continuous monitoring, reporting, and improvement for ongoing success.</p>
-                </div>
-                <div class="step-number">04</div>
+                <h3 class="text-xl font-bold mb-3 text-gray-900 relative z-10">Review & Optimization</h3>
+                <p class="text-gray-900 relative z-10">Continuous monitoring, reporting, and improvement for ongoing success.</p>
             </div>
         </div>
     </div>
 </section>
 
 <!-- CTA Section -->
-<section class="services-cta">
-    <div class="container">
-        <div class="cta-content">
-            <div class="cta-text">
-                <h2>Ready to Transform Your Business Operations?</h2>
-                <p>Get a personalized consultation and discover how our services can drive your success.</p>
-                <div class="cta-features">
-                    <div class="feature">
-                        <i class="fas fa-check-circle"></i>
-                        <span>Free initial consultation</span>
-                    </div>
-                    <div class="feature">
-                        <i class="fas fa-check-circle"></i>
-                        <span>Customized service packages</span>
-                    </div>
-                    <div class="feature">
-                        <i class="fas fa-check-circle"></i>
-                        <span>Flexible engagement models</span>
-                    </div>
-                </div>
-            </div>
-            <div class="cta-action">
-                <a href="{{ url_for('contact') }}" class="btn btn-primary btn-lg">
+<section class="py-16 lg:py-24 bg-gradient-to-r from-primary to-secondary">
+    <div class="container mx-auto px-4">
+        <div class="max-w-3xl mx-auto text-center text-white" data-aos="fade-up">
+            <h2 class="text-3xl md:text-4xl font-bold font-display mb-4">Ready to Transform Your Business Operations?</h2>
+            <p class="text-lg opacity-90 mb-8">Get a personalized consultation and discover how our services can drive your success.</p>
+            <div class="flex flex-col md:flex-row justify-center gap-4 mb-8">
+                <a href="{{ url_for('contact') }}" class="px-8 py-3 bg-white text-primary font-semibold rounded-lg hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 inline-flex items-center justify-center gap-2">
                     <i class="fas fa-calendar-check"></i> Schedule Free Consultation
                 </a>
-                <p class="cta-note">
-                    <i class="fas fa-phone"></i> Or call us: +265 887 580 622
-                </p>
+                <a href="tel:+265887580622" class="px-8 py-3 bg-white/20 border-2 border-white text-white font-semibold rounded-lg hover:bg-white/30 transition-all duration-300 inline-flex items-center justify-center gap-2">
+                    <i class="fas fa-phone"></i> Call: +265 887 580 622
+                </a>
+            </div>
+            <div class="space-y-3 text-sm">
+                <div class="flex items-center justify-center gap-2">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Free initial consultation</span>
+                </div>
+                <div class="flex items-center justify-center gap-2">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Customized service packages</span>
+                </div>
+                <div class="flex items-center justify-center gap-2">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Flexible engagement models</span>
+                </div>
             </div>
         </div>
     </div>
 </section>
 
 <!-- FAQ Section -->
-<section class="services-faq">
-    <div class="container">
-        <div class="section-header">
-            <h2 class="section-title">Frequently Asked Questions</h2>
-            <p class="section-subtitle">Common questions about our services</p>
+<section class="py-20 lg:py-32 bg-gray-50" x-data="{ activeId: null }">
+    <div class="container mx-auto px-4">
+        <div class="max-w-2xl mx-auto text-center mb-16" data-aos="fade-up">
+            <h2 class="text-3xl md:text-4xl font-bold font-display text-gray-900 mb-4">Frequently Asked Questions</h2>
+            <p class="text-gray-900">Common questions about our services</p>
         </div>
         
-        <div class="faq-grid">
-            <div class="faq-item">
-                <div class="faq-question">
-                    <h3>How do you determine which services I need?</h3>
-                    <i class="fas fa-chevron-down"></i>
-                </div>
-                <div class="faq-answer">
-                    <p>We begin with a comprehensive consultation to understand your specific challenges, goals, and current processes. Based on this analysis, we recommend the most relevant services from our portfolio.</p>
-                </div>
-            </div>
-            
-            <div class="faq-item">
-                <div class="faq-question">
-                    <h3>Can you customize service packages?</h3>
-                    <i class="fas fa-chevron-down"></i>
-                </div>
-                <div class="faq-answer">
-                    <p>Yes, absolutely! We specialize in creating tailored solutions that combine multiple services to meet your specific requirements and budget.</p>
+        <div class="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto" data-aos="fade-up">
+            <div class="backdrop-blur-xl bg-white/95 rounded-lg border border-white/30 shadow-smooth hover:shadow-smooth-lg transition-all duration-500 overflow-hidden">
+                <button 
+                    class="w-full px-6 py-4 flex items-center justify-between font-semibold text-gray-900 hover:bg-primary/5 transition-colors duration-300"
+                    @click="activeId = activeId === 'q1' ? null : 'q1'"
+                    :class="activeId === 'q1' ? 'bg-primary/5 text-primary' : ''"
+                >
+                    How do you determine which services I need?
+                    <i class="fas fa-chevron-down transition-transform duration-300" :class="activeId === 'q1' ? 'rotate-180' : ''"></i>
+                </button>
+                <div 
+                    x-show="activeId === 'q1'" 
+                    x-transition
+                    class="px-6 py-4 border-t border-gray-200 text-gray-900 text-sm"
+                >
+                    We begin with a comprehensive consultation to understand your specific challenges, goals, and current processes. Based on this analysis, we recommend the most relevant services from our portfolio.
                 </div>
             </div>
             
-            <div class="faq-item">
-                <div class="faq-question">
-                    <h3>What is your typical project timeline?</h3>
-                    <i class="fas fa-chevron-down"></i>
-                </div>
-                <div class="faq-answer">
-                    <p>Timelines vary based on project complexity and scope. During our initial consultation, we provide a detailed timeline with milestones for your specific project.</p>
+            <div class="backdrop-blur-xl bg-white/95 rounded-lg border border-white/30 shadow-smooth hover:shadow-smooth-lg transition-all duration-500 overflow-hidden">
+                <button 
+                    class="w-full px-6 py-4 flex items-center justify-between font-semibold text-gray-900 hover:bg-primary/5 transition-colors duration-300"
+                    @click="activeId = activeId === 'q2' ? null : 'q2'"
+                    :class="activeId === 'q2' ? 'bg-primary/5 text-primary' : ''"
+                >
+                    Can you customize service packages?
+                    <i class="fas fa-chevron-down transition-transform duration-300" :class="activeId === 'q2' ? 'rotate-180' : ''"></i>
+                </button>
+                <div 
+                    x-show="activeId === 'q2'" 
+                    x-transition
+                    class="px-6 py-4 border-t border-gray-200 text-gray-900 text-sm"
+                >
+                    Yes, absolutely! We specialize in creating tailored solutions that combine multiple services to meet your specific requirements and budget.
                 </div>
             </div>
             
-            <div class="faq-item">
-                <div class="faq-question">
-                    <h3>Do you offer ongoing support after project completion?</h3>
-                    <i class="fas fa-chevron-down"></i>
+            <div class="backdrop-blur-xl bg-white/95 rounded-lg border border-white/30 shadow-smooth hover:shadow-smooth-lg transition-all duration-500 overflow-hidden">
+                <button 
+                    class="w-full px-6 py-4 flex items-center justify-between font-semibold text-gray-900 hover:bg-primary/5 transition-colors duration-300"
+                    @click="activeId = activeId === 'q3' ? null : 'q3'"
+                    :class="activeId === 'q3' ? 'bg-primary/5 text-primary' : ''"
+                >
+                    What is your typical project timeline?
+                    <i class="fas fa-chevron-down transition-transform duration-300" :class="activeId === 'q3' ? 'rotate-180' : ''"></i>
+                </button>
+                <div 
+                    x-show="activeId === 'q3'" 
+                    x-transition
+                    class="px-6 py-4 border-t border-gray-200 text-gray-900 text-sm"
+                >
+                    Timelines vary based on project complexity and scope. During our initial consultation, we provide a detailed timeline with milestones for your specific project.
                 </div>
-                <div class="faq-answer">
-                    <p>Yes, we offer various support packages including maintenance, updates, and additional services to ensure continued success.</p>
+            </div>
+            
+            <div class="backdrop-blur-xl bg-white/95 rounded-lg border border-white/30 shadow-smooth hover:shadow-smooth-lg transition-all duration-500 overflow-hidden">
+                <button 
+                    class="w-full px-6 py-4 flex items-center justify-between font-semibold text-gray-900 hover:bg-primary/5 transition-colors duration-300"
+                    @click="activeId = activeId === 'q4' ? null : 'q4'"
+                    :class="activeId === 'q4' ? 'bg-primary/5 text-primary' : ''"
+                >
+                    Do you offer ongoing support after project completion?
+                    <i class="fas fa-chevron-down transition-transform duration-300" :class="activeId === 'q4' ? 'rotate-180' : ''"></i>
+                </button>
+                <div 
+                    x-show="activeId === 'q4'" 
+                    x-transition
+                    class="px-6 py-4 border-t border-gray-200 text-gray-900 text-sm"
+                >
+                    Yes, we offer various support packages including maintenance, updates, and additional services to ensure continued success.
                 </div>
             </div>
         </div>
@@ -509,124 +511,4 @@
 {% endblock %}
 
 {% block scripts %}
-<script>
-    // Animate numbers counting up
-    document.addEventListener('DOMContentLoaded', function() {
-        const counters = document.querySelectorAll('.stat-number');
-        
-        counters.forEach(counter => {
-            const updateCount = () => {
-                const target = +counter.getAttribute('data-target');
-                const count = +counter.innerText;
-                const increment = target / 100;
-                
-                if (count < target) {
-                    counter.innerText = Math.ceil(count + increment);
-                    setTimeout(updateCount, 20);
-                } else {
-                    counter.innerText = target;
-                }
-            };
-            
-            // Start counting when element is in viewport
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        updateCount();
-                        observer.unobserve(entry.target);
-                    }
-                });
-            }, { threshold: 0.5 });
-            
-            observer.observe(counter);
-        });
-        
-        // Services navigation
-        const navLinks = document.querySelectorAll('.nav-link');
-        const categorySections = document.querySelectorAll('.category-section');
-        
-        navLinks.forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                const category = this.getAttribute('data-category');
-                
-                // Update active link
-                navLinks.forEach(l => l.classList.remove('active'));
-                this.classList.add('active');
-                
-                // Scroll to category
-                const targetSection = document.getElementById(category);
-                if (targetSection) {
-                    targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
-            });
-        });
-        
-        // FAQ accordion
-        const faqQuestions = document.querySelectorAll('.faq-question');
-        
-        faqQuestions.forEach(question => {
-            question.addEventListener('click', function() {
-                const answer = this.nextElementSibling;
-                const icon = this.querySelector('i');
-                
-                // Toggle current answer
-                answer.classList.toggle('active');
-                icon.classList.toggle('fa-chevron-up');
-                icon.classList.toggle('fa-chevron-down');
-                
-                // Close other answers
-                faqQuestions.forEach(otherQuestion => {
-                    if (otherQuestion !== this) {
-                        const otherAnswer = otherQuestion.nextElementSibling;
-                        const otherIcon = otherQuestion.querySelector('i');
-                        otherAnswer.classList.remove('active');
-                        otherIcon.classList.remove('fa-chevron-up');
-                        otherIcon.classList.add('fa-chevron-down');
-                    }
-                });
-            });
-        });
-        
-        // Service inquiry buttons
-        const inquiryButtons = document.querySelectorAll('.service-inquire');
-        
-        inquiryButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                const serviceName = this.getAttribute('data-service');
-                
-                // Store service name in sessionStorage for contact form
-                sessionStorage.setItem('interestedService', serviceName);
-                
-                // Redirect to contact page
-                window.location.href = "{{ url_for('contact') }}";
-            });
-        });
-        
-        // Scroll spy for service navigation
-        const observerOptions = {
-            root: null,
-            rootMargin: '0px',
-            threshold: 0.3
-        };
-        
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const category = entry.target.id;
-                    navLinks.forEach(link => {
-                        if (link.getAttribute('data-category') === category) {
-                            navLinks.forEach(l => l.classList.remove('active'));
-                            link.classList.add('active');
-                        }
-                    });
-                }
-            });
-        }, observerOptions);
-        
-        categorySections.forEach(section => {
-            observer.observe(section);
-        });
-    });
-</script>
 {% endblock %}

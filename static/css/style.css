@@ -268,7 +268,8 @@ p { font-size: clamp(0.95rem, 2.2vw, var(--font-size-base)); }
 
 
 /* ===== LAYOUT & CONTAINERS ===== */
-.container {
+/* Container now handled by Tailwind CSS utility classes */
+/* .container {
     width: 100%;
     max-width: 1200px;
     margin: 0 auto;
@@ -279,7 +280,7 @@ p { font-size: clamp(0.95rem, 2.2vw, var(--font-size-base)); }
     .container {
         padding: 0 var(--spacing-6);
     }
-}
+} */
 
 .section-padding {
     padding: var(--spacing-24) 0;
@@ -826,9 +827,10 @@ p { font-size: clamp(0.95rem, 2.2vw, var(--font-size-base)); }
         padding: var(--spacing-16) 0;
     }
     
-    .container {
+    /* Container now handled by Tailwind */
+    /* .container {
         padding: 0 var(--spacing-4);
-    }
+    } */
     
     /* Flash Messages */
     .flash-messages {
@@ -868,9 +870,10 @@ p { font-size: clamp(0.95rem, 2.2vw, var(--font-size-base)); }
 }
 
 @media (max-width: 480px) {
-    .container {
+    /* Container now handled by Tailwind */
+    /* .container {
         padding: 0 var(--spacing-3);
-    }
+    } */
     
     .logo {
         height: 50px;
