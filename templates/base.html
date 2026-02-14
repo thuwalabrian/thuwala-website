@@ -102,7 +102,7 @@
     <!-- Only show main site navigation on non-admin pages -->
     {% if not request.path.startswith('/admin') %}
     <!-- Navigation (Alpine.js) -->
-    <nav x-data="{ open: false }" class="navbar">
+    <nav x-data="{ open: false }" @click.outside="open = false" class="navbar">
         <div class="container">
             <a href="{{ url_for('index') }}" class="logo">
                  <img src="{{ url_for('static', filename='images/logo/logo-512x512.png') }}" 
@@ -115,7 +115,7 @@
                      fetchpriority="high">
             </a>
 
-            <div class="nav-menu" id="navMenu" :class="{'active': open}" @click.away="open = false">
+            <div class="nav-menu" id="navMenu" :class="{'active': open}">
                 <a href="{{ url_for('index') }}" class="nav-link" @click="open = false">Home</a>
                 <a href="{{ url_for('about') }}" class="nav-link" @click="open = false">About</a>
                 <a href="{{ url_for('services') }}" class="nav-link" @click="open = false">Services</a>
