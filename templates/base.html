@@ -395,6 +395,59 @@
           AOS.init({ duration: 800, easing: 'ease-out-cubic', once: true, offset: 50 });
         }
       });
+      // Admin sidebar mobile toggle
+      (function() {
+        var btn = document.querySelector('button.fixed.lg\\:hidden');
+        var aside = document.querySelector('aside.fixed');
+        if (!btn || !aside) return;
+        // Create overlay backdrop
+        var overlay = document.createElement('div');
+        overlay.className = 'fixed inset-0 bg-black/50 z-30 hidden';
+        overlay.id = 'sidebarOverlay';
+        aside.parentNode.insertBefore(overlay, aside);
+        // Ensure sidebar slides in from left on mobile
+        aside.style.transition = 'transform 0.3s ease';
+        if (window.innerWidth < 1024) {
+          aside.classList.remove('hidden');
+          aside.style.transform = 'translateX(-100%)';
+          aside.style.display = 'flex';
+        }
+        function openSidebar() {
+          aside.classList.remove('hidden');
+          aside.style.display = 'flex';
+          aside.style.transform = 'translateX(0)';
+          overlay.classList.remove('hidden');
+          btn.querySelector('i').className = 'fas fa-times';
+        }
+        function closeSidebar() {
+          aside.style.transform = 'translateX(-100%)';
+          overlay.classList.add('hidden');
+          btn.querySelector('i').className = 'fas fa-bars';
+        }
+        var sidebarOpen = false;
+        btn.addEventListener('click', function() {
+          sidebarOpen = !sidebarOpen;
+          sidebarOpen ? openSidebar() : closeSidebar();
+        });
+        overlay.addEventListener('click', function() {
+          sidebarOpen = false;
+          closeSidebar();
+        });
+        // Keep sidebar visible on desktop resize
+        window.addEventListener('resize', function() {
+          if (window.innerWidth >= 1024) {
+            aside.classList.remove('hidden');
+            aside.style.transform = '';
+            aside.style.display = '';
+            overlay.classList.add('hidden');
+            sidebarOpen = false;
+          } else if (!sidebarOpen) {
+            aside.style.transform = 'translateX(-100%)';
+            aside.style.display = 'flex';
+          }
+        });
+      })();
+
       // Auto-inject CSRF tokens into all POST/PUT/DELETE forms
       (function() {
         var meta = document.querySelector('meta[name="csrf-token"]');
