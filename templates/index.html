@@ -99,6 +99,8 @@
                 <template x-if="ad.image_url">
                   <img :src="ad.image_url" 
                        :alt="ad.title"
+                       loading="lazy"
+                       decoding="async"
                        class="absolute inset-0 w-full h-full object-cover">
                 </template>
                 

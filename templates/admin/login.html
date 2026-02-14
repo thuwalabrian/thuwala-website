@@ -3,198 +3,79 @@
 {% block title %}Admin Login - Thuwala Co.{% endblock %}
 
 {% block content %}
-<div class="admin-login-container">
-    <div class="login-wrapper">
-        <!-- Left Panel - Branding & Info -->
-        <div class="login-left-panel">
-            <div class="brand-section">
-                <div class="brand-logo">
-                    <img src="{{ url_for('static', filename='images/logo/Thuwalaco first logo.png') }}" 
-                         alt="Thuwala Co. Logo"
-                         class="logo-image">
-                </div>
-                <h1>Admin Portal</h1>
-                <p class="brand-tagline">Secure access to website management</p>
-            </div>
-            
-            <div class="login-features">
-                <div class="feature">
-                    <div class="feature-icon">
-                        <i class="fas fa-shield-alt"></i>
-                    </div>
-                    <div class="feature-content">
-                        <h3>Secure Access</h3>
-                        <p>Enterprise-grade security with encrypted connections</p>
+<div class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+    <div class="fixed inset-0 overflow-hidden pointer-events-none">
+        <div class="absolute top-20 left-10 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl animate-pulse"></div>
+        <div class="absolute bottom-20 right-10 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
+    </div>
+
+    <div class="relative z-10 min-h-screen flex items-center justify-center px-6 py-12">
+        <div class="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div class="bg-slate-800/50 backdrop-blur-xl rounded-2xl border border-slate-700/50 p-8 text-slate-200">
+                <div class="flex items-center gap-3 mb-6">
+                    <img src="{{ url_for('static', filename='images/logo/Thuwala Co logo.png') }}" alt="Thuwala Co" class="h-10 w-auto">
+                    <div>
+                        <h1 class="text-2xl font-bold text-white">Admin Portal</h1>
+                        <p class="text-sm text-slate-400">Secure access to website management</p>
                     </div>
                 </div>
-                
-                <div class="feature">
-                    <div class="feature-icon">
-                        <i class="fas fa-cogs"></i>
-                    </div>
-                    <div class="feature-content">
-                        <h3>Full Control</h3>
-                        <p>Manage content, services, portfolio, and messages</p>
-                    </div>
-                </div>
-                
-                <div class="feature">
-                    <div class="feature-icon">
-                        <i class="fas fa-chart-line"></i>
-                    </div>
-                    <div class="feature-content">
-                        <h3>Analytics</h3>
-                        <p>Monitor website performance and user engagement</p>
-                    </div>
+                <ul class="space-y-4 text-sm text-slate-300">
+                    <li class="flex items-start gap-3"><i class="fas fa-shield-alt text-blue-400"></i> Enterprise-grade security</li>
+                    <li class="flex items-start gap-3"><i class="fas fa-cogs text-purple-400"></i> Manage content, services, and portfolio</li>
+                    <li class="flex items-start gap-3"><i class="fas fa-chart-line text-emerald-400"></i> Monitor performance and updates</li>
+                </ul>
+                <div class="mt-8 text-xs text-slate-400">
+                    <i class="fas fa-lock"></i> Authorized personnel only
                 </div>
             </div>
-            
-            <div class="security-notice">
-                <i class="fas fa-lock"></i>
-                <p>This area is restricted to authorized personnel only</p>
-            </div>
-        </div>
-        
-        <!-- Right Panel - Login Form -->
-        <div class="login-right-panel">
-            <div class="login-box">
-                <div class="login-header">
-                    <h2>Sign In</h2>
-                    <p>Enter your credentials to access the admin panel</p>
-                </div>
-                
-                <!-- Flash Messages -->
-                <div class="flash-messages">
+
+            <div class="bg-slate-800/50 backdrop-blur-xl rounded-2xl border border-slate-700/50 p-8">
+                <h2 class="text-2xl font-bold text-white">Sign In</h2>
+                <p class="text-slate-400 mt-1">Enter your credentials to access the admin panel.</p>
+
+                <div class="mt-6 space-y-3">
                     {% with messages = get_flashed_messages(with_categories=true) %}
                         {% if messages %}
                             {% for category, message in messages %}
-                                <div class="flash flash-{{ category }} animate__animated animate__fadeIn">
-                                    <div class="flash-content">
-                                        <i class="fas fa-{% if category == 'success' %}check-circle{% elif category == 'error' %}exclamation-circle{% else %}info-circle{% endif %}"></i>
-                                        <span>{{ message }}</span>
-                                    </div>
+                                <div class="px-4 py-3 rounded-lg text-sm border border-slate-700/50 bg-slate-900/40 text-slate-200">
+                                    <i class="fas fa-{% if category == 'success' %}check-circle{% elif category == 'error' %}exclamation-circle{% else %}info-circle{% endif %}"></i>
+                                    <span class="ml-2">{{ message }}</span>
                                 </div>
                             {% endfor %}
                         {% endif %}
                     {% endwith %}
                 </div>
-                
-                <!-- Login Form -->
-                <form method="POST" action="{{ url_for('admin_login') }}" id="loginForm" class="login-form">
-                    <div class="form-group">
-                        <label for="username" class="form-label">
-                            <i class="fas fa-user"></i> Username
-                        </label>
-                        <input type="text" 
-                               id="username" 
-                               name="username" 
-                               required 
-                               class="form-control"
-                               placeholder="Enter your username"
-                               autocomplete="username"
-                               spellcheck="false"
-                               autocapitalize="off">
-                        <div class="form-hint">Case-sensitive</div>
+
+                <form method="POST" action="{{ url_for('admin_login') }}" class="mt-6 space-y-4" x-data="AlpineComponents.formValidator({
+                    fields: { username: '', password: '' },
+                    rules: {
+                        username: [{ type: 'required' }, { type: 'minLength', value: 3 }],
+                        password: [{ type: 'required' }, { type: 'minLength', value: 8 }]
+                    }
+                })">
+                    <div>
+                        <label for="username" class="block text-sm text-slate-300 mb-2">Username</label>
+                        <input id="username" name="username" type="text" required x-model="fields.username" @input="touch('username')" class="w-full bg-slate-900/40 border border-slate-700/50 rounded-lg px-4 py-2 text-slate-100" autocomplete="username" :class="errors.username ? 'border-red-500/60' : ''">
+                        <p x-show="errors.username" class="text-xs text-red-400 mt-1" x-text="errors.username"></p>
                     </div>
-                    
-                    <div class="form-group">
-                        <div class="password-header">
-                            <label for="password" class="form-label">
-                                <i class="fas fa-key"></i> Password
-                            </label>
-                            <button type="button" class="btn-show-password" id="showPassword">
-                                <i class="fas fa-eye"></i> Show
-                            </button>
-                        </div>
-                        <input type="password" 
-                               id="password" 
-                               name="password" 
-                               required 
-                               class="form-control"
-                               placeholder="Enter your password"
-                               autocomplete="current-password"
-                               minlength="8">
-                        <div class="password-strength" id="passwordStrength">
-                            <div class="strength-bar"></div>
-                            <div class="strength-label">Password strength</div>
-                        </div>
+                    <div>
+                        <label for="password" class="block text-sm text-slate-300 mb-2">Password</label>
+                        <input id="password" name="password" type="password" required x-model="fields.password" @input="touch('password')" class="w-full bg-slate-900/40 border border-slate-700/50 rounded-lg px-4 py-2 text-slate-100" autocomplete="current-password" :class="errors.password ? 'border-red-500/60' : ''">
+                        <p x-show="errors.password" class="text-xs text-red-400 mt-1" x-text="errors.password"></p>
                     </div>
-                    
-                    <div class="form-options">
-                        <label class="checkbox-label">
-                            <input type="checkbox" id="remember" name="remember">
-                            <span class="checkmark"></span>
-                            Remember me for 30 days
-                        </label>
-                    </div>
-                    
-                    <button type="submit" class="btn-login" id="loginButton">
-                        <span class="btn-text">Sign In</span>
-                        <span class="btn-loader" id="loginLoader">
-                            <div class="loading-spinner"></div>
-                        </span>
+                    <label class="inline-flex items-center gap-2 text-sm text-slate-300">
+                        <input type="checkbox" name="remember" class="accent-blue-500">
+                        Remember me for 30 days
+                    </label>
+                    <button type="submit" class="w-full inline-flex items-center justify-center gap-2 px-4 py-2 bg-gradient-primary text-white rounded-lg shadow-lg shadow-blue-500/40 hover:shadow-blue-500/60 transition-all duration-300" :disabled="!isValid()" :class="!isValid() ? 'opacity-60 cursor-not-allowed' : ''">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Sign In
                     </button>
-                    
-                    <div class="login-footer">
-                        <a href="#" class="forgot-link" id="forgotPassword">
-                            <i class="fas fa-question-circle"></i> Forgot password?
-                        </a>
-                        <div class="session-info">
-                            <i class="fas fa-clock"></i>
-                            <span>Session timeout: 30 minutes</span>
-                        </div>
-                    </div>
                 </form>
-                
-                <!-- Security Tips -->
-                <div class="security-tips">
-                    <h4><i class="fas fa-lightbulb"></i> Security Tips</h4>
-                    <ul>
-                        <li>Never share your credentials</li>
-                        <li>Log out after each session</li>
-                        <li>Use strong, unique passwords</li>
-                        <li>Enable 2FA if available</li>
-                    </ul>
-                </div>
-                
-                <!-- System Status -->
-                <div class="system-status">
-                    <div class="status-indicator online">
-                        <div class="status-dot"></div>
-                        <span>System: Online</span>
-                    </div>
-                    <div class="last-login">
-                        <i class="fas fa-history"></i>
-                        <span>Last login: <time id="lastLoginTime">--:--</time></span>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Password Reset Modal -->
-            <div class="modal" id="resetModal">
-                <div class="modal-content">
-                    <span class="close-modal">&times;</span>
-                    <div class="modal-header">
-                        <h3>Reset Password</h3>
-                        <p>Enter your email to receive reset instructions</p>
-                    </div>
-                    <form id="resetForm" class="reset-form">
-                        <div class="form-group">
-                            <label for="resetEmail">Email Address</label>
-                            <input type="email" 
-                                   id="resetEmail" 
-                                   required 
-                                   class="form-control"
-                                   placeholder="admin@thuwalaco.com">
-                        </div>
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-paper-plane"></i> Send Reset Link
-                        </button>
-                    </form>
-                    <div class="modal-note">
-                        <i class="fas fa-info-circle"></i>
-                        <p>If you don't remember your email, contact the system administrator</p>
-                    </div>
+
+                <div class="mt-4 flex items-center justify-between text-sm text-slate-400">
+                    <a href="{{ url_for('forgot_password') }}" class="hover:text-white"><i class="fas fa-question-circle"></i> Forgot password?</a>
+                    <span><i class="fas fa-clock"></i> Session: 30 minutes</span>
                 </div>
             </div>
         </div>

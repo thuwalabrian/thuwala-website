@@ -3,159 +3,219 @@
 {% block title %}Manage Advertisements - Thuwala Co.{% endblock %}
 
 {% block content %}
-<div class="admin-container">
-    <!-- Include the existing sidebar -->
-    {% include 'admin/sidebar.html' %}
+<div class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+    <div class="fixed inset-0 overflow-hidden pointer-events-none">
+        <div class="absolute top-20 left-10 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl animate-pulse"></div>
+        <div class="absolute bottom-20 right-10 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
+    </div>
 
-    <main class="admin-main">
-        <!-- Mobile Menu Toggle -->
-        <button class="mobile-menu-toggle" id="mobileMenuToggle">
-            <i class="fas fa-bars"></i>
-        </button>
-
-        <!-- Header -->
-        <header class="admin-header">
-            <div class="header-title">
-                <h1>Advertisements Management</h1>
-                <p>Manage hero section advertisements and banners</p>
+    <!-- Sidebar -->
+    <aside class="fixed left-0 top-0 h-screen w-72 bg-slate-800/50 backdrop-blur-xl border-r border-slate-700/50 overflow-y-auto z-40 lg:flex flex-col hidden transition-all duration-300">
+        <div class="bg-slate-800/50 backdrop-blur-xl px-6 py-6 text-white border-b border-slate-700/50 relative group">
+            <div class="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div class="relative z-10 flex items-center justify-center h-16">
+                <img src="{{ url_for('static', filename='images/logo/Thuwala Co logo.png') }}" alt="Thuwala Co" class="h-14 w-auto object-contain" loading="eager" decoding="async">
             </div>
-            <div class="header-actions">
-                <a href="{{ url_for('admin_dashboard') }}" class="header-btn">
-                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </div>
+
+        <div class="p-4 border-b border-slate-700/50 backdrop-blur">
+            <div class="flex items-center gap-3 p-3 bg-slate-700/30 hover:bg-slate-700/50 rounded-lg transition-colors duration-300 group">
+                <div class="w-10 h-10 rounded-full bg-gradient-primary flex items-center justify-center text-white font-bold group-hover:scale-110 transition-transform duration-300">
+                    {{ current_user.username[0]|upper }}
+                </div>
+                <div class="flex-1 min-w-0">
+                    <p class="font-semibold text-white text-sm truncate">{{ current_user.username }}</p>
+                    <p class="text-xs text-slate-400">Administrator</p>
+                </div>
+            </div>
+        </div>
+
+        <nav class="flex-1 p-4 space-y-6">
+            <div class="space-y-2">
+                <p class="px-3 text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Navigation</p>
+                <a href="{{ url_for('admin_dashboard') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg {% if request.endpoint == 'admin_dashboard' %}bg-gradient-primary text-white shadow-lg shadow-blue-500/50{% else %}text-slate-300 hover:bg-slate-700/30 hover:text-white{% endif %} transition-all duration-300 group">
+                    <i class="fas fa-chart-line w-5 group-hover:scale-110 transition-transform duration-300"></i>
+                    <span class="font-medium">Dashboard</span>
                 </a>
-                <a href="{{ url_for('add_advertisement') }}" class="header-btn btn-primary">
-                    <i class="fas fa-plus"></i> Add New Ad
-                </a>
+            </div>
+
+            <div class="space-y-2">
+                <p class="px-3 text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Content</p>
+                <div class="space-y-1">
+                    <a href="{{ url_for('admin_services') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg {% if request.endpoint == 'admin_services' %}bg-gradient-primary text-white shadow-lg shadow-blue-500/50{% else %}text-slate-300 hover:bg-slate-700/30 hover:text-white{% endif %} transition-all duration-300 group">
+                        <i class="fas fa-cogs w-5 group-hover:scale-110 transition-transform duration-300"></i>
+                        <span class="font-medium">Services</span>
+                    </a>
+                    <a href="{{ url_for('admin_portfolio') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg {% if request.endpoint == 'admin_portfolio' %}bg-gradient-primary text-white shadow-lg shadow-blue-500/50{% else %}text-slate-300 hover:bg-slate-700/30 hover:text-white{% endif %} transition-all duration-300 group">
+                        <i class="fas fa-briefcase w-5 group-hover:scale-110 transition-transform duration-300"></i>
+                        <span class="font-medium">Portfolio</span>
+                    </a>
+                    <a href="{{ url_for('admin_advertisements') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg {% if request.endpoint in ['admin_advertisements', 'add_advertisement', 'edit_advertisement'] %}bg-gradient-primary text-white shadow-lg shadow-blue-500/50{% else %}text-slate-300 hover:bg-slate-700/30 hover:text-white{% endif %} transition-all duration-300 group">
+                        <i class="fas fa-bullhorn w-5 group-hover:scale-110 transition-transform duration-300"></i>
+                        <span class="font-medium">Advertisements</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="space-y-2">
+                <p class="px-3 text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">System</p>
+                <div class="space-y-1">
+                    <a href="{{ url_for('admin_users') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg {% if request.endpoint == 'admin_users' %}bg-gradient-primary text-white shadow-lg shadow-blue-500/50{% else %}text-slate-300 hover:bg-slate-700/30 hover:text-white{% endif %} transition-all duration-300 group">
+                        <i class="fas fa-users w-5 group-hover:scale-110 transition-transform duration-300"></i>
+                        <span class="font-medium">Users</span>
+                    </a>
+                    <a href="{{ url_for('change_password') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-slate-300 hover:bg-slate-700/30 hover:text-white transition-all duration-300 group">
+                        <i class="fas fa-key w-5 group-hover:scale-110 transition-transform duration-300"></i>
+                        <span class="font-medium">Change Password</span>
+                    </a>
+                </div>
+            </div>
+        </nav>
+
+        <div class="p-4 border-t border-slate-700/50 backdrop-blur">
+            <a href="{{ url_for('admin_logout') }}" class="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-red-500/20 hover:bg-red-500/40 text-red-300 rounded-lg transition-all duration-300 font-medium border border-red-500/30 hover:border-red-500/50 group">
+                <i class="fas fa-sign-out-alt group-hover:scale-110 transition-transform duration-300"></i>
+                <span>Logout</span>
+            </a>
+        </div>
+    </aside>
+
+    <button class="fixed bottom-6 right-6 lg:hidden z-30 w-14 h-14 bg-gradient-primary text-white rounded-full shadow-xl shadow-blue-500/50 hover:shadow-2xl hover:shadow-blue-500/70 transition-all duration-300 flex items-center justify-center hover:scale-110">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Main Content -->
+    <main class="lg:ml-72 min-h-screen relative z-10">
+        <header class="bg-slate-800/50 backdrop-blur-xl border-b border-slate-700/50 sticky top-0 z-20">
+            <div class="px-6 py-6 flex items-center justify-between">
+                <div>
+                    <h1 class="text-4xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">Advertisements</h1>
+                    <p class="text-slate-400 mt-1">Manage hero section advertisements and banners</p>
+                </div>
+                <div class="flex items-center gap-4">
+                    <a href="{{ url_for('add_advertisement') }}" class="inline-flex items-center gap-2 px-4 py-2 bg-gradient-primary text-white rounded-lg shadow-lg shadow-blue-500/40 hover:shadow-blue-500/60 transition-all duration-300">
+                        <i class="fas fa-plus"></i>
+                        <span class="hidden sm:inline">Add Ad</span>
+                    </a>
+                    <a href="{{ url_for('admin_dashboard') }}" class="inline-flex items-center gap-2 px-4 py-2 text-slate-300 hover:text-white hover:bg-slate-700/50 rounded-lg transition-all duration-300">
+                        <i class="fas fa-arrow-left"></i>
+                        <span class="hidden sm:inline">Dashboard</span>
+                    </a>
+                </div>
             </div>
         </header>
 
-        <!-- Stats Cards -->
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-icon blue">
-                    <i class="fas fa-ad"></i>
+        <div class="p-6 space-y-6">
+            <section class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+                <div class="bg-slate-800/50 backdrop-blur-xl rounded-xl border border-slate-700/50 p-5">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-xs text-slate-400">Total Ads</p>
+                            <p class="text-2xl font-bold text-white">{{ total_ads }}</p>
+                        </div>
+                        <div class="w-10 h-10 rounded-lg bg-blue-500/20 border border-blue-500/40 flex items-center justify-center">
+                            <i class="fas fa-ad text-blue-300"></i>
+                        </div>
+                    </div>
                 </div>
-                <div class="stat-content">
-                    <h3 class="stat-number">{{ total_ads }}</h3>
-                    <p class="stat-label">Total Ads</p>
+                <div class="bg-slate-800/50 backdrop-blur-xl rounded-xl border border-slate-700/50 p-5">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-xs text-slate-400">Active Ads</p>
+                            <p class="text-2xl font-bold text-white">{{ active_ads }}</p>
+                        </div>
+                        <div class="w-10 h-10 rounded-lg bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center">
+                            <i class="fas fa-eye text-emerald-300"></i>
+                        </div>
+                    </div>
                 </div>
-                <a href="{{ url_for('admin_advertisements') }}" class="stat-link">
-                    <i class="fas fa-arrow-right"></i>
-                </a>
-            </div>
-            
-            <div class="stat-card">
-                <div class="stat-icon green">
-                    <i class="fas fa-eye"></i>
+                <div class="bg-slate-800/50 backdrop-blur-xl rounded-xl border border-slate-700/50 p-5">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-xs text-slate-400">Inactive Ads</p>
+                            <p class="text-2xl font-bold text-white">{{ inactive_ads }}</p>
+                        </div>
+                        <div class="w-10 h-10 rounded-lg bg-amber-500/20 border border-amber-500/40 flex items-center justify-center">
+                            <i class="fas fa-eye-slash text-amber-300"></i>
+                        </div>
+                    </div>
                 </div>
-                <div class="stat-content">
-                    <h3 class="stat-number">{{ active_ads }}</h3>
-                    <p class="stat-label">Active Ads</p>
+                <div class="bg-slate-800/50 backdrop-blur-xl rounded-xl border border-slate-700/50 p-5">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-xs text-slate-400">Scheduled</p>
+                            <p class="text-2xl font-bold text-white">{{ expired_ads + upcoming_ads }}</p>
+                        </div>
+                        <div class="w-10 h-10 rounded-lg bg-purple-500/20 border border-purple-500/40 flex items-center justify-center">
+                            <i class="fas fa-calendar-check text-purple-300"></i>
+                        </div>
+                    </div>
                 </div>
-                <a href="{{ url_for('admin_advertisements', filter='active') }}" class="stat-link">
-                    <i class="fas fa-arrow-right"></i>
-                </a>
-            </div>
-            
-            <div class="stat-card">
-                <div class="stat-icon orange">
-                    <i class="fas fa-eye-slash"></i>
-                </div>
-                <div class="stat-content">
-                    <h3 class="stat-number">{{ inactive_ads }}</h3>
-                    <p class="stat-label">Inactive Ads</p>
-                </div>
-                <a href="{{ url_for('admin_advertisements', filter='inactive') }}" class="stat-link">
-                    <i class="fas fa-arrow-right"></i>
-                </a>
-            </div>
-            
-            <div class="stat-card">
-                <div class="stat-icon purple">
-                    <i class="fas fa-calendar-check"></i>
-                </div>
-                <div class="stat-content">
-                    <h3 class="stat-number">{{ expired_ads + upcoming_ads }}</h3>
-                    <p class="stat-label">Scheduled</p>
-                </div>
-                <a href="{{ url_for('admin_advertisements', filter='expired') }}" class="stat-link">
-                    <i class="fas fa-arrow-right"></i>
-                </a>
-            </div>
-        </div>
+            </section>
 
-        <!-- Filter Tabs -->
-        <div class="filter-tabs">
-            <a href="{{ url_for('admin_advertisements', filter='all') }}" 
-               class="filter-tab {% if filter == 'all' %}active{% endif %}">
-                <i class="fas fa-list"></i> All
-            </a>
-            <a href="{{ url_for('admin_advertisements', filter='active') }}" 
-               class="filter-tab {% if filter == 'active' %}active{% endif %}">
-                <i class="fas fa-eye"></i> Active
-            </a>
-            <a href="{{ url_for('admin_advertisements', filter='inactive') }}" 
-               class="filter-tab {% if filter == 'inactive' %}active{% endif %}">
-                <i class="fas fa-eye-slash"></i> Inactive
-            </a>
-            <a href="{{ url_for('admin_advertisements', filter='expired') }}" 
-               class="filter-tab {% if filter == 'expired' %}active{% endif %}">
-                <i class="fas fa-clock"></i> Expired
-            </a>
-            <a href="{{ url_for('admin_advertisements', filter='upcoming') }}" 
-               class="filter-tab {% if filter == 'upcoming' %}active{% endif %}">
-                <i class="fas fa-calendar-plus"></i> Upcoming
-            </a>
-        </div>
+            <section class="flex flex-wrap gap-3">
+                <a href="{{ url_for('admin_advertisements', filter='all') }}" class="px-4 py-2 rounded-full border text-sm {% if filter == 'all' %}bg-gradient-primary text-white border-transparent{% else %}border-slate-600/60 text-slate-300 hover:text-white hover:bg-slate-700/50{% endif %} transition-all duration-300">
+                    <i class="fas fa-list mr-2"></i>All
+                </a>
+                <a href="{{ url_for('admin_advertisements', filter='active') }}" class="px-4 py-2 rounded-full border text-sm {% if filter == 'active' %}bg-gradient-primary text-white border-transparent{% else %}border-slate-600/60 text-slate-300 hover:text-white hover:bg-slate-700/50{% endif %} transition-all duration-300">
+                    <i class="fas fa-eye mr-2"></i>Active
+                </a>
+                <a href="{{ url_for('admin_advertisements', filter='inactive') }}" class="px-4 py-2 rounded-full border text-sm {% if filter == 'inactive' %}bg-gradient-primary text-white border-transparent{% else %}border-slate-600/60 text-slate-300 hover:text-white hover:bg-slate-700/50{% endif %} transition-all duration-300">
+                    <i class="fas fa-eye-slash mr-2"></i>Inactive
+                </a>
+                <a href="{{ url_for('admin_advertisements', filter='expired') }}" class="px-4 py-2 rounded-full border text-sm {% if filter == 'expired' %}bg-gradient-primary text-white border-transparent{% else %}border-slate-600/60 text-slate-300 hover:text-white hover:bg-slate-700/50{% endif %} transition-all duration-300">
+                    <i class="fas fa-clock mr-2"></i>Expired
+                </a>
+                <a href="{{ url_for('admin_advertisements', filter='upcoming') }}" class="px-4 py-2 rounded-full border text-sm {% if filter == 'upcoming' %}bg-gradient-primary text-white border-transparent{% else %}border-slate-600/60 text-slate-300 hover:text-white hover:bg-slate-700/50{% endif %} transition-all duration-300">
+                    <i class="fas fa-calendar-plus mr-2"></i>Upcoming
+                </a>
+            </section>
 
-        <!-- Advertisements Table -->
-        <div class="card">
-            <div class="card-header">
-                <h2><i class="fas fa-list"></i> Advertisements</h2>
-                <div class="header-badges">
+            <section class="bg-slate-800/50 backdrop-blur-xl rounded-xl border border-slate-700/50 p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-xl font-semibold text-white">Advertisements</h2>
                     {% if advertisements %}
-                    <span class="badge unread-badge">{{ advertisements|length }} items</span>
+                    <span class="text-xs font-semibold text-slate-300 bg-slate-700/50 px-3 py-1 rounded-full border border-slate-600/50">{{ advertisements|length }} items</span>
                     {% endif %}
                 </div>
-            </div>
-            <div class="card-body">
+
                 {% if advertisements %}
-                <div class="table-responsive">
-                    <table class="data-table">
-                        <thead>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm text-slate-300">
+                        <thead class="text-xs uppercase text-slate-400 border-b border-slate-700/50">
                             <tr>
-                                <th>Order</th>
-                                <th>Title & Preview</th>
-                                <th>Status</th>
-                                <th>Dates</th>
-                                <th>Actions</th>
+                                <th class="py-3 text-left">Order</th>
+                                <th class="py-3 text-left">Title & Preview</th>
+                                <th class="py-3 text-left">Status</th>
+                                <th class="py-3 text-left">Dates</th>
+                                <th class="py-3 text-right">Actions</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody class="divide-y divide-slate-700/50">
                             {% for ad in advertisements %}
-                            <tr>
-                                <td>
-                                    <div class="order-controls">
-                                        <form action="{{ url_for('move_advertisement_up', ad_id=ad.id) }}" method="POST" class="inline-form">
-                                            <button type="submit" class="order-btn" title="Move Up">
+                            <tr class="hover:bg-slate-900/40 transition-colors">
+                                <td class="py-4">
+                                    <div class="flex items-center gap-2">
+                                        <form action="{{ url_for('move_advertisement_up', ad_id=ad.id) }}" method="POST">
+                                            <button type="submit" class="p-1 rounded bg-slate-700/40 hover:bg-slate-700/70" title="Move Up">
                                                 <i class="fas fa-arrow-up"></i>
                                             </button>
                                         </form>
-                                        <span class="order-number">{{ ad.display_order }}</span>
-                                        <form action="{{ url_for('move_advertisement_down', ad_id=ad.id) }}" method="POST" class="inline-form">
-                                            <button type="submit" class="order-btn" title="Move Down">
+                                        <span class="text-slate-100 font-semibold">{{ ad.display_order }}</span>
+                                        <form action="{{ url_for('move_advertisement_down', ad_id=ad.id) }}" method="POST">
+                                            <button type="submit" class="p-1 rounded bg-slate-700/40 hover:bg-slate-700/70" title="Move Down">
                                                 <i class="fas fa-arrow-down"></i>
                                             </button>
                                         </form>
                                     </div>
                                 </td>
-                                <td>
-                                    <div class="ad-preview-item">
-                                        <div class="ad-color-sample" style="background-color: {{ ad.background_color }};"></div>
-                                        <div class="ad-info">
-                                            <strong>{{ ad.title }}</strong>
-                                            <small>{{ ad.description[:60] }}{% if ad.description|length > 60 %}...{% endif %}</small>
-                                            <div class="ad-meta">
+                                <td class="py-4">
+                                    <div class="flex items-start gap-3">
+                                        <div class="w-10 h-10 rounded-lg border border-slate-700/50" style="background-color: {{ ad.background_color }};"></div>
+                                        <div>
+                                            <p class="text-white font-semibold">{{ ad.title }}</p>
+                                            <p class="text-slate-400 text-xs">{{ ad.description[:60] }}{% if ad.description|length > 60 %}...{% endif %}</p>
+                                            <div class="text-xs text-slate-400 mt-1 space-x-3">
                                                 <span><i class="fas fa-link"></i> {{ ad.cta_text or 'No CTA' }}</span>
                                                 {% if ad.image_url %}
                                                 <span><i class="fas fa-image"></i> Has Image</span>
@@ -164,74 +224,57 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td>
+                                <td class="py-4">
                                     {% if ad.is_active %}
-                                    <span class="badge badge-success">
+                                    <span class="inline-flex items-center gap-1 text-xs bg-emerald-500/20 text-emerald-200 border border-emerald-500/30 px-2 py-1 rounded">
                                         <i class="fas fa-check-circle"></i> Active
                                     </span>
                                     {% else %}
-                                    <span class="badge badge-secondary">
+                                    <span class="inline-flex items-center gap-1 text-xs bg-slate-600/40 text-slate-200 border border-slate-500/40 px-2 py-1 rounded">
                                         <i class="fas fa-times-circle"></i> Inactive
                                     </span>
                                     {% endif %}
-                                    
                                     {% if ad.end_date and ad.end_date < now %}
-                                    <br>
-                                    <span class="badge badge-danger">
-                                        <i class="fas fa-clock"></i> Expired
-                                    </span>
+                                    <div class="mt-2">
+                                        <span class="inline-flex items-center gap-1 text-xs bg-red-500/20 text-red-200 border border-red-500/30 px-2 py-1 rounded">
+                                            <i class="fas fa-clock"></i> Expired
+                                        </span>
+                                    </div>
                                     {% elif ad.start_date and ad.start_date > now %}
-                                    <br>
-                                    <span class="badge badge-warning">
-                                        <i class="fas fa-calendar-plus"></i> Upcoming
-                                    </span>
+                                    <div class="mt-2">
+                                        <span class="inline-flex items-center gap-1 text-xs bg-amber-500/20 text-amber-200 border border-amber-500/30 px-2 py-1 rounded">
+                                            <i class="fas fa-calendar-plus"></i> Upcoming
+                                        </span>
+                                    </div>
                                     {% endif %}
                                 </td>
-                                <td>
-                                    <div class="date-info">
-                                        <div class="date-item">
-                                            <strong>Created:</strong>
-                                            <span>{{ ad.created_at.strftime('%Y-%m-%d') }}</span>
-                                        </div>
-                                        {% if ad.start_date %}
-                                        <div class="date-item">
-                                            <strong>Starts:</strong>
-                                            <span>{{ ad.start_date.strftime('%Y-%m-%d') }}</span>
-                                        </div>
-                                        {% endif %}
-                                        {% if ad.end_date %}
-                                        <div class="date-item">
-                                            <strong>Ends:</strong>
-                                            <span>{{ ad.end_date.strftime('%Y-%m-%d') }}</span>
-                                        </div>
-                                        {% endif %}
-                                    </div>
+                                <td class="py-4 text-xs text-slate-400">
+                                    <div>Created: {{ ad.created_at.strftime('%Y-%m-%d') }}</div>
+                                    {% if ad.start_date %}
+                                    <div>Starts: {{ ad.start_date.strftime('%Y-%m-%d') }}</div>
+                                    {% endif %}
+                                    {% if ad.end_date %}
+                                    <div>Ends: {{ ad.end_date.strftime('%Y-%m-%d') }}</div>
+                                    {% endif %}
                                 </td>
-                                <td>
-                                    <div class="action-buttons">
-                                        <a href="{{ url_for('edit_advertisement', ad_id=ad.id) }}" 
-                                           class="btn btn-sm btn-primary" title="Edit">
+                                <td class="py-4 text-right">
+                                    <div class="inline-flex items-center gap-2">
+                                        <a href="{{ url_for('edit_advertisement', ad_id=ad.id) }}" class="p-2 rounded bg-blue-500/20 text-blue-200 border border-blue-500/30 hover:bg-blue-500/30" title="Edit">
                                             <i class="fas fa-edit"></i>
                                         </a>
-                                        
-                                        <form action="{{ url_for('toggle_advertisement', ad_id=ad.id) }}" 
-                                              method="POST" class="inline-form">
+                                        <form action="{{ url_for('toggle_advertisement', ad_id=ad.id) }}" method="POST">
                                             {% if ad.is_active %}
-                                            <button type="submit" class="btn btn-sm btn-warning" title="Deactivate">
+                                            <button type="submit" class="p-2 rounded bg-amber-500/20 text-amber-200 border border-amber-500/30 hover:bg-amber-500/30" title="Deactivate">
                                                 <i class="fas fa-eye-slash"></i>
                                             </button>
                                             {% else %}
-                                            <button type="submit" class="btn btn-sm btn-success" title="Activate">
+                                            <button type="submit" class="p-2 rounded bg-emerald-500/20 text-emerald-200 border border-emerald-500/30 hover:bg-emerald-500/30" title="Activate">
                                                 <i class="fas fa-eye"></i>
                                             </button>
                                             {% endif %}
                                         </form>
-                                        
-                                        <form action="{{ url_for('delete_advertisement', ad_id=ad.id) }}" 
-                                              method="POST" 
-                                              onsubmit="return confirm('Are you sure you want to delete this advertisement?');"
-                                              class="inline-form">
-                                            <button type="submit" class="btn btn-sm btn-danger" title="Delete">
+                                        <form action="{{ url_for('delete_advertisement', ad_id=ad.id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this advertisement?');">
+                                            <button type="submit" class="p-2 rounded bg-red-500/20 text-red-200 border border-red-500/30 hover:bg-red-500/30" title="Delete">
                                                 <i class="fas fa-trash"></i>
                                             </button>
                                         </form>
@@ -243,16 +286,19 @@
                     </table>
                 </div>
                 {% else %}
-                <div class="empty-state">
-                    <i class="fas fa-ad"></i>
-                    <h3>No advertisements found</h3>
-                    <p>{% if filter != 'all' %}No {{ filter }} advertisements found.{% else %}Create your first advertisement to display on the homepage hero section.{% endif %}</p>
-                    <a href="{{ url_for('add_advertisement') }}" class="btn btn-primary">
-                        <i class="fas fa-plus"></i> Create New Advertisement
+                <div class="bg-slate-900/40 rounded-xl border border-slate-700/50 p-10 text-center">
+                    <div class="w-16 h-16 mx-auto rounded-full bg-blue-500/20 border border-blue-500/40 flex items-center justify-center mb-4">
+                        <i class="fas fa-ad text-blue-300 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-white">No advertisements found</h3>
+                    <p class="text-slate-400 mt-2">{% if filter != 'all' %}No {{ filter }} advertisements found.{% else %}Create your first advertisement to display on the homepage hero section.{% endif %}</p>
+                    <a href="{{ url_for('add_advertisement') }}" class="inline-flex items-center gap-2 mt-6 px-4 py-2 bg-gradient-primary text-white rounded-lg shadow-lg shadow-blue-500/40 hover:shadow-blue-500/60 transition-all duration-300">
+                        <i class="fas fa-plus"></i>
+                        Create New Advertisement
                     </a>
                 </div>
                 {% endif %}
-            </div>
+            </section>
         </div>
     </main>
 </div>

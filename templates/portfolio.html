@@ -39,6 +39,20 @@
   </div>
 </section>
 
+<!-- Breadcrumb Navigation -->
+<section class="py-4 bg-white border-b border-gray-200">
+    <div class="container mx-auto px-4">
+        <nav class="flex items-center gap-2 text-sm" aria-label="Breadcrumb">
+            <a href="{{ url_for('index') }}" class="text-primary hover:text-secondary transition-colors duration-300 flex items-center gap-1">
+                <i class="fas fa-home text-xs"></i>
+                <span>Home</span>
+            </a>
+            <i class="fas fa-chevron-right text-gray-400 text-xs"></i>
+            <span class="text-gray-900 font-medium">Portfolio</span>
+        </nav>
+    </div>
+</section>
+
 <!-- Filter & Portfolio Grid -->
 <section class="py-20 lg:py-32">
   <div class="container mx-auto px-4">
@@ -65,7 +79,7 @@
         <!-- Image Container -->
         <div class="relative h-48 overflow-hidden bg-gradient-to-br from-gray-200 to-gray-300">
           {% if item.image_url %}
-          <img src="{{ item.image_url }}" alt="{{ item.title }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+          <img src="{{ item.image_url }}" alt="{{ item.title }}" loading="lazy" decoding="async" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
           {% else %}
           <div class="w-full h-full flex items-center justify-center">
             <i class="fas fa-image text-gray-400 text-4xl"></i>

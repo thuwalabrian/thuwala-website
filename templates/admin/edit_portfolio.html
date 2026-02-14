@@ -3,201 +3,289 @@
 {% block title %}{{ 'Edit' if portfolio else 'Add' }} Portfolio - Admin Dashboard{% endblock %}
 
 {% block content %}
-<div class="admin-container">
-    <!-- Sidebar -->
-    <aside class="admin-sidebar" id="adminSidebar">
-        <div class="sidebar-header">
-            <h1>Thuwala Admin</h1>
-            <p>Portfolio Management</p>
+<div class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900" x-data="Object.assign(AlpineComponents.formValidator({
+    fields: {
+        title: {{ (portfolio.title if portfolio else '')|tojson }},
+        client: {{ (portfolio.client if portfolio else '')|tojson }},
+        category: {{ (portfolio.category if portfolio else '')|tojson }},
+        projectUrl: {{ (portfolio.project_url if portfolio else '')|tojson }},
+        description: {{ (portfolio.description if portfolio else '')|tojson }},
+        technologies: {{ (portfolio.technologies if portfolio else '')|tojson }},
+        imageUrl: {{ (portfolio.image_url if portfolio else '')|tojson }},
+        featured: {{ 'true' if portfolio and portfolio.featured else 'false' }},
+        clientName: {{ (portfolio.client_name if portfolio else '')|tojson }},
+        clientRole: {{ (portfolio.client_role if portfolio else '')|tojson }},
+        testimonial: {{ (portfolio.testimonial if portfolio else '')|tojson }}
+    },
+    rules: {
+        title: [{ type: 'required' }, { type: 'minLength', value: 3 }],
+        client: [{ type: 'required' }],
+        category: [{ type: 'required' }],
+        description: [{ type: 'required' }, { type: 'minLength', value: 10 }],
+        projectUrl: [{ type: 'url' }],
+        imageUrl: [{ type: 'url' }]
+    }
+}), {
+    previewImage() {
+        return this.fields.imageUrl || 'https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80';
+    },
+    updateImage(event) {
+        const file = event.target.files && event.target.files[0];
+        if (file) {
+            this.fields.imageUrl = URL.createObjectURL(file);
+        }
+    }
+})">
+    <div class="fixed inset-0 overflow-hidden pointer-events-none">
+        <div class="absolute top-20 left-10 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl animate-pulse"></div>
+        <div class="absolute bottom-20 right-10 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
+    </div>
+
+    <aside class="fixed left-0 top-0 h-screen w-72 bg-slate-800/50 backdrop-blur-xl border-r border-slate-700/50 overflow-y-auto z-40 lg:flex flex-col hidden transition-all duration-300">
+        <div class="bg-slate-800/50 backdrop-blur-xl px-6 py-6 text-white border-b border-slate-700/50 relative group">
+            <div class="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div class="relative z-10 flex items-center justify-center h-16">
+                <img src="{{ url_for('static', filename='images/logo/Thuwala Co logo.png') }}" alt="Thuwala Co" class="h-14 w-auto object-contain" loading="eager" decoding="async">
+            </div>
         </div>
-        
-        <div class="sidebar-user">
-            <div class="user-avatar">
-                {{ current_user.username[0]|upper }}
-            </div>
-            <div class="user-info">
-                <h3>{{ current_user.username }}</h3>
-                <p>Administrator</p>
+
+        <div class="p-4 border-b border-slate-700/50 backdrop-blur">
+            <div class="flex items-center gap-3 p-3 bg-slate-700/30 hover:bg-slate-700/50 rounded-lg transition-colors duration-300 group">
+                <div class="w-10 h-10 rounded-full bg-gradient-primary flex items-center justify-center text-white font-bold group-hover:scale-110 transition-transform duration-300">
+                    {{ current_user.username[0]|upper }}
+                </div>
+                <div class="flex-1 min-w-0">
+                    <p class="font-semibold text-white text-sm truncate">{{ current_user.username }}</p>
+                    <p class="text-xs text-slate-400">Administrator</p>
+                </div>
             </div>
         </div>
-        
-        <nav class="sidebar-nav">
-            <div class="nav-section">
-                <h3>Main</h3>
-                <a href="{{ url_for('admin_dashboard') }}" 
-                   class="nav-item {% if request.endpoint == 'admin_dashboard' %}active{% endif %}">
-                    <i class="fas fa-tachometer-alt"></i>
-                    <span>Dashboard</span>
+
+        <nav class="flex-1 p-4 space-y-6">
+            <div class="space-y-2">
+                <p class="px-3 text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Navigation</p>
+                <a href="{{ url_for('admin_dashboard') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg {% if request.endpoint == 'admin_dashboard' %}bg-gradient-primary text-white shadow-lg shadow-blue-500/50{% else %}text-slate-300 hover:bg-slate-700/30 hover:text-white{% endif %} transition-all duration-300 group">
+                    <i class="fas fa-chart-line w-5 group-hover:scale-110 transition-transform duration-300"></i>
+                    <span class="font-medium">Dashboard</span>
                 </a>
             </div>
-            
-            <div class="nav-section">
-                <h3>Content Management</h3>
-                <a href="{{ url_for('admin_services') }}" 
-                   class="nav-item {% if request.endpoint == 'admin_services' %}active{% endif %}">
-                    <i class="fas fa-cogs"></i>
-                    <span>Services</span>
-                </a>
-                <a href="{{ url_for('admin_portfolio') }}" 
-                   class="nav-item {% if request.endpoint == 'admin_portfolio' %}active{% endif %}">
-                    <i class="fas fa-briefcase"></i>
-                    <span>Portfolio</span>
-                </a>
+
+            <div class="space-y-2">
+                <p class="px-3 text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Content</p>
+                <div class="space-y-1">
+                    <a href="{{ url_for('admin_services') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg {% if request.endpoint == 'admin_services' %}bg-gradient-primary text-white shadow-lg shadow-blue-500/50{% else %}text-slate-300 hover:bg-slate-700/30 hover:text-white{% endif %} transition-all duration-300 group">
+                        <i class="fas fa-cogs w-5 group-hover:scale-110 transition-transform duration-300"></i>
+                        <span class="font-medium">Services</span>
+                    </a>
+                    <a href="{{ url_for('admin_portfolio') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg {% if request.endpoint == 'admin_portfolio' %}bg-gradient-primary text-white shadow-lg shadow-blue-500/50{% else %}text-slate-300 hover:bg-slate-700/30 hover:text-white{% endif %} transition-all duration-300 group">
+                        <i class="fas fa-briefcase w-5 group-hover:scale-110 transition-transform duration-300"></i>
+                        <span class="font-medium">Portfolio</span>
+                    </a>
+                    <a href="{{ url_for('admin_advertisements') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg {% if request.endpoint in ['admin_advertisements', 'add_advertisement', 'edit_advertisement'] %}bg-gradient-primary text-white shadow-lg shadow-blue-500/50{% else %}text-slate-300 hover:bg-slate-700/30 hover:text-white{% endif %} transition-all duration-300 group">
+                        <i class="fas fa-bullhorn w-5 group-hover:scale-110 transition-transform duration-300"></i>
+                        <span class="font-medium">Advertisements</span>
+                    </a>
+                </div>
             </div>
-            
-            <div class="nav-section">
-                <h3>System</h3>
-                <a href="{{ url_for('admin_users') }}" 
-                   class="nav-item {% if request.endpoint == 'admin_users' %}active{% endif %}">
-                    <i class="fas fa-users"></i>
-                    <span>Users</span>
-                </a>
-                <a href="{{ url_for('change_password') }}" class="nav-item">
-                    <i class="fas fa-key"></i>
-                    <span>Change Password</span>
-                </a>
+
+            <div class="space-y-2">
+                <p class="px-3 text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">System</p>
+                <div class="space-y-1">
+                    <a href="{{ url_for('admin_users') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg {% if request.endpoint == 'admin_users' %}bg-gradient-primary text-white shadow-lg shadow-blue-500/50{% else %}text-slate-300 hover:bg-slate-700/30 hover:text-white{% endif %} transition-all duration-300 group">
+                        <i class="fas fa-users w-5 group-hover:scale-110 transition-transform duration-300"></i>
+                        <span class="font-medium">Users</span>
+                    </a>
+                    <a href="{{ url_for('change_password') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-slate-300 hover:bg-slate-700/30 hover:text-white transition-all duration-300 group">
+                        <i class="fas fa-key w-5 group-hover:scale-110 transition-transform duration-300"></i>
+                        <span class="font-medium">Change Password</span>
+                    </a>
+                </div>
             </div>
         </nav>
-        
-        <div class="sidebar-footer">
-            <a href="{{ url_for('admin_logout') }}" class="btn btn-danger btn-sm">
-                <i class="fas fa-sign-out-alt"></i> Logout
+
+        <div class="p-4 border-t border-slate-700/50 backdrop-blur">
+            <a href="{{ url_for('admin_logout') }}" class="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-red-500/20 hover:bg-red-500/40 text-red-300 rounded-lg transition-all duration-300 font-medium border border-red-500/30 hover:border-red-500/50 group">
+                <i class="fas fa-sign-out-alt group-hover:scale-110 transition-transform duration-300"></i>
+                <span>Logout</span>
             </a>
         </div>
     </aside>
 
-    <!-- Main Content -->
-    <main class="admin-main">
-        <!-- Mobile Menu Toggle -->
-        <button class="mobile-menu-toggle" id="mobileMenuToggle">
-            <i class="fas fa-bars"></i>
-        </button>
+    <button class="fixed bottom-6 right-6 lg:hidden z-30 w-14 h-14 bg-gradient-primary text-white rounded-full shadow-xl shadow-blue-500/50 hover:shadow-2xl hover:shadow-blue-500/70 transition-all duration-300 flex items-center justify-center hover:scale-110">
+        <i class="fas fa-bars"></i>
+    </button>
 
-        <!-- Header -->
-        <header class="admin-header">
-            <div class="header-title">
-                <h1>{{ 'Edit Portfolio Item' if portfolio else 'Add New Portfolio Item' }}</h1>
-                <p>{{ 'Update project details' if portfolio else 'Showcase your work with a new portfolio item' }}</p>
-            </div>
-            <div class="header-actions">
-                <a href="{{ url_for('admin_portfolio') }}" class="header-btn">
-                    <i class="fas fa-arrow-left"></i> Back to Portfolio
-                </a>
+    <main class="lg:ml-72 min-h-screen relative z-10">
+        <header class="bg-slate-800/50 backdrop-blur-xl border-b border-slate-700/50 sticky top-0 z-20">
+            <div class="px-6 py-6 flex items-center justify-between">
+                <div>
+                    <h1 class="text-4xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">{{ 'Edit Portfolio Item' if portfolio else 'Add Portfolio Item' }}</h1>
+                    <p class="text-slate-400 mt-1">{{ 'Update project details' if portfolio else 'Showcase your work with a new portfolio item' }}</p>
+                </div>
+                <div class="flex items-center gap-4">
+                    <a href="{{ url_for('admin_portfolio') }}" class="inline-flex items-center gap-2 px-4 py-2 text-slate-300 hover:text-white hover:bg-slate-700/50 rounded-lg transition-all duration-300">
+                        <i class="fas fa-arrow-left"></i>
+                        <span class="hidden sm:inline">Back to Portfolio</span>
+                    </a>
+                </div>
             </div>
         </header>
 
-        <!-- Form Container -->
-        <div class="form-container">
-            <div class="form-layout">
-                <!-- Left Column: Form -->
-                <div class="form-column">
-                    <form method="POST" class="modern-form" enctype="multipart/form-data">
-                        <!-- Basic Information Card -->
-                        <div class="form-card">
-                            <div class="form-card-header">
-                                <h2><i class="fas fa-info-circle"></i> Basic Information</h2>
-                                <p class="form-card-subtitle">Required project details</p>
+        <div class="p-6">
+            <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+                <div class="xl:col-span-2">
+                    <form method="POST" enctype="multipart/form-data" class="space-y-6">
+                        <section class="bg-slate-800/50 backdrop-blur-xl rounded-xl border border-slate-700/50 p-6 space-y-4">
+                            <h2 class="text-xl font-semibold text-white">Basic Information</h2>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm text-slate-300 mb-2" for="title">Project Title *</label>
+                                    <input id="title" name="title" type="text" x-model="fields.title" @input="touch('title')" value="{{ portfolio.title if portfolio else '' }}" required class="w-full bg-slate-900/40 border border-slate-700/50 rounded-lg px-4 py-2 text-slate-100" placeholder="Malawi NGO Data Dashboard" :class="errors.title ? 'border-red-500/60' : ''">
+                                    <p x-show="errors.title" class="text-xs text-red-400 mt-1" x-text="errors.title"></p>
+                                </div>
+                                <div>
+                                    <label class="block text-sm text-slate-300 mb-2" for="client">Client Name *</label>
+                                    <input id="client" name="client" type="text" x-model="fields.client" @input="touch('client')" value="{{ portfolio.client if portfolio else '' }}" required class="w-full bg-slate-900/40 border border-slate-700/50 rounded-lg px-4 py-2 text-slate-100" placeholder="Malawi Development NGO" :class="errors.client ? 'border-red-500/60' : ''">
+                                    <p x-show="errors.client" class="text-xs text-red-400 mt-1" x-text="errors.client"></p>
+                                </div>
                             </div>
-                            <div class="form-card-body">
-                                <div class="form-row">
-                                    <div class="form-group">
-                                        <label for="title" class="form-label">
-                                            <i class="fas fa-heading"></i> Project Title *
-                                        </label>
-                                        <input type="text" 
-                                               id="title" 
-                                               name="title" 
-                                               value="{{ portfolio.title if portfolio else '' }}" 
-                                               required 
-                                               class="form-input"
-                                               placeholder="e.g., Malawi NGO Data Dashboard"
-                                               data-preview="title">
-                                        <div class="form-hint">Keep it concise and descriptive</div>
-                                    </div>
-                                    
-                                    <div class="form-group">
-                                        <label for="client" class="form-label">
-                                            <i class="fas fa-building"></i> Client Name *
-                                        </label>
-                                        <input type="text" 
-                                               id="client" 
-                                               name="client" 
-                                               value="{{ portfolio.client if portfolio else '' }}" 
-                                               required 
-                                               class="form-input"
-                                               placeholder="e.g., Malawi Development NGO"
-                                               data-preview="client">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm text-slate-300 mb-2" for="category">Category *</label>
+                                    <select id="category" name="category" x-model="fields.category" @change="touch('category')" required class="w-full bg-slate-900/40 border border-slate-700/50 rounded-lg px-4 py-2 text-slate-100" :class="errors.category ? 'border-red-500/60' : ''">
+                                        <option value="">Select a category</option>
+                                        {% for cat in categories %}
+                                        <option value="{{ cat }}" {% if portfolio and portfolio.category == cat %}selected{% endif %}>{{ cat|title }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm text-slate-300 mb-2" for="project_url">Project URL</label>
+                                    <input id="project_url" name="project_url" type="url" x-model="fields.projectUrl" @input="touch('projectUrl')" value="{{ portfolio.project_url if portfolio else '' }}" class="w-full bg-slate-900/40 border border-slate-700/50 rounded-lg px-4 py-2 text-slate-100" placeholder="https://example.com" :class="errors.projectUrl ? 'border-red-500/60' : ''">
+                                    <p x-show="errors.projectUrl" class="text-xs text-red-400 mt-1" x-text="errors.projectUrl"></p>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="bg-slate-800/50 backdrop-blur-xl rounded-xl border border-slate-700/50 p-6 space-y-4">
+                            <h2 class="text-xl font-semibold text-white">Project Details</h2>
+                            <div>
+                                <label class="block text-sm text-slate-300 mb-2" for="description">Project Description *</label>
+                                <textarea id="description" name="description" rows="6" x-model="fields.description" @input="touch('description')" required class="w-full bg-slate-900/40 border border-slate-700/50 rounded-lg px-4 py-2 text-slate-100" placeholder="Describe the project scope, challenges, solutions, and outcomes." :class="errors.description ? 'border-red-500/60' : ''">{{ portfolio.description if portfolio else '' }}</textarea>
+                                <p x-show="errors.description" class="text-xs text-red-400 mt-1" x-text="errors.description"></p>
+                            </div>
+                            <div>
+                                <label class="block text-sm text-slate-300 mb-2" for="technologies">Technologies Used</label>
+                                <input id="technologies" name="technologies" type="text" x-model="fields.technologies" value="{{ portfolio.technologies if portfolio else '' }}" class="w-full bg-slate-900/40 border border-slate-700/50 rounded-lg px-4 py-2 text-slate-100" placeholder="Python, React, MySQL">
+                                <p class="text-xs text-slate-500 mt-1">Separate with commas</p>
+                            </div>
+                        </section>
+
+                        <section class="bg-slate-800/50 backdrop-blur-xl rounded-xl border border-slate-700/50 p-6 space-y-4">
+                            <h2 class="text-xl font-semibold text-white">Media & Display</h2>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm text-slate-300 mb-2" for="image_url">Image URL</label>
+                                    <input id="image_url" name="image_url" type="url" x-model="fields.imageUrl" @input="touch('imageUrl')" value="{{ portfolio.image_url if portfolio else '' }}" class="w-full bg-slate-900/40 border border-slate-700/50 rounded-lg px-4 py-2 text-slate-100" placeholder="https://images.unsplash.com/photo-..." :class="errors.imageUrl ? 'border-red-500/60' : ''">
+                                    <p x-show="errors.imageUrl" class="text-xs text-red-400 mt-1" x-text="errors.imageUrl"></p>
+                                </div>
+                                <div>
+                                    <label class="block text-sm text-slate-300 mb-2" for="image_file">Upload Image</label>
+                                    <div class="dropzone" :class="dragOver ? 'dragover' : ''" x-data="{ dragOver: false }"
+                                         @dragover.prevent="dragOver = true"
+                                         @dragleave.prevent="dragOver = false"
+                                         @drop.prevent="dragOver = false; if ($event.dataTransfer.files.length) { $refs.imageFile.files = $event.dataTransfer.files; updateImage({ target: $refs.imageFile }); }">
+                                        <div class="p-4 text-center text-slate-300">
+                                            <i class="fas fa-cloud-upload-alt text-blue-300 text-xl"></i>
+                                            <p class="mt-2 text-sm">Drag & drop an image here or click to browse</p>
+                                            <p class="text-xs text-slate-500 mt-1">JPG, PNG, WebP • Max 5MB</p>
+                                        </div>
+                                        <input id="image_file" name="image_file" type="file" accept="image/*" @change="updateImage($event)" class="absolute inset-0 opacity-0 cursor-pointer" x-ref="imageFile">
                                     </div>
                                 </div>
+                            </div>
+                            <label class="inline-flex items-center gap-3 text-sm text-slate-300">
+                                <input type="checkbox" id="featured" name="featured" value="1" x-model="fields.featured" {% if portfolio and portfolio.featured %}checked{% endif %} class="accent-blue-500">
+                                Featured Project
+                            </label>
+                        </section>
 
-                                <div class="form-row">
-                                    <div class="form-group">
-                                        <label for="category" class="form-label">
-                                            <i class="fas fa-tag"></i> Category *
-                                        </label>
-                                        <select id="category" name="category" required class="form-select" data-preview="category">
-                                            <option value="">Select a category</option>
-                                            {% for cat in categories %}
-                                            <option value="{{ cat }}" 
-                                                    {% if portfolio and portfolio.category == cat %}selected{% endif %}>
-                                                {{ cat|title }}
-                                            </option>
-                                            {% endfor %}
-                                        </select>
-                                    </div>
-                                    
-                                    <div class="form-group">
-                                        <label for="project_url" class="form-label">
-                                            <i class="fas fa-link"></i> Project URL
-                                        </label>
-                                        <input type="url" 
-                                               id="project_url" 
-                                               name="project_url" 
-                                               value="{{ portfolio.project_url if portfolio else '' }}" 
-                                               class="form-input"
-                                               placeholder="https://example.com">
-                                        <div class="form-hint">Optional - live project link</div>
-                                    </div>
+                        <section class="bg-slate-800/50 backdrop-blur-xl rounded-xl border border-slate-700/50 p-6 space-y-4">
+                            <h2 class="text-xl font-semibold text-white">Client Testimonial</h2>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm text-slate-300 mb-2" for="client_name">Client Name</label>
+                                    <input id="client_name" name="client_name" type="text" x-model="fields.clientName" value="{{ portfolio.client_name if portfolio else '' }}" class="w-full bg-slate-900/40 border border-slate-700/50 rounded-lg px-4 py-2 text-slate-100" placeholder="John Banda">
+                                </div>
+                                <div>
+                                    <label class="block text-sm text-slate-300 mb-2" for="client_role">Client Role</label>
+                                    <input id="client_role" name="client_role" type="text" x-model="fields.clientRole" value="{{ portfolio.client_role if portfolio else '' }}" class="w-full bg-slate-900/40 border border-slate-700/50 rounded-lg px-4 py-2 text-slate-100" placeholder="M&E Director">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-sm text-slate-300 mb-2" for="testimonial">Testimonial Text</label>
+                                <textarea id="testimonial" name="testimonial" rows="4" x-model="fields.testimonial" class="w-full bg-slate-900/40 border border-slate-700/50 rounded-lg px-4 py-2 text-slate-100" placeholder="Client's feedback about the project.">{{ portfolio.testimonial if portfolio else '' }}</textarea>
+                            </div>
+                        </section>
+
+                        <div class="flex items-center gap-3 flex-wrap">
+                            <button type="submit" class="inline-flex items-center gap-2 px-4 py-2 bg-gradient-primary text-white rounded-lg shadow-lg shadow-blue-500/40 hover:shadow-blue-500/60 transition-all duration-300">
+                                <i class="fas fa-save"></i>
+                                {{ 'Update Project' if portfolio else 'Add Project' }}
+                            </button>
+                            <a href="{{ url_for('admin_portfolio') }}" class="inline-flex items-center gap-2 px-4 py-2 text-slate-300 hover:text-white hover:bg-slate-700/50 rounded-lg transition-all duration-300">
+                                <i class="fas fa-times"></i>
+                                Cancel
+                            </a>
+                            {% if portfolio %}
+                            <a href="{{ url_for('delete_portfolio', portfolio_id=portfolio.id) }}" class="inline-flex items-center gap-2 px-4 py-2 bg-red-500/20 text-red-200 border border-red-500/30 rounded-lg hover:bg-red-500/30 transition-all duration-300 ml-auto" onclick="return confirm('Are you sure you want to delete this portfolio item?')">
+                                <i class="fas fa-trash"></i>
+                                Delete
+                            </a>
+                            {% endif %}
+                        </div>
+                    </form>
+                </div>
+
+                <div class="space-y-6">
+                    <div class="bg-slate-800/50 backdrop-blur-xl rounded-xl border border-slate-700/50 overflow-hidden">
+                        <img :src="previewImage()" alt="Project preview" class="w-full h-48 object-cover">
+                        <div class="p-5">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-xs text-slate-300 bg-slate-700/50 border border-slate-600/50 px-2 py-1 rounded" x-text="fields.category || 'Category'"></span>
+                                <span class="text-xs text-amber-200 bg-amber-500/20 border border-amber-500/40 px-2 py-1 rounded" x-show="fields.featured"><i class="fas fa-star"></i> Featured</span>
+                            </div>
+                            <h3 class="text-white font-semibold" x-text="fields.title || 'Project Title'"></h3>
+                            <p class="text-xs text-slate-400" x-text="fields.client || 'Client Name'"></p>
+                            <p class="text-sm text-slate-400 mt-3" x-text="fields.description || 'Project description will appear here.'"></p>
+                            <div class="flex flex-wrap gap-2 mt-3" x-show="fields.technologies">
+                                <template x-for="tech in (fields.technologies || '').split(',').map(t => t.trim()).filter(Boolean).slice(0,5)" :key="tech">
+                                    <span class="text-xs bg-purple-500/20 text-purple-200 border border-purple-500/30 px-2 py-1 rounded" x-text="tech"></span>
+                                </template>
+                            </div>
+                            <div class="mt-4 text-xs text-slate-400" x-show="fields.testimonial">
+                                <div class="bg-slate-900/40 border border-slate-700/50 rounded-lg p-3">
+                                    <i class="fas fa-quote-left"></i>
+                                    <p class="mt-2" x-text="fields.testimonial"></p>
+                                    <p class="mt-2 text-slate-300" x-text="fields.clientName ? fields.clientName + (fields.clientRole ? ' — ' + fields.clientRole : '') : ''"></p>
                                 </div>
                             </div>
                         </div>
-
-                        <!-- Project Details Card -->
-                        <div class="form-card">
-                            <div class="form-card-header">
-                                <h2><i class="fas fa-file-alt"></i> Project Details</h2>
-                                <p class="form-card-subtitle">Describe the project and technologies used</p>
-                            </div>
-                            <div class="form-card-body">
-                                <div class="form-group">
-                                    <label for="description" class="form-label">
-                                        <i class="fas fa-align-left"></i> Project Description *
-                                    </label>
-                                    <textarea id="description" 
-                                              name="description" 
-                                              rows="6" 
-                                              required 
-                                              class="form-textarea"
-                                              placeholder="Describe the project scope, challenges faced, solutions implemented, and outcomes achieved..."
-                                              data-preview="description">{{ portfolio.description if portfolio else '' }}</textarea>
-                                    <div class="form-hint">Detailed description helps showcase your expertise</div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="technologies" class="form-label">
-                                        <i class="fas fa-code"></i> Technologies Used
-                                    </label>
-                                    <div class="tags-input-container">
-                                        <input type="text" 
-                                               id="technologies" 
-                                               name="technologies" 
-                                               value="{{ portfolio.technologies if portfolio else '' }}" 
-                                               class="form-input"
-                                               placeholder="Enter technology and press comma"
-                                               data-preview="technologies">
-                                        <div class="tags-hint">Separate with commas (e.g., Python, React, MySQL)</div>
-                                        <div class="tags-preview" id="tagsPreview"></div>
-                                    </div>
+                    </div>
+                    <div class="bg-slate-800/50 backdrop-blur-xl rounded-xl border border-slate-700/50 p-5 text-sm text-slate-400">
+                        <p class="font-semibold text-slate-200 mb-2">Image Guidelines</p>
+                        <ul class="space-y-1">
+                            <li>Optimal size: 1200×800px (3:2 ratio)</li>
+                            <li>File size: under 500KB</li>
+                            <li>Formats: JPG, PNG, WebP</li>
+                            <li>Clear, professional images work best</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
                                 </div>
                             </div>
                         </div>
@@ -433,10 +521,4 @@
     </main>
 </div>
 
-<script>
-// This function will be handled by admin.js
-document.addEventListener('DOMContentLoaded', function() {
-    // Admin.js handles the initialization
-});
-</script>
 {% endblock %}

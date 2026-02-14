@@ -116,13 +116,55 @@
         <h2 class="text-3xl font-bold font-display text-gray-900 mb-3">Send Us a Message</h2>
         <p class="text-gray-900 mb-8">Fill out the form below and we'll get back to you promptly</p>
 
-        <form method="POST" action="{{ url_for('contact') }}" class="space-y-5" x-data="AlpineComponents.form({ service: '', name: '', email: '', phone: '', subject: '', message: '' })" @submit.prevent="$refs.form.submit()">
+        <form method="POST" action="{{ url_for('contact') }}" #form x-ref="form" class="space-y-5" x-data="{
+          fields: { service: '', name: '', email: '', phone: '', company: '', subject: '', message: '', inquiryType: 'quote', newsletter: true },
+          errors: {},
+          submitting: false,
+          submitted: false,
+          validateField(field, value) {
+            if (!this.errors) this.errors = {};
+            switch(field) {
+              case 'name':
+                this.errors.name = !value || value.trim().length < 2 ? 'Name must be at least 2 characters' : '';
+                break;
+              case 'email':
+                this.errors.email = !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) ? 'Please enter a valid email' : '';
+                break;
+              case 'subject':
+                this.errors.subject = !value || value.trim().length < 3 ? 'Subject must be at least 3 characters' : '';
+                break;
+              case 'message':
+                this.errors.message = !value || value.trim().length < 10 ? 'Message must be at least 10 characters' : '';
+                break;
+            }
+          },
+          isFormValid() {
+            return this.fields.name && this.fields.email && this.fields.subject && this.fields.message &&
+                   !this.errors.name && !this.errors.email && !this.errors.subject && !this.errors.message;
+          },
+          async submitForm() {
+            if (!this.isFormValid()) return;
+            this.submitting = true;
+            // Actually submit the form to the server (which may redirect to WhatsApp)
+            this.$refs.form.submit();
+          }
+        }" @submit.prevent="submitForm()">
+          
+          <!-- Success Message -->
+          <div x-show="submitted" x-transition class="p-4 bg-green-50 border border-green-200 rounded-lg flex items-start gap-3">
+            <i class="fab fa-whatsapp text-green-600 text-xl flex-shrink-0 mt-0.5"></i>
+            <div>
+              <h3 class="font-semibold text-green-900">Redirecting to WhatsApp…</h3>
+              <p class="text-sm text-green-800 mt-1">Your message is being prepared. You'll be redirected to WhatsApp to send it directly to us.</p>
+            </div>
+          </div>
+
           <!-- Service Interest -->
           <div>
             <label class="block text-sm font-semibold text-gray-900 mb-2">
               <i class="fas fa-briefcase text-primary mr-2"></i>Service of Interest
             </label>
-            <select name="service_interest" x-model="fields.service" class="w-full px-4 py-3 bg-white/95 border border-white/30 rounded-lg focus:outline-none focus:border-primary transition-colors duration-300 text-gray-900" @change="activeService = $el.value; if(activeService) { $dispatch('service-selected', { service: activeService }); }">
+            <select name="service_interest" x-model="fields.service" class="w-full px-4 py-3 bg-white/95 border border-white/30 rounded-lg focus:outline-none focus:border-primary transition-colors duration-300 text-gray-900">
               <option value="">Select a service (Optional)</option>
               <option value="administrative">Administrative & Executive Support</option>
               <option value="operations">Project & Operations Support</option>
@@ -139,40 +181,72 @@
 
           <!-- Name & Email -->
           <div class="grid md:grid-cols-2 gap-4">
-            <input type="text" name="name" x-model="fields.name" placeholder="Your Full Name *" required class="px-4 py-3 bg-white/95 border border-white/30 rounded-lg focus:outline-none focus:border-primary transition-colors duration-300 text-gray-900 placeholder-gray-500" @blur="validate('name', [{type: 'required'}])">
-            <input type="email" name="email" x-model="fields.email" placeholder="Email Address *" required class="px-4 py-3 bg-white/95 border border-white/30 rounded-lg focus:outline-none focus:border-primary transition-colors duration-300 text-gray-900 placeholder-gray-500" @blur="validate('email', [{type: 'email'}])">
+            <div>
+              <input type="text" name="name" x-model="fields.name" placeholder="Your Full Name *" required 
+                class="w-full px-4 py-3 bg-white/95 border rounded-lg focus:outline-none transition-colors duration-300 text-gray-900 placeholder-gray-500"
+                :class="errors.name ? 'border-red-500 focus:border-red-500' : 'border-white/30 focus:border-primary'"
+                @blur="validateField('name', fields.name)">
+              <p x-show="errors.name" x-transition class="text-sm text-red-600 mt-1 flex items-center gap-1">
+                <i class="fas fa-exclamation-circle"></i> <span x-text="errors.name"></span>
+              </p>
+            </div>
+            <div>
+              <input type="email" name="email" x-model="fields.email" placeholder="Email Address *" required 
+                class="w-full px-4 py-3 bg-white/95 border rounded-lg focus:outline-none transition-colors duration-300 text-gray-900 placeholder-gray-500"
+                :class="errors.email ? 'border-red-500 focus:border-red-500' : 'border-white/30 focus:border-primary'"
+                @blur="validateField('email', fields.email)">
+              <p x-show="errors.email" x-transition class="text-sm text-red-600 mt-1 flex items-center gap-1">
+                <i class="fas fa-exclamation-circle"></i> <span x-text="errors.email"></span>
+              </p>
+            </div>
           </div>
 
           <!-- Phone & Company -->
           <div class="grid md:grid-cols-2 gap-4">
             <input type="tel" name="phone" x-model="fields.phone" placeholder="Phone Number" class="px-4 py-3 bg-white/95 border border-white/30 rounded-lg focus:outline-none focus:border-primary transition-colors duration-300 text-gray-900 placeholder-gray-500">
-            <input type="text" name="company" placeholder="Company/Organization" class="px-4 py-3 bg-white/95 border border-white/30 rounded-lg focus:outline-none focus:border-primary transition-colors duration-300 text-gray-900 placeholder-gray-500">
+            <input type="text" name="company" x-model="fields.company" placeholder="Company/Organization" class="px-4 py-3 bg-white/95 border border-white/30 rounded-lg focus:outline-none focus:border-primary transition-colors duration-300 text-gray-900 placeholder-gray-500">
           </div>
 
           <!-- Subject -->
-          <input type="text" name="subject" x-model="fields.subject" placeholder="Subject *" required class="w-full px-4 py-3 bg-white/95 border border-white/30 rounded-lg focus:outline-none focus:border-primary transition-colors duration-300 text-gray-900 placeholder-gray-500" @blur="validate('subject', [{type: 'required'}])">
+          <div>
+            <input type="text" name="subject" x-model="fields.subject" placeholder="Subject *" required 
+              class="w-full px-4 py-3 bg-white/95 border rounded-lg focus:outline-none transition-colors duration-300 text-gray-900 placeholder-gray-500"
+              :class="errors.subject ? 'border-red-500 focus:border-red-500' : 'border-white/30 focus:border-primary'"
+              @blur="validateField('subject', fields.subject)">
+            <p x-show="errors.subject" x-transition class="text-sm text-red-600 mt-1 flex items-center gap-1">
+              <i class="fas fa-exclamation-circle"></i> <span x-text="errors.subject"></span>
+            </p>
+          </div>
 
           <!-- Message -->
-          <textarea name="message" x-model="fields.message" placeholder="Your Message *" rows="5" required class="w-full px-4 py-3 bg-white/95 border border-white/30 rounded-lg focus:outline-none focus:border-primary transition-colors duration-300 text-gray-900 placeholder-gray-500 resize-none" @blur="validate('message', [{type: 'required', value: 10}])"></textarea>
+          <div>
+            <textarea name="message" x-model="fields.message" placeholder="Your Message *" rows="5" required 
+              class="w-full px-4 py-3 bg-white/95 border rounded-lg focus:outline-none transition-colors duration-300 text-gray-900 placeholder-gray-500 resize-none"
+              :class="errors.message ? 'border-red-500 focus:border-red-500' : 'border-white/30 focus:border-primary'"
+              @blur="validateField('message', fields.message)"></textarea>
+            <p x-show="errors.message" x-transition class="text-sm text-red-600 mt-1 flex items-center gap-1">
+              <i class="fas fa-exclamation-circle"></i> <span x-text="errors.message"></span>
+            </p>
+          </div>
 
           <!-- Inquiry Type -->
           <div>
             <label class="block text-sm font-semibold text-gray-900 mb-3">Inquiry Type</label>
             <div class="grid grid-cols-2 gap-3">
               <label class="relative flex items-center gap-3 p-3 border border-white/30 rounded-lg cursor-pointer hover:border-primary transition-colors duration-300 has-[input:checked]:border-primary has-[input:checked]:bg-primary/5">
-                <input type="radio" name="inquiry_type" value="quote" checked class="w-4 h-4" x-model="fields.inquiryType">
+                <input type="radio" name="inquiry_type" value="quote" x-model="fields.inquiryType" class="w-4 h-4">
                 <span class="text-sm font-medium text-gray-900"><i class="fas fa-dollar-sign text-primary mr-2"></i>Quote</span>
               </label>
               <label class="relative flex items-center gap-3 p-3 border border-white/30 rounded-lg cursor-pointer hover:border-primary transition-colors duration-300 has-[input:checked]:border-primary has-[input:checked]:bg-primary/5">
-                <input type="radio" name="inquiry_type" value="consultation" class="w-4 h-4" x-model="fields.inquiryType">
+                <input type="radio" name="inquiry_type" value="consultation" x-model="fields.inquiryType" class="w-4 h-4">
                 <span class="text-sm font-medium text-gray-900"><i class="fas fa-calendar-check text-primary mr-2"></i>Consultation</span>
               </label>
               <label class="relative flex items-center gap-3 p-3 border border-white/30 rounded-lg cursor-pointer hover:border-primary transition-colors duration-300 has-[input:checked]:border-primary has-[input:checked]:bg-primary/5">
-                <input type="radio" name="inquiry_type" value="partnership" class="w-4 h-4" x-model="fields.inquiryType">
+                <input type="radio" name="inquiry_type" value="partnership" x-model="fields.inquiryType" class="w-4 h-4">
                 <span class="text-sm font-medium text-gray-900"><i class="fas fa-handshake text-primary mr-2"></i>Partnership</span>
               </label>
               <label class="relative flex items-center gap-3 p-3 border border-white/30 rounded-lg cursor-pointer hover:border-primary transition-colors duration-300 has-[input:checked]:border-primary has-[input:checked]:bg-primary/5">
-                <input type="radio" name="inquiry_type" value="general" class="w-4 h-4" x-model="fields.inquiryType">
+                <input type="radio" name="inquiry_type" value="general" x-model="fields.inquiryType" class="w-4 h-4">
                 <span class="text-sm font-medium text-gray-900"><i class="fas fa-question-circle text-primary mr-2"></i>General</span>
               </label>
             </div>
@@ -180,13 +254,36 @@
 
           <!-- Newsletter Checkbox -->
           <label class="flex items-center gap-3 cursor-pointer">
-            <input type="checkbox" name="newsletter" checked class="w-4 h-4 accent-primary" x-model="fields.newsletter">
+            <input type="checkbox" name="newsletter" x-model="fields.newsletter" class="w-4 h-4 accent-primary">
             <span class="text-sm text-gray-900">Subscribe to our newsletter for updates</span>
           </label>
 
-          <!-- Submit Button -->
-          <button type="submit" class="w-full px-6 py-3 bg-gradient-to-r from-primary to-secondary text-white font-semibold rounded-lg hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-center gap-2" @click="submitted = true">
-            <i class="fas fa-paper-plane"></i> Send Message
+          <!-- Submit Button with Loading State -->
+          <button type="submit" :disabled="!isFormValid() || submitting || submitted" 
+            class="w-full px-6 py-3 text-white font-semibold rounded-lg transition-all duration-300 flex items-center justify-center gap-2"
+            :class="!isFormValid() || submitted ? 'bg-gray-400 cursor-not-allowed' : 'bg-gradient-to-r from-primary to-secondary hover:shadow-lg hover:-translate-y-0.5'">
+            
+            <!-- Loading skeleton -->
+            <div x-show="submitting" x-transition class="flex items-center gap-2">
+              <div class="flex gap-1">
+                <div class="w-2 h-2 bg-white rounded-full animate-bounce" style="animation-delay: 0ms;"></div>
+                <div class="w-2 h-2 bg-white rounded-full animate-bounce" style="animation-delay: 150ms;"></div>
+                <div class="w-2 h-2 bg-white rounded-full animate-bounce" style="animation-delay: 300ms;"></div>
+              </div>
+              <span>Sending...</span>
+            </div>
+            
+            <!-- Success checkmark -->
+            <div x-show="submitted && !submitting" x-transition class="flex items-center gap-2">
+              <i class="fas fa-check-circle"></i>
+              <span>Message Sent!</span>
+            </div>
+            
+            <!-- Default state -->
+            <div x-show="!submitting && !submitted" x-transition class="flex items-center gap-2">
+              <i class="fab fa-whatsapp"></i>
+              <span>Send via WhatsApp</span>
+            </div>
           </button>
 
           <p class="text-xs text-gray-900 text-center">

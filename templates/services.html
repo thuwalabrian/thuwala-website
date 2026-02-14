@@ -45,7 +45,6 @@
         <div class="backdrop-blur-xl bg-white/95 rounded-2xl p-4 shadow-smooth border border-white/30" data-aos="fade-up">
             <div class="text-sm font-semibold text-gray-900 mb-3">Jump to:</div>
             <div class="flex flex-wrap gap-3">
-            <div class="flex flex-wrap gap-3">
                 <a href="#administrative" class="group flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg font-medium hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 active" data-category="administrative">
                     <i class="fas fa-clipboard-check"></i>
                     <span>Administrative</span>
@@ -88,6 +87,20 @@
                 </a>
             </div>
         </div>
+    </div>
+</section>
+
+<!-- Breadcrumb Navigation -->
+<section class="py-4 bg-white border-b border-gray-200">
+    <div class="container mx-auto px-4">
+        <nav class="flex items-center gap-2 text-sm" aria-label="Breadcrumb">
+            <a href="{{ url_for('index') }}" class="text-primary hover:text-secondary transition-colors duration-300 flex items-center gap-1">
+                <i class="fas fa-home text-xs"></i>
+                <span>Home</span>
+            </a>
+            <i class="fas fa-chevron-right text-gray-400 text-xs"></i>
+            <span class="text-gray-900 font-medium">Services</span>
+        </nav>
     </div>
 </section>
 

@@ -6,7 +6,6 @@ from flask import (
     url_for,
     flash,
     jsonify,
-    session,
 )
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import (
@@ -21,13 +20,15 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 import os
 from datetime import datetime, timedelta
-from functools import wraps
-from sqlalchemy import inspect
+from sqlalchemy import inspect, text
 import secrets
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-from itsdangerous import URLSafeTimedSerializer
+from flask_wtf.csrf import CSRFProtect
+import traceback
+import logging
+from urllib.parse import quote
 
 app = Flask(__name__)
 app.config.from_object("config.Config")
@@ -44,12 +45,21 @@ def add_static_cache_headers(response):
 db = SQLAlchemy(app)
 login_manager = LoginManager(app)
 login_manager.login_view = "admin_login"
+csrf = CSRFProtect(app)
 
-
-# Note: developer debug hooks removed to avoid noisy logs and accidental info leaks.
-
-# Create URL safe serializer for tokens
-s = URLSafeTimedSerializer(app.config["SECRET_KEY"])
+# Shared list of service categories used across routes and templates.
+SERVICE_CATEGORIES = [
+    "administrative",
+    "operations",
+    "data",
+    "communications",
+    "branding",
+    "business",
+    "systems",
+    "training",
+    "creative",
+    "consulting",
+]
 
 
 # Database Models
@@ -133,6 +143,35 @@ def load_user(user_id):
 def generate_reset_token():
     """Generate a secure reset token"""
     return secrets.token_urlsafe(32)
+
+
+def is_allowed_file(filename):
+    """Check if uploaded file has an allowed extension."""
+    return (
+        "." in filename
+        and filename.rsplit(".", 1)[1].lower() in app.config["ALLOWED_EXTENSIONS"]
+    )
+
+
+def save_uploaded_image(file, subdir, add_timestamp=False):
+    """Save an uploaded image and return its public URL."""
+    if not file or file.filename == "":
+        return None
+
+    filename = secure_filename(file.filename)
+    if not is_allowed_file(filename):
+        return None
+
+    if add_timestamp:
+        timestamp = datetime.utcnow().strftime("%Y%m%d_%H%M%S")
+        filename = f"{timestamp}_{filename}"
+
+    upload_dir = os.path.join(app.config["UPLOAD_FOLDER"], subdir)
+    os.makedirs(upload_dir, exist_ok=True)
+
+    filepath = os.path.join(upload_dir, filename)
+    file.save(filepath)
+    return f"/static/uploads/{subdir}/{filename}"
 
 
 def send_password_reset_email(user_email, reset_url):
@@ -234,7 +273,8 @@ def send_password_reset_email(user_email, reset_url):
 
         # Send email
         with smtplib.SMTP(app.config["MAIL_SERVER"], app.config["MAIL_PORT"]) as server:
-            server.starttls()
+            if app.config.get("MAIL_USE_TLS", True):
+                server.starttls()
             server.login(app.config["MAIL_USERNAME"], app.config["MAIL_PASSWORD"])
             server.send_message(msg)
 
@@ -242,10 +282,7 @@ def send_password_reset_email(user_email, reset_url):
         return True
 
     except Exception as e:
-        import traceback
-
-        print(f"Error sending email: {e}")
-        traceback.print_exc()
+        app.logger.error("Error sending email: %s", e, exc_info=True)
         return False
 
 
@@ -269,8 +306,41 @@ def darken_color_filter(color, percent=20):
 
         # Convert back to hex
         return f"#{r:02x}{g:02x}{b:02x}"
-    except:
+    except Exception:
         return color
+
+
+def build_whatsapp_url(
+    name, email, phone, subject, message, service="", inquiry_type=""
+):
+    """Build a WhatsApp `wa.me` redirect URL with a pre-filled message.
+
+    The user's browser will open WhatsApp (web or app) with the message
+    ready to send, so the business owner receives it instantly.
+    """
+    wa_number = app.config.get("WHATSAPP_NUMBER", "265887580622")
+
+    lines = [
+        "📩 *New Inquiry from Thuwala Co. Website*",
+        "",
+        f"*Name:* {name}",
+        f"*Email:* {email}",
+    ]
+    if phone:
+        lines.append(f"*Phone:* {phone}")
+    if service:
+        lines.append(f"*Service Interest:* {service}")
+    if inquiry_type:
+        lines.append(f"*Inquiry Type:* {inquiry_type}")
+    lines += [
+        f"*Subject:* {subject}",
+        "",
+        f"*Message:*",
+        message,
+    ]
+
+    text = "\n".join(lines)
+    return f"https://wa.me/{wa_number}?text={quote(text)}"
 
 
 def init_or_migrate_database():
@@ -281,30 +351,22 @@ def init_or_migrate_database():
         columns = [col["name"] for col in inspector.get_columns("service")]
 
         if "category" not in columns:
-            print("⚠️ 'category' column missing. Adding it now...")
+            app.logger.info(
+                "'category' column missing from service table — adding it now…"
+            )
             try:
-                # Try to add column (SQLite syntax)
                 db.session.execute(
-                    "ALTER TABLE service ADD COLUMN category VARCHAR(100)"
+                    text("ALTER TABLE service ADD COLUMN category VARCHAR(100)")
                 )
                 db.session.commit()
-                print("✅ Added 'category' column to service table")
+                app.logger.info("Added 'category' column to service table")
             except Exception as e:
-                print(f"⚠️ Could not add column automatically: {e}")
-                print("Trying PostgreSQL syntax...")
-                try:
-                    # PostgreSQL syntax
-                    db.session.execute(
-                        "ALTER TABLE service ADD COLUMN category VARCHAR(100)"
-                    )
-                    db.session.commit()
-                    print("✅ Added 'category' column to service table (PostgreSQL)")
-                except Exception as e2:
-                    print(f"⚠️ PostgreSQL syntax also failed: {e2}")
-                    print(
-                        "Please update your database manually or delete the database file to recreate."
-                    )
-                    return False
+                db.session.rollback()
+                app.logger.warning("Could not add 'category' column: %s", e)
+                app.logger.warning(
+                    "Please update your database manually or delete the database file to recreate."
+                )
+                return False
 
         return True
     except Exception as e:
@@ -339,7 +401,7 @@ def init_db():
 
         # Update existing services with categories if they don't have them
         services_without_category = Service.query.filter(
-            (Service.category == None) | (Service.category == "")
+            (Service.category.is_(None)) | (Service.category == "")
         ).all()
 
         if services_without_category:
@@ -626,10 +688,7 @@ def init_db():
                         f"  - {ad.title} (Active: {ad.is_active}, Order: {ad.display_order})"
                     )
         except Exception as e:
-            print(f"⚠️  Error with advertisements: {e}")
-            import traceback
-
-            traceback.print_exc()
+            app.logger.warning("Error with advertisements: %s", e, exc_info=True)
 
         # Clean up expired tokens on startup
         expired_tokens = PasswordResetToken.query.filter(
@@ -645,11 +704,8 @@ def init_db():
         print("=" * 50)
 
     except Exception as e:
-        print(f"⚠️ Database initialization error: {e}")
-        import traceback
-
-        traceback.print_exc()
-        print("Will retry on first request...")
+        app.logger.error("Database initialization error: %s", e, exc_info=True)
+        app.logger.info("Will retry on first request...")
 
 
 # Inject current year into all templates
@@ -789,13 +845,17 @@ def portfolio():
 @app.route("/contact", methods=["GET", "POST"])
 def contact():
     if request.method == "POST":
-        try:
-            name = request.form.get("name")
-            email = request.form.get("email")
-            phone = request.form.get("phone")
-            subject = request.form.get("subject")
-            message = request.form.get("message")
+        name = request.form.get("name", "").strip()
+        email = request.form.get("email", "").strip()
+        phone = request.form.get("phone", "").strip()
+        subject = request.form.get("subject", "").strip()
+        message = request.form.get("message", "").strip()
+        service = request.form.get("service_interest", "").strip()
+        inquiry_type = request.form.get("inquiry_type", "").strip()
 
+        # --- 1. Try saving to the database (works on paid hosting) ---
+        db_saved = False
+        try:
             new_message = ContactMessage(
                 name=name,
                 email=email,
@@ -803,18 +863,43 @@ def contact():
                 subject=subject,
                 message=message,
             )
-
             db.session.add(new_message)
             db.session.commit()
+            db_saved = True
+        except Exception as e:
+            db.session.rollback()
+            app.logger.warning("Could not save contact message to DB: %s", e)
 
+        # --- 2. WhatsApp redirect (ideal for Vercel / no-DB hosting) ---
+        if app.config.get("WHATSAPP_ENABLED"):
+            wa_url = build_whatsapp_url(
+                name,
+                email,
+                phone,
+                subject,
+                message,
+                service=service,
+                inquiry_type=inquiry_type,
+            )
+            # If DB also worked we flash a note; otherwise the redirect is
+            # the *only* delivery channel so no flash is needed.
+            if db_saved:
+                flash(
+                    "Message saved! You'll now be redirected to WhatsApp to send it directly.",
+                    "success",
+                )
+            return redirect(wa_url)
+
+        # --- 3. DB-only path (traditional hosting) ---
+        if db_saved:
             flash(
                 "Thank you for your message! We will contact you soon.",
                 "success",
             )
-            return redirect(url_for("contact"))
-        except Exception as e:
+        else:
             flash("An error occurred. Please try again.", "error")
-            print(f"Contact form error: {e}")
+
+        return redirect(url_for("contact"))
 
     return render_template("contact.html")
 
@@ -1080,7 +1165,7 @@ def admin_logout():
     return redirect(url_for("index"))
 
 
-@app.route("/admin/message/<int:message_id>/read")
+@app.route("/admin/message/<int:message_id>/read", methods=["POST"])
 @login_required
 def mark_message_read(message_id):
     try:
@@ -1129,19 +1214,7 @@ def add_service():
         except Exception as e:
             flash(f"Error adding service: {str(e)}", "error")
 
-    categories = [
-        "administrative",
-        "operations",
-        "data",
-        "communications",
-        "branding",
-        "business",
-        "systems",
-        "training",
-        "creative",
-        "consulting",
-    ]
-    return render_template("admin/edit_service.html", categories=categories)
+    return render_template("admin/edit_service.html", categories=SERVICE_CATEGORIES)
 
 
 @app.route("/admin/service/<int:service_id>/edit", methods=["GET", "POST"])
@@ -1163,20 +1236,8 @@ def edit_service(service_id):
         except Exception as e:
             flash(f"Error updating service: {str(e)}", "error")
 
-    categories = [
-        "administrative",
-        "operations",
-        "data",
-        "communications",
-        "branding",
-        "business",
-        "systems",
-        "training",
-        "creative",
-        "consulting",
-    ]
     return render_template(
-        "admin/edit_service.html", service=service, categories=categories
+        "admin/edit_service.html", service=service, categories=SERVICE_CATEGORIES
     )
 
 
@@ -1218,14 +1279,11 @@ def add_portfolio():
             image_url = request.form.get("image_url")
             if "image_file" in request.files:
                 file = request.files["image_file"]
-                if file and file.filename != "":
-                    filename = secure_filename(file.filename)
-                    filepath = os.path.join(
-                        app.config["UPLOAD_FOLDER"], "portfolio", filename
-                    )
-                    os.makedirs(os.path.dirname(filepath), exist_ok=True)
-                    file.save(filepath)
-                    image_url = f"/static/uploads/portfolio/{filename}"
+                uploaded_url = save_uploaded_image(
+                    file, "portfolio", add_timestamp=True
+                )
+                if uploaded_url:
+                    image_url = uploaded_url
 
             portfolio = Portfolio(
                 title=request.form.get("title"),
@@ -1247,19 +1305,7 @@ def add_portfolio():
         except Exception as e:
             flash(f"Error adding portfolio item: {str(e)}", "error")
 
-    categories = [
-        "administrative",
-        "operations",
-        "data",
-        "communications",
-        "branding",
-        "business",
-        "systems",
-        "training",
-        "creative",
-        "consulting",
-    ]
-    return render_template("admin/edit_portfolio.html", categories=categories)
+    return render_template("admin/edit_portfolio.html", categories=SERVICE_CATEGORIES)
 
 
 @app.route("/admin/portfolio/<int:item_id>/edit", methods=["GET", "POST"])
@@ -1273,14 +1319,11 @@ def edit_portfolio(item_id):
             image_url = request.form.get("image_url")
             if "image_file" in request.files:
                 file = request.files["image_file"]
-                if file and file.filename != "":
-                    filename = secure_filename(file.filename)
-                    filepath = os.path.join(
-                        app.config["UPLOAD_FOLDER"], "portfolio", filename
-                    )
-                    os.makedirs(os.path.dirname(filepath), exist_ok=True)
-                    file.save(filepath)
-                    image_url = f"/static/uploads/portfolio/{filename}"
+                uploaded_url = save_uploaded_image(
+                    file, "portfolio", add_timestamp=True
+                )
+                if uploaded_url:
+                    image_url = uploaded_url
 
             portfolio.title = request.form.get("title")
             portfolio.client = request.form.get("client")
@@ -1301,20 +1344,8 @@ def edit_portfolio(item_id):
         except Exception as e:
             flash(f"Error updating portfolio item: {str(e)}", "error")
 
-    categories = [
-        "administrative",
-        "operations",
-        "data",
-        "communications",
-        "branding",
-        "business",
-        "systems",
-        "training",
-        "creative",
-        "consulting",
-    ]
     return render_template(
-        "admin/edit_portfolio.html", portfolio=portfolio, categories=categories
+        "admin/edit_portfolio.html", portfolio=portfolio, categories=SERVICE_CATEGORIES
     )
 
 
@@ -1402,29 +1433,10 @@ def add_advertisement():
 
             if "image_file" in request.files:
                 file = request.files["image_file"]
-                if (
-                    file
-                    and file.filename != ""
-                    and file.filename.lower().endswith(
-                        (".png", ".jpg", ".jpeg", ".gif", ".webp")
-                    )
-                ):
-                    # Create upload directory if it doesn't exist
-                    upload_dir = os.path.join(app.config["UPLOAD_FOLDER"], "ads")
-                    os.makedirs(upload_dir, exist_ok=True)
-
-                    # Save file with secure filename
-                    filename = secure_filename(file.filename)
-                    # Add timestamp to make filename unique
-                    from datetime import datetime
-
-                    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-                    filename = f"{timestamp}_{filename}"
-
-                    filepath = os.path.join(upload_dir, filename)
-                    file.save(filepath)
-                    image_url = f"/static/uploads/ads/{filename}"
-                    print(f"DEBUG: Image saved to {filepath}, URL: {image_url}")
+                uploaded_url = save_uploaded_image(file, "ads", add_timestamp=True)
+                if uploaded_url:
+                    image_url = uploaded_url
+                    print(f"DEBUG: Image saved, URL: {image_url}")
 
             # Parse dates
             start_date_str = request.form.get("start_date")
@@ -1468,10 +1480,7 @@ def add_advertisement():
 
         except Exception as e:
             db.session.rollback()
-            print(f"Error adding advertisement: {e}")
-            import traceback
-
-            traceback.print_exc()
+            app.logger.error("Error adding advertisement: %s", e, exc_info=True)
             flash(f"Error creating advertisement: {str(e)}", "error")
 
     return render_template("admin/edit_advertisement.html", ad=None)
@@ -1488,16 +1497,9 @@ def edit_advertisement(ad_id):
             # Handle file upload
             if "image_file" in request.files:
                 file = request.files["image_file"]
-                if file and file.filename != "":
-                    # Create upload directory if it doesn't exist
-                    upload_dir = os.path.join(app.config["UPLOAD_FOLDER"], "ads")
-                    os.makedirs(upload_dir, exist_ok=True)
-
-                    # Save file
-                    filename = secure_filename(file.filename)
-                    filepath = os.path.join(upload_dir, filename)
-                    file.save(filepath)
-                    ad.image_url = f"/static/uploads/ads/{filename}"
+                uploaded_url = save_uploaded_image(file, "ads", add_timestamp=True)
+                if uploaded_url:
+                    ad.image_url = uploaded_url
             elif request.form.get("image_url"):
                 ad.image_url = request.form.get("image_url", "").strip()
 
@@ -1697,6 +1699,7 @@ def add_user():
 
 # Test route for email configuration (development only)
 @app.route("/admin/test-email")
+@login_required
 def test_email():
     """Test email configuration (for development only)"""
     if app.config.get("FLASK_ENV") == "production":
@@ -1708,8 +1711,9 @@ def test_email():
     return f"Test email sent: {success}<br>Reset URL: {reset_url}"
 
 
-# Debug route to check advertisements
+# Debug route to check advertisements (admin-only)
 @app.route("/debug/check-ads")
+@login_required
 def debug_check_ads():
     """Debug route to check advertisements"""
     try:
@@ -1745,8 +1749,9 @@ def debug_check_ads():
         return jsonify({"error": str(e), "advertisement_table_exists": False})
 
 
-# Debug route to manually add sample ads
+# Debug route to manually add sample ads (admin-only)
 @app.route("/debug/add-sample-ads")
+@login_required
 def debug_add_sample_ads():
     """Manually add sample ads"""
     try:
@@ -1787,8 +1792,9 @@ def debug_add_sample_ads():
         return f"❌ Error: {str(e)}"
 
 
-# Add a debug route to check database status
+# Debug route to check database status (admin-only)
 @app.route("/debug/db-status")
+@login_required
 def debug_db_status():
     try:
         # SQLAlchemy 2.0 compatible way to get table names

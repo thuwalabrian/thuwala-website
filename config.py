@@ -9,7 +9,9 @@ class Config:
     SECRET_KEY = os.environ.get("SECRET_KEY")
     if not SECRET_KEY:
         if os.environ.get("FLASK_ENV", "").lower() == "production":
-            raise RuntimeError("SECRET_KEY must be set in production (see .env.example)")
+            raise RuntimeError(
+                "SECRET_KEY must be set in production (see .env.example)"
+            )
         # Development fallback (safe only on local machines)
         SECRET_KEY = "dev-secret-key-change-this"
 
@@ -24,7 +26,9 @@ class Config:
     # Upload folder configuration
     UPLOAD_FOLDER = os.environ.get("UPLOAD_FOLDER", "static/uploads")
     MAX_CONTENT_LENGTH = int(os.environ.get("MAX_CONTENT_LENGTH", 16 * 1024 * 1024))
-    ALLOWED_EXTENSIONS = set(os.environ.get("ALLOWED_EXTENSIONS", "png,jpg,jpeg,gif,webp").split(","))
+    ALLOWED_EXTENSIONS = set(
+        os.environ.get("ALLOWED_EXTENSIONS", "png,jpg,jpeg,gif,webp").split(",")
+    )
 
     # Email configuration
     MAIL_SERVER = os.environ.get("MAIL_SERVER", "smtp.gmail.com")
@@ -35,9 +39,18 @@ class Config:
     MAIL_DEFAULT_SENDER = os.environ.get("MAIL_DEFAULT_SENDER", "noreply@thuwalaco.com")
 
     # Password reset settings
-    PASSWORD_RESET_TOKEN_EXPIRE_HOURS = int(os.environ.get("PASSWORD_RESET_TOKEN_EXPIRE_HOURS", 24))
+    PASSWORD_RESET_TOKEN_EXPIRE_HOURS = int(
+        os.environ.get("PASSWORD_RESET_TOKEN_EXPIRE_HOURS", 24)
+    )
     SECURITY_PASSWORD_SALT = os.environ.get("SECURITY_PASSWORD_SALT")
     if not SECURITY_PASSWORD_SALT:
         if os.environ.get("FLASK_ENV", "").lower() == "production":
-            raise RuntimeError("SECURITY_PASSWORD_SALT must be set in production (see .env.example)")
+            raise RuntimeError(
+                "SECURITY_PASSWORD_SALT must be set in production (see .env.example)"
+            )
         SECURITY_PASSWORD_SALT = "password-reset-salt-change-this"
+
+    # WhatsApp integration (for Vercel / no-database deployments)
+    # Set WHATSAPP_ENABLED=true to redirect contact-form submissions to WhatsApp.
+    WHATSAPP_ENABLED = os.environ.get("WHATSAPP_ENABLED", "true").lower() == "true"
+    WHATSAPP_NUMBER = os.environ.get("WHATSAPP_NUMBER", "265887580622")

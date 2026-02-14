@@ -3,308 +3,261 @@
 {% block title %}{{ 'Edit' if ad else 'Add' }} Advertisement - Thuwala Co.{% endblock %}
 
 {% block content %}
-<div class="admin-container">
-    <!-- Include the existing sidebar -->
-    {% include 'admin/sidebar.html' %}
+<div class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900" x-data="Object.assign(AlpineComponents.formValidator({
+    fields: {
+        title: {{ (ad.title if ad else '')|tojson }},
+        displayOrder: {{ (ad.display_order if ad else 0) }},
+        description: {{ (ad.description if ad else '')|tojson }},
+        ctaText: {{ (ad.cta_text if ad else 'Learn More')|tojson }},
+        ctaLink: {{ (ad.cta_link if ad else '')|tojson }},
+        backgroundColor: {{ (ad.background_color if ad else '#2563eb')|tojson }},
+        textColor: {{ (ad.text_color if ad else '#ffffff')|tojson }},
+        imageUrl: {{ (ad.image_url if ad else '')|tojson }},
+        isActive: {{ 'true' if not ad or ad.is_active else 'false' }}
+    },
+    rules: {
+        title: [{ type: 'required' }, { type: 'minLength', value: 3 }],
+        description: [{ type: 'required' }, { type: 'minLength', value: 10 }],
+        ctaLink: [{ type: 'url' }],
+        backgroundColor: [{ type: 'hex' }],
+        textColor: [{ type: 'hex' }],
+        imageUrl: [{ type: 'url' }]
+    }
+}), {
+    previewImage() {
+        return this.fields.imageUrl || '';
+    },
+    updateImage(event) {
+        const file = event.target.files && event.target.files[0];
+        if (file) {
+            this.fields.imageUrl = URL.createObjectURL(file);
+        }
+    }
+})">
+    <div class="fixed inset-0 overflow-hidden pointer-events-none">
+        <div class="absolute top-20 left-10 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl animate-pulse"></div>
+        <div class="absolute bottom-20 right-10 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
+    </div>
 
-    <main class="admin-main">
-        <!-- Mobile Menu Toggle -->
-        <button class="mobile-menu-toggle" id="mobileMenuToggle">
-            <i class="fas fa-bars"></i>
-        </button>
-
-        <!-- Header -->
-        <header class="admin-header">
-            <div class="header-title">
-                <h1>{{ 'Edit' if ad else 'Create' }} Advertisement</h1>
-                <p>{{ 'Update the advertisement details' if ad else 'Create a new advertisement for the hero section' }}</p>
+    <aside class="fixed left-0 top-0 h-screen w-72 bg-slate-800/50 backdrop-blur-xl border-r border-slate-700/50 overflow-y-auto z-40 lg:flex flex-col hidden transition-all duration-300">
+        <div class="bg-slate-800/50 backdrop-blur-xl px-6 py-6 text-white border-b border-slate-700/50 relative group">
+            <div class="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div class="relative z-10 flex items-center justify-center h-16">
+                <img src="{{ url_for('static', filename='images/logo/Thuwala Co logo.png') }}" alt="Thuwala Co" class="h-14 w-auto object-contain" loading="eager" decoding="async">
             </div>
-            <div class="header-actions">
-                <a href="{{ url_for('admin_advertisements') }}" class="header-btn">
-                    <i class="fas fa-arrow-left"></i> Back to Ads
+        </div>
+
+        <div class="p-4 border-b border-slate-700/50 backdrop-blur">
+            <div class="flex items-center gap-3 p-3 bg-slate-700/30 hover:bg-slate-700/50 rounded-lg transition-colors duration-300 group">
+                <div class="w-10 h-10 rounded-full bg-gradient-primary flex items-center justify-center text-white font-bold group-hover:scale-110 transition-transform duration-300">
+                    {{ current_user.username[0]|upper }}
+                </div>
+                <div class="flex-1 min-w-0">
+                    <p class="font-semibold text-white text-sm truncate">{{ current_user.username }}</p>
+                    <p class="text-xs text-slate-400">Administrator</p>
+                </div>
+            </div>
+        </div>
+
+        <nav class="flex-1 p-4 space-y-6">
+            <div class="space-y-2">
+                <p class="px-3 text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Navigation</p>
+                <a href="{{ url_for('admin_dashboard') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg {% if request.endpoint == 'admin_dashboard' %}bg-gradient-primary text-white shadow-lg shadow-blue-500/50{% else %}text-slate-300 hover:bg-slate-700/30 hover:text-white{% endif %} transition-all duration-300 group">
+                    <i class="fas fa-chart-line w-5 group-hover:scale-110 transition-transform duration-300"></i>
+                    <span class="font-medium">Dashboard</span>
                 </a>
+            </div>
+
+            <div class="space-y-2">
+                <p class="px-3 text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Content</p>
+                <div class="space-y-1">
+                    <a href="{{ url_for('admin_services') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg {% if request.endpoint == 'admin_services' %}bg-gradient-primary text-white shadow-lg shadow-blue-500/50{% else %}text-slate-300 hover:bg-slate-700/30 hover:text-white{% endif %} transition-all duration-300 group">
+                        <i class="fas fa-cogs w-5 group-hover:scale-110 transition-transform duration-300"></i>
+                        <span class="font-medium">Services</span>
+                    </a>
+                    <a href="{{ url_for('admin_portfolio') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg {% if request.endpoint == 'admin_portfolio' %}bg-gradient-primary text-white shadow-lg shadow-blue-500/50{% else %}text-slate-300 hover:bg-slate-700/30 hover:text-white{% endif %} transition-all duration-300 group">
+                        <i class="fas fa-briefcase w-5 group-hover:scale-110 transition-transform duration-300"></i>
+                        <span class="font-medium">Portfolio</span>
+                    </a>
+                    <a href="{{ url_for('admin_advertisements') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg {% if request.endpoint in ['admin_advertisements', 'add_advertisement', 'edit_advertisement'] %}bg-gradient-primary text-white shadow-lg shadow-blue-500/50{% else %}text-slate-300 hover:bg-slate-700/30 hover:text-white{% endif %} transition-all duration-300 group">
+                        <i class="fas fa-bullhorn w-5 group-hover:scale-110 transition-transform duration-300"></i>
+                        <span class="font-medium">Advertisements</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="space-y-2">
+                <p class="px-3 text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">System</p>
+                <div class="space-y-1">
+                    <a href="{{ url_for('admin_users') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg {% if request.endpoint == 'admin_users' %}bg-gradient-primary text-white shadow-lg shadow-blue-500/50{% else %}text-slate-300 hover:bg-slate-700/30 hover:text-white{% endif %} transition-all duration-300 group">
+                        <i class="fas fa-users w-5 group-hover:scale-110 transition-transform duration-300"></i>
+                        <span class="font-medium">Users</span>
+                    </a>
+                    <a href="{{ url_for('change_password') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-slate-300 hover:bg-slate-700/30 hover:text-white transition-all duration-300 group">
+                        <i class="fas fa-key w-5 group-hover:scale-110 transition-transform duration-300"></i>
+                        <span class="font-medium">Change Password</span>
+                    </a>
+                </div>
+            </div>
+        </nav>
+
+        <div class="p-4 border-t border-slate-700/50 backdrop-blur">
+            <a href="{{ url_for('admin_logout') }}" class="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-red-500/20 hover:bg-red-500/40 text-red-300 rounded-lg transition-all duration-300 font-medium border border-red-500/30 hover:border-red-500/50 group">
+                <i class="fas fa-sign-out-alt group-hover:scale-110 transition-transform duration-300"></i>
+                <span>Logout</span>
+            </a>
+        </div>
+    </aside>
+
+    <button class="fixed bottom-6 right-6 lg:hidden z-30 w-14 h-14 bg-gradient-primary text-white rounded-full shadow-xl shadow-blue-500/50 hover:shadow-2xl hover:shadow-blue-500/70 transition-all duration-300 flex items-center justify-center hover:scale-110">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <main class="lg:ml-72 min-h-screen relative z-10">
+        <header class="bg-slate-800/50 backdrop-blur-xl border-b border-slate-700/50 sticky top-0 z-20">
+            <div class="px-6 py-6 flex items-center justify-between">
+                <div>
+                    <h1 class="text-4xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">{{ 'Edit' if ad else 'Create' }} Advertisement</h1>
+                    <p class="text-slate-400 mt-1">{{ 'Update the advertisement details' if ad else 'Create a new advertisement for the hero section' }}</p>
+                </div>
+                <div class="flex items-center gap-4">
+                    <a href="{{ url_for('admin_advertisements') }}" class="inline-flex items-center gap-2 px-4 py-2 text-slate-300 hover:text-white hover:bg-slate-700/50 rounded-lg transition-all duration-300">
+                        <i class="fas fa-arrow-left"></i>
+                        <span class="hidden sm:inline">Back to Ads</span>
+                    </a>
+                </div>
             </div>
         </header>
 
-        <div class="form-layout">
-            <!-- Left Column: Form -->
-            <div class="form-column">
-                <div class="form-card">
-                    <div class="form-card-header">
-                        <h2><i class="fas fa-edit"></i> Advertisement Details</h2>
-                        <p class="form-card-subtitle">Fill in the details for your advertisement</p>
-                    </div>
-                    <div class="form-card-body">
-                        <form method="POST" enctype="multipart/form-data" class="modern-form">
-                            <!-- Title & Order -->
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label for="title" class="form-label">
-                                        <i class="fas fa-heading"></i>
-                                        <span>Advertisement Title *</span>
-                                    </label>
-                                    <input type="text" id="title" name="title" 
-                                           value="{{ ad.title if ad else '' }}" 
-                                           placeholder="Enter advertisement title" 
-                                           class="form-input" required>
-                                    <div class="form-hint">This will be displayed as the main headline</div>
+        <div class="p-6">
+            <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+                <div class="xl:col-span-2">
+                    <form method="POST" enctype="multipart/form-data" class="space-y-6">
+                        <section class="bg-slate-800/50 backdrop-blur-xl rounded-xl border border-slate-700/50 p-6 space-y-4">
+                            <h2 class="text-xl font-semibold text-white">Advertisement Details</h2>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm text-slate-300 mb-2" for="title">Advertisement Title *</label>
+                                    <input id="title" name="title" type="text" x-model="fields.title" @input="touch('title')" value="{{ ad.title if ad else '' }}" required class="w-full bg-slate-900/40 border border-slate-700/50 rounded-lg px-4 py-2 text-slate-100" placeholder="Enter advertisement title" :class="errors.title ? 'border-red-500/60' : ''">
+                                    <p x-show="errors.title" class="text-xs text-red-400 mt-1" x-text="errors.title"></p>
                                 </div>
-                                
-                                <div class="form-group">
-                                    <label for="display_order" class="form-label">
-                                        <i class="fas fa-sort-numeric-down"></i>
-                                        <span>Display Order</span>
-                                    </label>
-                                    <input type="number" id="display_order" name="display_order" 
-                                           value="{{ ad.display_order if ad else 0 }}" 
-                                           placeholder="0" min="0" step="1"
-                                           class="form-input">
-                                    <div class="form-hint">Lower numbers appear first (0 is highest priority)</div>
+                                <div>
+                                    <label class="block text-sm text-slate-300 mb-2" for="display_order">Display Order</label>
+                                    <input id="display_order" name="display_order" type="number" x-model="fields.displayOrder" value="{{ ad.display_order if ad else 0 }}" min="0" step="1" class="w-full bg-slate-900/40 border border-slate-700/50 rounded-lg px-4 py-2 text-slate-100" placeholder="0">
                                 </div>
                             </div>
-
-                            <!-- Description -->
-                            <div class="form-group">
-                                <label for="description" class="form-label">
-                                    <i class="fas fa-align-left"></i>
-                                    <span>Description *</span>
-                                </label>
-                                <textarea id="description" name="description" rows="4" 
-                                          placeholder="Enter advertisement description"
-                                          class="form-textarea" required>{{ ad.description if ad else '' }}</textarea>
-                                <div class="form-hint">This text appears below the title</div>
+                            <div>
+                                <label class="block text-sm text-slate-300 mb-2" for="description">Description *</label>
+                                <textarea id="description" name="description" rows="4" x-model="fields.description" @input="touch('description')" required class="w-full bg-slate-900/40 border border-slate-700/50 rounded-lg px-4 py-2 text-slate-100" placeholder="Enter advertisement description" :class="errors.description ? 'border-red-500/60' : ''">{{ ad.description if ad else '' }}</textarea>
+                                <p x-show="errors.description" class="text-xs text-red-400 mt-1" x-text="errors.description"></p>
                             </div>
-
-                            <!-- CTA Text & Link -->
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label for="cta_text" class="form-label">
-                                        <i class="fas fa-hand-point-right"></i>
-                                        <span>Button Text</span>
-                                    </label>
-                                    <input type="text" id="cta_text" name="cta_text" 
-                                           value="{{ ad.cta_text if ad else 'Learn More' }}" 
-                                           placeholder="Learn More"
-                                           class="form-input">
-                                    <div class="form-hint">Text for the call-to-action button</div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm text-slate-300 mb-2" for="cta_text">Button Text</label>
+                                    <input id="cta_text" name="cta_text" type="text" x-model="fields.ctaText" value="{{ ad.cta_text if ad else 'Learn More' }}" class="w-full bg-slate-900/40 border border-slate-700/50 rounded-lg px-4 py-2 text-slate-100" placeholder="Learn More">
                                 </div>
-                                
-                                <div class="form-group">
-                                    <label for="cta_link" class="form-label">
-                                        <i class="fas fa-link"></i>
-                                        <span>Button Link</span>
-                                    </label>
-                                    <input type="url" id="cta_link" name="cta_link" 
-                                           value="{{ ad.cta_link if ad else '' }}" 
-                                           placeholder="https://example.com or /services"
-                                           class="form-input">
-                                    <div class="form-hint">URL where the button should link to (external or internal)</div>
+                                <div>
+                                    <label class="block text-sm text-slate-300 mb-2" for="cta_link">Button Link</label>
+                                    <input id="cta_link" name="cta_link" type="url" x-model="fields.ctaLink" @input="touch('ctaLink')" value="{{ ad.cta_link if ad else '' }}" class="w-full bg-slate-900/40 border border-slate-700/50 rounded-lg px-4 py-2 text-slate-100" placeholder="https://example.com or /services" :class="errors.ctaLink ? 'border-red-500/60' : ''">
+                                    <p x-show="errors.ctaLink" class="text-xs text-red-400 mt-1" x-text="errors.ctaLink"></p>
                                 </div>
                             </div>
-
-                            <!-- Colors -->
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label class="form-label">
-                                        <i class="fas fa-fill-drip"></i>
-                                        <span>Background Color</span>
-                                    </label>
-                                    <div class="color-input-group">
-                                        <input type="color" id="background_color" name="background_color" 
-                                               value="{{ ad.background_color if ad else '#2563eb' }}"
-                                               class="form-input">
-                                        <input type="text" id="background_color_text" 
-                                               value="{{ ad.background_color if ad else '#2563eb' }}" 
-                                               placeholder="#2563eb" pattern="^#[0-9A-Fa-f]{6}$"
-                                               class="form-input">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm text-slate-300 mb-2" for="background_color">Background Color</label>
+                                    <div class="flex items-center gap-3">
+                                        <input id="background_color" name="background_color" type="color" x-model="fields.backgroundColor" value="{{ ad.background_color if ad else '#2563eb' }}" class="h-10 w-14 bg-transparent" @input="touch('backgroundColor')">
+                                        <input type="text" x-model="fields.backgroundColor" @input="touch('backgroundColor')" class="w-full bg-slate-900/40 border border-slate-700/50 rounded-lg px-4 py-2 text-slate-100" placeholder="#2563eb" :class="errors.backgroundColor ? 'border-red-500/60' : ''">
                                     </div>
-                                    <div class="form-hint">Background color of the advertisement</div>
-                                </div>
-                                
-                                <div class="form-group">
-                                    <label class="form-label">
-                                        <i class="fas fa-font"></i>
-                                        <span>Text Color</span>
-                                    </label>
-                                    <div class="color-input-group">
-                                        <input type="color" id="text_color" name="text_color" 
-                                               value="{{ ad.text_color if ad else '#ffffff' }}"
-                                               class="form-input">
-                                        <input type="text" id="text_color_text" 
-                                               value="{{ ad.text_color if ad else '#ffffff' }}" 
-                                               placeholder="#ffffff" pattern="^#[0-9A-Fa-f]{6}$"
-                                               class="form-input">
+                                    <p x-show="errors.backgroundColor" class="text-xs text-red-400 mt-1" x-text="errors.backgroundColor"></p>
                                     </div>
-                                    <div class="form-hint">Color of the text on the advertisement</div>
+                                </div>
+                                <div>
+                                    <label class="block text-sm text-slate-300 mb-2" for="text_color">Text Color</label>
+                                    <div class="flex items-center gap-3">
+                                        <input id="text_color" name="text_color" type="color" x-model="fields.textColor" value="{{ ad.text_color if ad else '#ffffff' }}" class="h-10 w-14 bg-transparent" @input="touch('textColor')">
+                                        <input type="text" x-model="fields.textColor" @input="touch('textColor')" class="w-full bg-slate-900/40 border border-slate-700/50 rounded-lg px-4 py-2 text-slate-100" placeholder="#ffffff" :class="errors.textColor ? 'border-red-500/60' : ''">
+                                    </div>
+                                    <p x-show="errors.textColor" class="text-xs text-red-400 mt-1" x-text="errors.textColor"></p>
+                                    </div>
                                 </div>
                             </div>
-
-                            <!-- Dates -->
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label for="start_date" class="form-label">
-                                        <i class="fas fa-calendar-plus"></i>
-                                        <span>Start Date</span>
-                                    </label>
-                                    <input type="datetime-local" id="start_date" name="start_date" 
-                                           value="{{ ad.start_date.strftime('%Y-%m-%dT%H:%M') if ad and ad.start_date else '' }}"
-                                           class="form-input">
-                                    <div class="form-hint">When the ad should start showing (leave empty for immediate)</div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm text-slate-300 mb-2" for="start_date">Start Date</label>
+                                    <input id="start_date" name="start_date" type="datetime-local" value="{{ ad.start_date.strftime('%Y-%m-%dT%H:%M') if ad and ad.start_date else '' }}" class="w-full bg-slate-900/40 border border-slate-700/50 rounded-lg px-4 py-2 text-slate-100">
                                 </div>
-                                
-                                <div class="form-group">
-                                    <label for="end_date" class="form-label">
-                                        <i class="fas fa-calendar-minus"></i>
-                                        <span>End Date</span>
-                                    </label>
-                                    <input type="datetime-local" id="end_date" name="end_date" 
-                                           value="{{ ad.end_date.strftime('%Y-%m-%dT%H:%M') if ad and ad.end_date else '' }}"
-                                           class="form-input">
-                                    <div class="form-hint">When the ad should stop showing (optional)</div>
+                                <div>
+                                    <label class="block text-sm text-slate-300 mb-2" for="end_date">End Date</label>
+                                    <input id="end_date" name="end_date" type="datetime-local" value="{{ ad.end_date.strftime('%Y-%m-%dT%H:%M') if ad and ad.end_date else '' }}" class="w-full bg-slate-900/40 border border-slate-700/50 rounded-lg px-4 py-2 text-slate-100">
                                 </div>
                             </div>
-
-                            <!-- Image -->
-                            <div class="form-group">
-                                <label for="image_url" class="form-label">
-                                    <i class="fas fa-image"></i>
-                                    <span>Image URL</span>
-                                </label>
-                                <input type="url" id="image_url" name="image_url" 
-                                       value="{{ ad.image_url if ad else '' }}" 
-                                       placeholder="https://example.com/image.jpg"
-                                       class="form-input">
-                                <div class="form-hint">URL of an image to display (optional)</div>
+                            <div>
+                                <label class="block text-sm text-slate-300 mb-2" for="image_url">Image URL</label>
+                                <input id="image_url" name="image_url" type="url" x-model="fields.imageUrl" @input="touch('imageUrl')" value="{{ ad.image_url if ad else '' }}" class="w-full bg-slate-900/40 border border-slate-700/50 rounded-lg px-4 py-2 text-slate-100" placeholder="https://example.com/image.jpg" :class="errors.imageUrl ? 'border-red-500/60' : ''">
+                                <p x-show="errors.imageUrl" class="text-xs text-red-400 mt-1" x-text="errors.imageUrl"></p>
                             </div>
-
-                            <div class="form-group">
-                                <label class="form-label">
-                                    <i class="fas fa-upload"></i>
-                                    <span>Or Upload Image</span>
-                                </label>
-                                <div class="file-upload">
-                                    <input type="file" id="image_file" name="image_file" accept="image/*" class="file-input">
-                                    <label for="image_file" class="file-label">
-                                        <i class="fas fa-cloud-upload-alt"></i>
-                                        <span>Choose Image File</span>
-                                    </label>
+                            <div>
+                                <label class="block text-sm text-slate-300 mb-2" for="image_file">Or Upload Image</label>
+                                <div class="dropzone" :class="dragOver ? 'dragover' : ''" x-data="{ dragOver: false }"
+                                     @dragover.prevent="dragOver = true"
+                                     @dragleave.prevent="dragOver = false"
+                                     @drop.prevent="dragOver = false; if ($event.dataTransfer.files.length) { $refs.imageFile.files = $event.dataTransfer.files; updateImage({ target: $refs.imageFile }); }">
+                                    <div class="p-4 text-center text-slate-300">
+                                        <i class="fas fa-cloud-upload-alt text-blue-300 text-xl"></i>
+                                        <p class="mt-2 text-sm">Drag & drop an image here or click to browse</p>
+                                        <p class="text-xs text-slate-500 mt-1">JPG, PNG, GIF • Max 5MB</p>
+                                    </div>
+                                    <input id="image_file" name="image_file" type="file" accept="image/*" @change="updateImage($event)" class="absolute inset-0 opacity-0 cursor-pointer" x-ref="imageFile">
                                 </div>
-                                <div class="file-info">JPG, PNG, GIF - max 5MB</div>
                             </div>
-
                             {% if ad and ad.image_url %}
-                            <div class="form-group">
-                                <label class="form-label">
-                                    <i class="fas fa-eye"></i>
-                                    <span>Current Image</span>
-                                </label>
-                                <div class="current-image">
-                                    <img src="{{ ad.image_url }}" alt="Current advertisement image" 
-                                         style="max-width: 200px; max-height: 100px; border-radius: 8px; margin-bottom: 10px;">
-                                    <a href="{{ ad.image_url }}" target="_blank" class="btn btn-sm btn-secondary">
-                                        <i class="fas fa-external-link-alt"></i> View Full Image
-                                    </a>
-                                </div>
+                            <div class="flex items-center gap-4">
+                                <img src="{{ ad.image_url }}" alt="Current advertisement image" class="w-32 h-16 object-cover rounded">
+                                <a href="{{ ad.image_url }}" target="_blank" class="text-sm text-slate-300 hover:text-white">View Full Image</a>
                             </div>
                             {% endif %}
+                            <label class="inline-flex items-center gap-3 text-sm text-slate-300">
+                                <input type="checkbox" id="is_active" name="is_active" value="1" x-model="fields.isActive" {{ 'checked' if not ad or ad.is_active else '' }} class="accent-blue-500">
+                                Active
+                            </label>
+                        </section>
 
-                            <!-- Active Status -->
-                            <div class="form-group">
-                                <div class="checkbox-group">
-                                    <input type="checkbox" id="is_active" name="is_active" value="1" 
-                                           {{ 'checked' if not ad or ad.is_active else '' }}
-                                           class="checkbox-input">
-                                    <label for="is_active" class="checkbox-label">
-                                        <span class="checkbox-box">
-                                            <i class="fas fa-check"></i>
-                                        </span>
-                                        <div class="checkbox-content">
-                                            <span class="checkbox-title">Active</span>
-                                            <span class="checkbox-description">Show this advertisement on the website</span>
-                                        </div>
-                                    </label>
-                                </div>
-                            </div>
-
-                            <!-- Form Actions -->
-                            <div class="form-actions">
-                                <a href="{{ url_for('admin_advertisements') }}" class="btn btn-secondary">
-                                    <i class="fas fa-times"></i> Cancel
-                                </a>
-                                <button type="submit" class="btn btn-primary ml-auto">
-                                    <i class="fas fa-save"></i> {{ 'Update' if ad else 'Create' }} Advertisement
-                                </button>
-                            </div>
-                        </form>
-                    </div>
+                        <div class="flex items-center gap-3 flex-wrap">
+                            <a href="{{ url_for('admin_advertisements') }}" class="inline-flex items-center gap-2 px-4 py-2 text-slate-300 hover:text-white hover:bg-slate-700/50 rounded-lg transition-all duration-300">
+                                <i class="fas fa-times"></i>
+                                Cancel
+                            </a>
+                            <button type="submit" class="inline-flex items-center gap-2 px-4 py-2 bg-gradient-primary text-white rounded-lg shadow-lg shadow-blue-500/40 hover:shadow-blue-500/60 transition-all duration-300 ml-auto">
+                                <i class="fas fa-save"></i>
+                                {{ 'Update' if ad else 'Create' }} Advertisement
+                            </button>
+                        </div>
+                    </form>
                 </div>
-            </div>
 
-            <!-- Right Column: Preview -->
-            <div class="preview-column">
-                <div class="preview-card">
-                    <div class="preview-card-header">
-                        <h3><i class="fas fa-eye"></i> Live Preview</h3>
-                        <p>See how your ad will appear on the homepage</p>
-                    </div>
-                    <div class="preview-content">
-                        <div id="adLivePreview" class="advertisement-preview">
-                            <div class="ad-content">
-                                <div class="ad-badge">
-                                    <i class="fas fa-bullhorn"></i> Featured
-                                </div>
-                                <h3 id="previewTitle">Advertisement Title</h3>
-                                <p id="previewDescription">This is a preview of how your advertisement will look on the homepage.</p>
-                                <a href="#" id="previewButton" class="btn btn-primary">Learn More</a>
-                            </div>
+                <div class="space-y-6">
+                    <div class="bg-slate-800/50 backdrop-blur-xl rounded-xl border border-slate-700/50 p-5">
+                        <h3 class="text-lg font-semibold text-white mb-4">Live Preview</h3>
+                        <div class="rounded-xl p-6" :style="`background:${fields.backgroundColor}; color:${fields.textColor};`">
+                            <div class="text-xs uppercase tracking-widest opacity-80 mb-2"><i class="fas fa-bullhorn"></i> Featured</div>
+                            <h4 class="text-2xl font-bold" x-text="fields.title || 'Advertisement Title'"></h4>
+                            <p class="mt-2 opacity-90" x-text="fields.description || 'This is a preview of how your advertisement will look on the homepage.'"></p>
+                            <a class="inline-flex items-center gap-2 mt-4 px-4 py-2 rounded-lg" :style="`background:${fields.textColor}; color:${fields.backgroundColor};`" href="#" x-text="fields.ctaText || 'Learn More'"></a>
                         </div>
-                        <div class="preview-tips">
-                            <h4><i class="fas fa-lightbulb"></i> Preview Tips</h4>
-                            <ul class="tips-list">
-                                <li><i class="fas fa-check-circle"></i> Changes update in real-time</li>
-                                <li><i class="fas fa-check-circle"></i> Colors automatically adjust for readability</li>
-                                <li><i class="fas fa-check-circle"></i> Images appear with gradient overlay</li>
-                            </ul>
+                        <div class="mt-4" x-show="previewImage()">
+                            <img :src="previewImage()" alt="Preview image" class="w-full h-36 object-cover rounded-lg">
                         </div>
                     </div>
-                </div>
-                
-                <!-- Tips Card -->
-                <div class="card">
-                    <div class="card-header">
-                        <h2><i class="fas fa-question-circle"></i> Best Practices</h2>
-                    </div>
-                    <div class="card-body">
-                        <div class="tips-list">
-                            <div class="tip-item">
-                                <i class="fas fa-bullhorn text-primary"></i>
-                                <div>
-                                    <h5>Clear Call-to-Action</h5>
-                                    <p>Make sure your CTA button text is action-oriented and clear.</p>
-                                </div>
-                            </div>
-                            <div class="tip-item">
-                                <i class="fas fa-palette text-success"></i>
-                                <div>
-                                    <h5>Color Contrast</h5>
-                                    <p>Ensure text is readable against the background color.</p>
-                                </div>
-                            </div>
-                            <div class="tip-item">
-                                <i class="fas fa-image text-warning"></i>
-                                <div>
-                                    <h5>Image Quality</h5>
-                                    <p>Use high-quality images. Optimal size: 1200x600px.</p>
-                                </div>
-                            </div>
-                            <div class="tip-item">
-                                <i class="fas fa-calendar text-info"></i>
-                                <div>
-                                    <h5>Scheduling</h5>
-                                    <p>Use dates to automatically show/hide ads for promotions.</p>
-                                </div>
-                            </div>
-                        </div>
+
+                    <div class="bg-slate-800/50 backdrop-blur-xl rounded-xl border border-slate-700/50 p-5 text-sm text-slate-400">
+                        <p class="font-semibold text-slate-200 mb-2">Best Practices</p>
+                        <ul class="space-y-1">
+                            <li>Use clear, action-oriented CTA text.</li>
+                            <li>Ensure text contrast for readability.</li>
+                            <li>Use high-quality images (1200x600px).</li>
+                            <li>Schedule ads for time-limited promotions.</li>
+                        </ul>
                     </div>
                 </div>
             </div>

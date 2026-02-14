@@ -3,344 +3,309 @@
 {% block title %}Admin Dashboard - Thuwala Co.{% endblock %}
 
 {% block content %}
-<div class="admin-container">
-    <!-- Sidebar -->
-    <aside class="admin-sidebar" id="adminSidebar">
-        <div class="sidebar-header">
-            <h1>Thuwala Admin</h1>
-            <p>Dashboard Control Panel</p>
+<div class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900" x-data="dashboardApp()">
+    <!-- Animated background elements -->
+    <div class="fixed inset-0 overflow-hidden pointer-events-none">
+        <div class="absolute top-20 left-10 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl animate-pulse"></div>
+        <div class="absolute bottom-20 right-10 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
+    </div>
+
+    <!-- Sidebar Navigation -->
+    <aside class="fixed left-0 top-0 h-screen w-72 bg-slate-800/50 backdrop-blur-xl border-r border-slate-700/50 overflow-y-auto z-40 lg:flex flex-col hidden transition-all duration-300">
+        <!-- Logo/Header -->
+        <div class="bg-slate-800/50 backdrop-blur-xl px-6 py-6 text-white border-b border-slate-700/50 relative group">
+            <div class="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div class="relative z-10 flex items-center justify-center h-16">
+                <img src="{{ url_for('static', filename='images/logo/Thuwala Co logo.png') }}" alt="Thuwala Co" class="h-14 w-auto object-contain" loading="eager" decoding="async">
+            </div>
         </div>
         
-        <div class="sidebar-user">
-            <div class="user-avatar">
-                {{ current_user.username[0]|upper }}
-            </div>
-            <div class="user-info">
-                <h3>{{ current_user.username }}</h3>
-                <p>Administrator</p>
+        <!-- User Profile -->
+        <div class="p-4 border-b border-slate-700/50 backdrop-blur">
+            <div class="flex items-center gap-3 p-3 bg-slate-700/30 hover:bg-slate-700/50 rounded-lg transition-colors duration-300 group">
+                <div class="w-10 h-10 rounded-full bg-gradient-primary flex items-center justify-center text-white font-bold group-hover:scale-110 transition-transform duration-300">
+                    {{ current_user.username[0]|upper }}
+                </div>
+                <div class="flex-1 min-w-0">
+                    <p class="font-semibold text-white text-sm truncate">{{ current_user.username }}</p>
+                    <p class="text-xs text-slate-400">Administrator</p>
+                </div>
             </div>
         </div>
         
-        <nav class="sidebar-nav">
-            <div class="nav-section">
-                <h3>Main</h3>
-                <a href="{{ url_for('admin_dashboard') }}" 
-                   class="nav-item {% if request.endpoint == 'admin_dashboard' %}active{% endif %}">
-                    <i class="fas fa-tachometer-alt"></i>
-                    <span>Dashboard</span>
+        <!-- Navigation -->
+        <nav class="flex-1 p-4 space-y-6">
+            <!-- Main Section -->
+            <div class="space-y-2">
+                <p class="px-3 text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Navigation</p>
+                <a href="{{ url_for('admin_dashboard') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg {% if request.endpoint == 'admin_dashboard' %}bg-gradient-primary text-white shadow-lg shadow-blue-500/50{% else %}text-slate-300 hover:bg-slate-700/30 hover:text-white{% endif %} transition-all duration-300 group">
+                    <i class="fas fa-chart-line w-5 group-hover:scale-110 transition-transform duration-300"></i>
+                    <span class="font-medium">Dashboard</span>
                 </a>
             </div>
             
-            <div class="nav-section">
-                <h3>Content Management</h3>
-                <a href="{{ url_for('admin_services') }}" 
-                   class="nav-item {% if request.endpoint == 'admin_services' %}active{% endif %}">
-                    <i class="fas fa-cogs"></i>
-                    <span>Services</span>
-                </a>
-                <a href="{{ url_for('admin_portfolio') }}" 
-                   class="nav-item {% if request.endpoint == 'admin_portfolio' %}active{% endif %}">
-                    <i class="fas fa-briefcase"></i>
-                    <span>Portfolio</span>
-                </a>
-                <a href="{{ url_for('admin_advertisements') }}" 
-                   class="nav-item {% if request.endpoint in ['admin_advertisements', 'add_advertisement', 'edit_advertisement'] %}active{% endif %}">
-                    <i class="fas fa-ad"></i>
-                    <span>Advertisements</span>
-                </a>
+            <!-- Content Management -->
+            <div class="space-y-2">
+                <p class="px-3 text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Content</p>
+                <div class="space-y-1">
+                    <a href="{{ url_for('admin_services') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg {% if request.endpoint == 'admin_services' %}bg-gradient-primary text-white shadow-lg shadow-blue-500/50{% else %}text-slate-300 hover:bg-slate-700/30 hover:text-white{% endif %} transition-all duration-300 group">
+                        <i class="fas fa-cogs w-5 group-hover:scale-110 transition-transform duration-300"></i>
+                        <span class="font-medium">Services</span>
+                    </a>
+                    <a href="{{ url_for('admin_portfolio') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg {% if request.endpoint == 'admin_portfolio' %}bg-gradient-primary text-white shadow-lg shadow-blue-500/50{% else %}text-slate-300 hover:bg-slate-700/30 hover:text-white{% endif %} transition-all duration-300 group">
+                        <i class="fas fa-briefcase w-5 group-hover:scale-110 transition-transform duration-300"></i>
+                        <span class="font-medium">Portfolio</span>
+                    </a>
+                    <a href="{{ url_for('admin_advertisements') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg {% if request.endpoint in ['admin_advertisements', 'add_advertisement', 'edit_advertisement'] %}bg-gradient-primary text-white shadow-lg shadow-blue-500/50{% else %}text-slate-300 hover:bg-slate-700/30 hover:text-white{% endif %} transition-all duration-300 group">
+                        <i class="fas fa-bullhorn w-5 group-hover:scale-110 transition-transform duration-300"></i>
+                        <span class="font-medium">Advertisements</span>
+                    </a>
+                </div>
             </div>
             
-            <div class="nav-section">
-                <h3>System</h3>
-                <a href="{{ url_for('admin_users') }}" 
-                   class="nav-item {% if request.endpoint == 'admin_users' %}active{% endif %}">
-                    <i class="fas fa-users"></i>
-                    <span>Users</span>
-                </a>
-                <a href="{{ url_for('change_password') }}" class="nav-item">
-                    <i class="fas fa-key"></i>
-                    <span>Change Password</span>
-                </a>
+            <!-- System -->
+            <div class="space-y-2">
+                <p class="px-3 text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">System</p>
+                <div class="space-y-1">
+                    <a href="{{ url_for('admin_users') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg {% if request.endpoint == 'admin_users' %}bg-gradient-primary text-white shadow-lg shadow-blue-500/50{% else %}text-slate-300 hover:bg-slate-700/30 hover:text-white{% endif %} transition-all duration-300 group">
+                        <i class="fas fa-users w-5 group-hover:scale-110 transition-transform duration-300"></i>
+                        <span class="font-medium">Users</span>
+                    </a>
+                    <a href="{{ url_for('change_password') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-slate-300 hover:bg-slate-700/30 hover:text-white transition-all duration-300 group">
+                        <i class="fas fa-key w-5 group-hover:scale-110 transition-transform duration-300"></i>
+                        <span class="font-medium">Change Password</span>
+                    </a>
+                </div>
             </div>
-            
         </nav>
         
-        <div class="sidebar-footer">
-            <a href="{{ url_for('admin_logout') }}" class="btn btn-danger btn-sm">
-                <i class="fas fa-sign-out-alt"></i> Logout
+        <!-- Footer -->
+        <div class="p-4 border-t border-slate-700/50 backdrop-blur">
+            <a href="{{ url_for('admin_logout') }}" class="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-red-500/20 hover:bg-red-500/40 text-red-300 rounded-lg transition-all duration-300 font-medium border border-red-500/30 hover:border-red-500/50 group">
+                <i class="fas fa-sign-out-alt group-hover:scale-110 transition-transform duration-300"></i>
+                <span>Logout</span>
             </a>
         </div>
     </aside>
+    
+    <!-- Mobile Menu Toggle -->
+    <button class="fixed bottom-6 right-6 lg:hidden z-30 w-14 h-14 bg-gradient-primary text-white rounded-full shadow-xl shadow-blue-500/50 hover:shadow-2xl hover:shadow-blue-500/70 transition-all duration-300 flex items-center justify-center hover:scale-110">
+        <i class="fas fa-bars"></i>
+    </button>
 
     <!-- Main Content -->
-    <main class="admin-main">
-        <!-- Mobile Menu Toggle -->
-        <button class="mobile-menu-toggle" id="mobileMenuToggle">
-            <i class="fas fa-bars"></i>
-        </button>
-
+    <main class="lg:ml-72 min-h-screen relative z-10">
         <!-- Header -->
-        <header class="admin-header">
-            <div class="header-title">
-                <h1>Dashboard Overview</h1>
-                <p>Welcome back, {{ current_user.username }}! Here's what's happening today.</p>
-            </div>
-            <div class="header-actions">
-                <a href="{{ url_for('change_password') }}" class="header-btn">
-                    <i class="fas fa-key"></i> Password
-                </a>
-                <a href="{{ url_for('admin_logout') }}" class="header-btn logout-btn">
-                    <i class="fas fa-sign-out-alt"></i> Logout
-                </a>
+        <header class="bg-slate-800/50 backdrop-blur-xl border-b border-slate-700/50 sticky top-0 z-20">
+            <div class="px-6 py-6 flex items-center justify-between">
+                <div class="animate-slideIn">
+                    <h1 class="text-4xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">Dashboard</h1>
+                    <p class="text-slate-400 mt-1">Welcome back, <span class="text-white font-semibold">{{ current_user.username }}</span>!</p>
+                </div>
+                <div class="flex items-center gap-4">
+                    <a href="{{ url_for('change_password') }}" class="flex items-center gap-2 px-4 py-2 text-slate-300 hover:text-white hover:bg-slate-700/50 rounded-lg transition-all duration-300 group">
+                        <i class="fas fa-key group-hover:scale-110 transition-transform duration-300"></i>
+                        <span class="hidden sm:inline">Password</span>
+                    </a>
+                    <a href="{{ url_for('admin_logout') }}" class="flex items-center gap-2 px-4 py-2 text-red-400 hover:text-red-300 hover:bg-red-500/20 rounded-lg transition-all duration-300 group border border-transparent hover:border-red-500/30">
+                        <i class="fas fa-sign-out-alt group-hover:scale-110 transition-transform duration-300"></i>
+                        <span class="hidden sm:inline">Logout</span>
+                    </a>
+                </div>
             </div>
         </header>
 
-        <!-- Stats Cards -->
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-icon blue">
-                    <i class="fas fa-cogs"></i>
-                </div>
-                <div class="stat-content">
-                    <h3 class="stat-number">{{ service_count|default(0) }}</h3>
-                    <p class="stat-label">Active Services</p>
-                </div>
-                <a href="{{ url_for('admin_services') }}" class="stat-link">
-                    <i class="fas fa-arrow-right"></i>
-                </a>
-            </div>
-            
-            <div class="stat-card">
-                <div class="stat-icon purple">
-                    <i class="fas fa-briefcase"></i>
-                </div>
-                <div class="stat-content">
-                    <h3 class="stat-number">{{ portfolio_count|default(0) }}</h3>
-                    <p class="stat-label">Portfolio Items</p>
-                </div>
-                <a href="{{ url_for('admin_portfolio') }}" class="stat-link">
-                    <i class="fas fa-arrow-right"></i>
-                </a>
-            </div>
-            
-            <div class="stat-card">
-                <div class="stat-icon green">
-                    <i class="fas fa-envelope"></i>
-                </div>
-                <div class="stat-content">
-                    <h3 class="stat-number">{{ messages|length|default(0) }}</h3>
-                    <p class="stat-label">Total Messages</p>
-                </div>
-                <a href="#view-all-messages" class="stat-link">
-                    <i class="fas fa-arrow-right"></i>
-                </a>
-            </div>
-            
-            <div class="stat-card">
-                <div class="stat-icon red">
-                    <i class="fas fa-user-shield"></i>
-                </div>
-                <div class="stat-content">
-                    <h3 class="stat-number">{{ user_count|default(1) }}</h3>
-                    <p class="stat-label">Admin Users</p>
-                </div>
-                <a href="{{ url_for('admin_users') }}" class="stat-link">
-                    <i class="fas fa-arrow-right"></i>
-                </a>
-            </div>
-        </div>
-
-        <!-- Main Content Grid -->
-        <div class="content-grid">
-            <!-- Left Column -->
-            <div class="main-column">
-                <!-- Quick Actions -->
-                <div class="card">
-                    <div class="card-header">
-                        <h2><i class="fas fa-bolt"></i> Quick Actions</h2>
-                    </div>
-                    <div class="card-body">
-                        <div class="actions-grid">
-                            <a href="{{ url_for('add_service') }}" class="action-item">
-                                <div class="action-icon blue">
-                                    <i class="fas fa-plus"></i>
-                                </div>
-                                <div>
-                                    <h4>Add Service</h4>
-                                    <p>Create new service offering</p>
-                                </div>
-                            </a>
-                            
-                            <a href="{{ url_for('add_portfolio') }}" class="action-item">
-                                <div class="action-icon purple">
-                                    <i class="fas fa-plus"></i>
-                                </div>
-                                <div>
-                                    <h4>Add Portfolio</h4>
-                                    <p>Showcase new projects</p>
-                                </div>
-                            </a>
-                            
-                            <a href="{{ url_for('admin_services') }}" class="action-item">
-                                <div class="action-icon green">
-                                    <i class="fas fa-edit"></i>
-                                </div>
-                                <div>
-                                    <h4>Manage Services</h4>
-                                    <p>Edit existing services</p>
-                                </div>
-                            </a>
-                            
-                            <a href="{{ url_for('admin_portfolio') }}" class="action-item">
-                                <div class="action-icon amber">
-                                    <i class="fas fa-edit"></i>
-                                </div>
-                                <div>
-                                    <h4>Manage Portfolio</h4>
-                                    <p>Edit portfolio items</p>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Recent Messages -->
-                <div class="card">
-                    <div class="card-header">
-                        <h2><i class="fas fa-envelope"></i> Recent Messages</h2>
-                        <div class="header-badges">
-                            {% if unread_count > 0 %}
-                            <span class="badge unread-badge">{{ unread_count }} Unread</span>
-                            {% endif %}
-                            <a href="#view-all" class="btn-text">View All →</a>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        {% if messages %}
-                        <div class="messages-list">
-                            {% for msg in messages[:5] %}
-                            <div class="message-item {% if not msg.is_read %}unread{% endif %}">
-                                <div class="message-avatar">
-                                    {{ msg.name[0]|upper }}
-                                </div>
-                                <div class="message-content">
-                                    <div class="message-header">
-                                        <h4>{{ msg.name }}</h4>
-                                        <span class="message-time">{{ msg.created_at.strftime('%I:%M %p') }}</span>
-                                    </div>
-                                    <p class="message-preview">{{ msg.subject or 'No Subject' }}</p>
-                                    <div class="message-actions">
-                                        <button class="btn btn-sm btn-primary" onclick="viewMessage({{ msg.id }})">
-                                            <i class="fas fa-eye"></i> View
-                                        </button>
-                                        {% if not msg.is_read %}
-                                        <a href="{{ url_for('mark_message_read', message_id=msg.id) }}" 
-                                           class="btn btn-sm btn-success"
-                                           onclick="return confirm('Mark as read?')">
-                                            <i class="fas fa-check"></i> Mark Read
-                                        </a>
-                                        {% endif %}
-                                    </div>
-                                </div>
+        <!-- Content -->
+        <div class="p-6 space-y-6">
+            <!-- Stats Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Services Card -->
+                <div class="group relative animate-slideIn" style="animation-delay: 0.1s">
+                    <div class="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl blur opacity-0 group-hover:opacity-75 transition-opacity duration-300"></div>
+                    <div class="relative bg-slate-800/50 backdrop-blur-xl rounded-xl border border-slate-700/50 p-6 hover:border-slate-600/50 transition-all duration-300 group-hover:transform group-hover:scale-105">
+                        <div class="flex items-start justify-between mb-4">
+                            <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-blue-500/30 to-blue-600/30 flex items-center justify-center border border-blue-500/50">
+                                <i class="fas fa-cogs text-blue-400 text-lg"></i>
                             </div>
-                            {% endfor %}
+                            <span class="text-xs font-bold text-blue-400 bg-blue-500/20 px-3 py-1 rounded-full border border-blue-500/30">Active</span>
                         </div>
-                        {% else %}
-                        <div class="empty-state">
-                            <i class="fas fa-comments"></i>
-                            <h3>No messages yet</h3>
-                            <p>Contact messages will appear here</p>
+                        <h3 class="text-4xl font-bold text-white mb-1" x-text="stats.services">{{ service_count|default(0) }}</h3>
+                        <p class="text-slate-400 text-sm mb-4">Active Services</p>
+                        <a href="{{ url_for('admin_services') }}" class="inline-flex items-center gap-2 text-blue-400 hover:text-blue-300 font-semibold text-sm group/link">
+                            View All <i class="fas fa-arrow-right group-hover/link:translate-x-1 transition-transform duration-300"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Portfolio Card -->
+                <div class="group relative animate-slideIn" style="animation-delay: 0.2s">
+                    <div class="absolute inset-0 bg-gradient-to-r from-purple-500 to-pink-600 rounded-xl blur opacity-0 group-hover:opacity-75 transition-opacity duration-300"></div>
+                    <div class="relative bg-slate-800/50 backdrop-blur-xl rounded-xl border border-slate-700/50 p-6 hover:border-slate-600/50 transition-all duration-300 group-hover:transform group-hover:scale-105">
+                        <div class="flex items-start justify-between mb-4">
+                            <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-500/30 to-purple-600/30 flex items-center justify-center border border-purple-500/50">
+                                <i class="fas fa-briefcase text-purple-400 text-lg"></i>
+                            </div>
+                            <span class="text-xs font-bold text-purple-400 bg-purple-500/20 px-3 py-1 rounded-full border border-purple-500/30">Items</span>
                         </div>
-                        {% endif %}
+                        <h3 class="text-4xl font-bold text-white mb-1" x-text="stats.portfolio">{{ portfolio_count|default(0) }}</h3>
+                        <p class="text-slate-400 text-sm mb-4">Portfolio Items</p>
+                        <a href="{{ url_for('admin_portfolio') }}" class="inline-flex items-center gap-2 text-purple-400 hover:text-purple-300 font-semibold text-sm group/link">
+                            View All <i class="fas fa-arrow-right group-hover/link:translate-x-1 transition-transform duration-300"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Messages Card -->
+                <div class="group relative animate-slideIn" style="animation-delay: 0.3s">
+                    <div class="absolute inset-0 bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl blur opacity-0 group-hover:opacity-75 transition-opacity duration-300"></div>
+                    <div class="relative bg-slate-800/50 backdrop-blur-xl rounded-xl border border-slate-700/50 p-6 hover:border-slate-600/50 transition-all duration-300 group-hover:transform group-hover:scale-105">
+                        <div class="flex items-start justify-between mb-4">
+                            <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-green-500/30 to-green-600/30 flex items-center justify-center border border-green-500/50">
+                                <i class="fas fa-envelope text-green-400 text-lg"></i>
+                            </div>
+                            <span class="text-xs font-bold text-green-400 bg-green-500/20 px-3 py-1 rounded-full border border-green-500/30">Total</span>
+                        </div>
+                        <h3 class="text-4xl font-bold text-white mb-1" x-text="stats.messages">{{ messages|length|default(0) }}</h3>
+                        <p class="text-slate-400 text-sm mb-4">Contact Messages</p>
+                        <a href="#" class="inline-flex items-center gap-2 text-green-400 hover:text-green-300 font-semibold text-sm group/link">
+                            View All <i class="fas fa-arrow-right group-hover/link:translate-x-1 transition-transform duration-300"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Users Card -->
+                <div class="group relative animate-slideIn" style="animation-delay: 0.4s">
+                    <div class="absolute inset-0 bg-gradient-to-r from-amber-500 to-orange-600 rounded-xl blur opacity-0 group-hover:opacity-75 transition-opacity duration-300"></div>
+                    <div class="relative bg-slate-800/50 backdrop-blur-xl rounded-xl border border-slate-700/50 p-6 hover:border-slate-600/50 transition-all duration-300 group-hover:transform group-hover:scale-105">
+                        <div class="flex items-start justify-between mb-4">
+                            <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-amber-500/30 to-amber-600/30 flex items-center justify-center border border-amber-500/50">
+                                <i class="fas fa-users text-amber-400 text-lg"></i>
+                            </div>
+                            <span class="text-xs font-bold text-amber-400 bg-amber-500/20 px-3 py-1 rounded-full border border-amber-500/30">System</span>
+                        </div>
+                        <h3 class="text-4xl font-bold text-white mb-1" x-text="stats.users">{{ user_count|default(1) }}</h3>
+                        <p class="text-slate-400 text-sm mb-4">Admin Users</p>
+                        <a href="{{ url_for('admin_users') }}" class="inline-flex items-center gap-2 text-amber-400 hover:text-amber-300 font-semibold text-sm group/link">
+                            View All <i class="fas fa-arrow-right group-hover/link:translate-x-1 transition-transform duration-300"></i>
+                        </a>
                     </div>
                 </div>
             </div>
 
-            <!-- Right Column -->
-            <div class="sidebar-column">
-                <!-- System Status -->
-                <div class="card">
-                    <div class="card-header">
-                        <h2><i class="fas fa-heartbeat"></i> System Status</h2>
+            <!-- Quick Actions -->
+            <div class="bg-slate-800/50 backdrop-blur-xl rounded-xl border border-slate-700/50 p-6 hover:border-slate-600/50 transition-all duration-300 animate-slideIn" style="animation-delay: 0.5s">
+                <h2 class="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-500/30 to-amber-600/30 flex items-center justify-center border border-amber-500/50">
+                        <i class="fas fa-lightning-bolt text-amber-400 text-sm"></i>
                     </div>
-                    <div class="card-body">
-                        <div class="status-list">
-                            <div class="status-item online">
-                                <div class="status-indicator"></div>
-                                <span>Website Status</span>
-                                <span class="status-value">Online</span>
+                    Quick Actions
+                </h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <a href="{{ url_for('add_service') }}" class="group relative overflow-hidden">
+                        <div class="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-purple-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg"></div>
+                        <div class="relative flex items-center gap-4 p-4 border border-slate-700/50 rounded-lg hover:border-blue-500/50 transition-all duration-300 group-hover:bg-blue-500/5">
+                            <div class="w-12 h-12 rounded-lg bg-blue-500/20 flex items-center justify-center border border-blue-500/50 group-hover:bg-blue-500/40 transition-colors duration-300">
+                                <i class="fas fa-plus text-blue-400 text-lg"></i>
                             </div>
-                            <div class="status-item online">
-                                <div class="status-indicator"></div>
-                                <span>Database</span>
-                                <span class="status-value">Connected</span>
-                            </div>
-                            <div class="status-item online">
-                                <div class="status-indicator"></div>
-                                <span>Storage</span>
-                                <span class="status-value">Healthy</span>
-                            </div>
-                            <div class="status-item online">
-                                <div class="status-indicator"></div>
-                                <span>Messages Today</span>
-                                <span class="status-value">{{ unread_count|default(0) }}</span>
+                            <div>
+                                <h4 class="font-semibold text-white group-hover:text-blue-300 transition-colors duration-300">Add Service</h4>
+                                <p class="text-xs text-slate-400">New service</p>
                             </div>
                         </div>
-                    </div>
-                </div>
-
-                <!-- Recent Activity -->
-                <div class="card">
-                    <div class="card-header">
-                        <h2><i class="fas fa-chart-line"></i> Recent Activity</h2>
-                    </div>
-                    <div class="card-body">
-                        <div class="activity-list">
-                            <div class="activity-item">
-                                <div class="activity-icon blue">
-                                    <i class="fas fa-cogs"></i>
-                                </div>
-                                <div class="activity-info">
-                                    <h4>{{ service_count|default(0) }} Services</h4>
-                                    <p>Currently active</p>
-                                </div>
+                    </a>
+                    
+                    <a href="{{ url_for('add_portfolio') }}" class="group relative overflow-hidden">
+                        <div class="absolute inset-0 bg-gradient-to-r from-purple-500/10 to-pink-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg"></div>
+                        <div class="relative flex items-center gap-4 p-4 border border-slate-700/50 rounded-lg hover:border-purple-500/50 transition-all duration-300 group-hover:bg-purple-500/5">
+                            <div class="w-12 h-12 rounded-lg bg-purple-500/20 flex items-center justify-center border border-purple-500/50 group-hover:bg-purple-500/40 transition-colors duration-300">
+                                <i class="fas fa-plus text-purple-400 text-lg"></i>
                             </div>
-                            <div class="activity-item">
-                                <div class="activity-icon green">
-                                    <i class="fas fa-briefcase"></i>
-                                </div>
-                                <div class="activity-info">
-                                    <h4>{{ portfolio_count|default(0) }} Projects</h4>
-                                    <p>In portfolio</p>
-                                </div>
-                            </div>
-                            <div class="activity-item">
-                                <div class="activity-icon orange">
-                                    <i class="fas fa-users"></i>
-                                </div>
-                                <div class="activity-info">
-                                    <h4>{{ user_count|default(1) }} Users</h4>
-                                    <p>With admin access</p>
-                                </div>
+                            <div>
+                                <h4 class="font-semibold text-white group-hover:text-purple-300 transition-colors duration-300">Add Portfolio</h4>
+                                <p class="text-xs text-slate-400">New project</p>
                             </div>
                         </div>
-                    </div>
+                    </a>
+                    
+                    <a href="{{ url_for('add_advertisement') }}" class="group relative overflow-hidden">
+                        <div class="absolute inset-0 bg-gradient-to-r from-green-500/10 to-emerald-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg"></div>
+                        <div class="relative flex items-center gap-4 p-4 border border-slate-700/50 rounded-lg hover:border-green-500/50 transition-all duration-300 group-hover:bg-green-500/5">
+                            <div class="w-12 h-12 rounded-lg bg-green-500/20 flex items-center justify-center border border-green-500/50 group-hover:bg-green-500/40 transition-colors duration-300">
+                                <i class="fas fa-plus text-green-400 text-lg"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-white group-hover:text-green-300 transition-colors duration-300">Add Advertisement</h4>
+                                <p class="text-xs text-slate-400">New ad campaign</p>
+                            </div>
+                        </div>
+                    </a>
+                    
+                    <a href="{{ url_for('admin_services') }}" class="group relative overflow-hidden">
+                        <div class="absolute inset-0 bg-gradient-to-r from-amber-500/10 to-orange-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg"></div>
+                        <div class="relative flex items-center gap-4 p-4 border border-slate-700/50 rounded-lg hover:border-amber-500/50 transition-all duration-300 group-hover:bg-amber-500/5">
+                            <div class="w-12 h-12 rounded-lg bg-amber-500/20 flex items-center justify-center border border-amber-500/50 group-hover:bg-amber-500/40 transition-colors duration-300">
+                                <i class="fas fa-sliders-h text-amber-400 text-lg"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-white group-hover:text-amber-300 transition-colors duration-300">Manage All</h4>
+                                <p class="text-xs text-slate-400">View all items</p>
+                            </div>
+                        </div>
+                    </a>
                 </div>
             </div>
         </div>
     </main>
 </div>
 
-<!-- Message Modal -->
-<div class="modal-overlay" id="messageModalOverlay">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h2>Message Details</h2>
-            <button class="modal-close" onclick="closeModal(this.closest('.modal-overlay'))">&times;</button>
-        </div>
-        <div class="modal-body" id="messageModalContent">
-            <!-- Message content will be loaded here -->
-        </div>
-    </div>
-</div>
+<script>
+    function dashboardApp() {
+        return {
+            stats: {
+                services: {{ service_count|default(0) }},
+                portfolio: {{ portfolio_count|default(0) }},
+                messages: {{ messages|length|default(0) }},
+                users: {{ user_count|default(1) }}
+            },
+            init() {
+                // Animate counter values on page load
+                this.animateCounters();
+            },
+            animateCounters() {
+                const animateValue = (key, target, duration = 800) => {
+                    let current = 0;
+                    const increment = target / (duration / 16);
+                    const timer = setInterval(() => {
+                        current += increment;
+                        if (current >= target) {
+                            this.stats[key] = target;
+                            clearInterval(timer);
+                        } else {
+                            this.stats[key] = Math.floor(current);
+                        }
+                    }, 16);
+                };
+                
+                // Animate all counters
+                setTimeout(() => {
+                    const targets = {
+                        services: {{ service_count|default(0) }},
+                        portfolio: {{ portfolio_count|default(0) }},
+                        messages: {{ messages|length|default(0) }},
+                        users: {{ user_count|default(1) }}
+                    };
+                    
+                    // Start at 0 and animate to target
+                    this.stats = { services: 0, portfolio: 0, messages: 0, users: 0 };
+                    
+                    Object.keys(targets).forEach(key => {
+                        if (targets[key] > 0) {
+                            animateValue(key, targets[key]);
+                        }
+                    });
+                }, 100);
+            }
+        };
+    }
+</script>
 {% endblock %}

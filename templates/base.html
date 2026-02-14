@@ -58,14 +58,34 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
     <!-- Custom CSS Files - Load order critical -->
+    <!-- Tailwind CSS CDN for Admin Pages (full palette) -->
+    {% if request.path.startswith('/admin') %}
+    <script src="https://cdn.tailwindcss.com?v=3.4.19"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2563eb',
+                        secondary: '#10b981'
+                    }
+                }
+            }
+        }
+    </script>
+    {% else %}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/tailwind.css') }}?v=20260209">
+    {% endif %}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=20260209">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/components.css') }}?v=20260209">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/splide-theme.css') }}?v=20260209">
     
+    <!-- CSRF Token for form protection -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    
     <!-- Admin CSS (only loads on admin pages) -->
     {% if request.path.startswith('/admin') %}
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}?v=20260210">
     {% endif %}
     
     {% block head %}{% endblock %}
@@ -74,12 +94,6 @@
     <style>
       [x-cloak]{display:none!important}
       html{scroll-behavior:smooth;}
-      /* Ensure AOS elements are visible - fallback if AOS doesn't load */
-      [data-aos] {
-        opacity: 1 !important;
-        visibility: visible !important;
-        transform: none !important;
-      }
     </style>
 </head>
 <body>
@@ -218,19 +232,19 @@
                 
                 <!-- Brand Column -->
                 <div class="lg:col-span-1 space-y-4">
-                    <p class="text-gray-900 text-sm leading-relaxed">Transforming businesses with precision and excellence.</p>
+                    <p class="text-gray-400 text-sm leading-relaxed">Transforming businesses with precision and excellence.</p>
                     
                     <!-- Contact Info -->
                     <div class="space-y-2 pt-4">
-                        <a href="mailto:info@thuwalaco.com" class="flex items-center gap-2 text-gray-900 hover:text-primary transition-colors duration-300 text-sm">
+                        <a href="mailto:info@thuwalaco.com" class="flex items-center gap-2 text-gray-300 hover:text-primary transition-colors duration-300 text-sm">
                             <i class="fas fa-envelope text-primary"></i>
                             <span>info@thuwalaco.com</span>
                         </a>
-                        <a href="tel:+265887580622" class="flex items-center gap-2 text-gray-900 hover:text-primary transition-colors duration-300 text-sm">
+                        <a href="tel:+265887580622" class="flex items-center gap-2 text-gray-300 hover:text-primary transition-colors duration-300 text-sm">
                             <i class="fas fa-phone text-primary"></i>
                             <span>+265 887 580 622</span>
                         </a>
-                        <div class="flex items-center gap-2 text-gray-900 text-sm pt-1">
+                        <div class="flex items-center gap-2 text-gray-300 text-sm pt-1">
                             <i class="fas fa-map-marker-alt text-primary"></i>
                             <span>Malawi & Beyond</span>
                         </div>
@@ -244,11 +258,11 @@
                         Quick Links
                     </h4>
                     <ul class="space-y-3">
-                        <li><a href="{{ url_for('index') }}" class="text-gray-900 hover:text-primary transition-colors duration-300 flex items-center gap-2"><i class="fas fa-home text-primary/50"></i> Home</a></li>
-                        <li><a href="{{ url_for('services') }}" class="text-gray-900 hover:text-primary transition-colors duration-300 flex items-center gap-2"><i class="fas fa-rocket text-primary/50"></i> Services</a></li>
-                        <li><a href="{{ url_for('portfolio') }}" class="text-gray-900 hover:text-primary transition-colors duration-300 flex items-center gap-2"><i class="fas fa-briefcase text-primary/50"></i> Portfolio</a></li>
-                        <li><a href="{{ url_for('about') }}" class="text-gray-900 hover:text-primary transition-colors duration-300 flex items-center gap-2"><i class="fas fa-users text-primary/50"></i> About Us</a></li>
-                        <li><a href="{{ url_for('contact') }}" class="text-gray-900 hover:text-primary transition-colors duration-300 flex items-center gap-2"><i class="fas fa-envelope text-primary/50"></i> Contact</a></li>
+                        <li><a href="{{ url_for('index') }}" class="text-gray-300 hover:text-primary transition-colors duration-300 flex items-center gap-2"><i class="fas fa-home text-primary/50"></i> Home</a></li>
+                        <li><a href="{{ url_for('services') }}" class="text-gray-300 hover:text-primary transition-colors duration-300 flex items-center gap-2"><i class="fas fa-rocket text-primary/50"></i> Services</a></li>
+                        <li><a href="{{ url_for('portfolio') }}" class="text-gray-300 hover:text-primary transition-colors duration-300 flex items-center gap-2"><i class="fas fa-briefcase text-primary/50"></i> Portfolio</a></li>
+                        <li><a href="{{ url_for('about') }}" class="text-gray-300 hover:text-primary transition-colors duration-300 flex items-center gap-2"><i class="fas fa-users text-primary/50"></i> About Us</a></li>
+                        <li><a href="{{ url_for('contact') }}" class="text-gray-300 hover:text-primary transition-colors duration-300 flex items-center gap-2"><i class="fas fa-envelope text-primary/50"></i> Contact</a></li>
                     </ul>
                 </div>
 
@@ -259,11 +273,11 @@
                         Services
                     </h4>
                     <ul class="space-y-3">
-                        <li><a href="{{ url_for('services') }}#consulting" class="text-gray-900 hover:text-secondary transition-colors duration-300 flex items-center gap-2"><i class="fas fa-chart-line text-secondary/50"></i> Business Consulting</a></li>
-                        <li><a href="{{ url_for('services') }}#analytics" class="text-gray-900 hover:text-secondary transition-colors duration-300 flex items-center gap-2"><i class="fas fa-database text-secondary/50"></i> Data Analytics</a></li>
-                        <li><a href="{{ url_for('services') }}#development" class="text-gray-900 hover:text-secondary transition-colors duration-300 flex items-center gap-2"><i class="fas fa-code text-secondary/50"></i> Development</a></li>
-                        <li><a href="{{ url_for('services') }}#strategy" class="text-gray-900 hover:text-secondary transition-colors duration-300 flex items-center gap-2"><i class="fas fa-chess text-secondary/50"></i> Digital Strategy</a></li>
-                        <li><a href="{{ url_for('services') }}#training" class="text-gray-900 hover:text-secondary transition-colors duration-300 flex items-center gap-2"><i class="fas fa-graduation-cap text-secondary/50"></i> Training</a></li>
+                        <li><a href="{{ url_for('services') }}#consulting" class="text-gray-300 hover:text-secondary transition-colors duration-300 flex items-center gap-2"><i class="fas fa-chart-line text-secondary/50"></i> Business Consulting</a></li>
+                        <li><a href="{{ url_for('services') }}#analytics" class="text-gray-300 hover:text-secondary transition-colors duration-300 flex items-center gap-2"><i class="fas fa-database text-secondary/50"></i> Data Analytics</a></li>
+                        <li><a href="{{ url_for('services') }}#development" class="text-gray-300 hover:text-secondary transition-colors duration-300 flex items-center gap-2"><i class="fas fa-code text-secondary/50"></i> Development</a></li>
+                        <li><a href="{{ url_for('services') }}#strategy" class="text-gray-300 hover:text-secondary transition-colors duration-300 flex items-center gap-2"><i class="fas fa-chess text-secondary/50"></i> Digital Strategy</a></li>
+                        <li><a href="{{ url_for('services') }}#training" class="text-gray-300 hover:text-secondary transition-colors duration-300 flex items-center gap-2"><i class="fas fa-graduation-cap text-secondary/50"></i> Training</a></li>
                     </ul>
                 </div>
 
@@ -273,7 +287,7 @@
                     
                     <!-- Social Links -->
                     <div class="space-y-3 mb-8">
-                        <p class="text-gray-900 text-sm">Follow us on social media</p>
+                        <p class="text-gray-400 text-sm">Follow us on social media</p>
                         <div class="flex gap-3">
                             <a href="#" aria-label="Facebook" class="w-10 h-10 rounded-lg bg-primary/10 hover:bg-primary flex items-center justify-center transition-all duration-300 hover:-translate-y-1">
                                 <i class="fab fa-facebook-f text-primary"></i>
@@ -296,7 +310,7 @@
                         <button type="submit" class="w-full px-4 py-2.5 bg-gradient-to-r from-primary to-secondary text-white font-semibold rounded-lg hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
                             Subscribe <i class="fas fa-paper-plane ml-2"></i>
                         </button>
-                        <p class="text-gray-900 text-xs">We respect your privacy. Unsubscribe anytime.</p>
+                        <p class="text-gray-500 text-xs">We respect your privacy. Unsubscribe anytime.</p>
                     </form>
                 </div>
             </div>
@@ -304,17 +318,17 @@
             <!-- Footer Bottom -->
             <div class="grid md:grid-cols-3 gap-6 items-center text-center md:text-left pt-8">
                 <!-- Copyright -->
-                <div class="text-gray-900 text-sm">
+                <div class="text-gray-400 text-sm">
                     &copy; <span id="current-year">{{ now.year if now else "2024" }}</span> Thuwala Co. All rights reserved.
                 </div>
 
                 <!-- Trust Badges -->
                 <div class="flex flex-wrap justify-center md:justify-center gap-3">
-                    <div class="inline-flex items-center gap-1 px-3 py-1 bg-primary/10 rounded-full text-xs text-gray-900">
+                    <div class="inline-flex items-center gap-1 px-3 py-1 bg-primary/10 rounded-full text-xs text-gray-300">
                         <i class="fas fa-shield-alt text-primary text-xs"></i>
                         <span>Secure</span>
                     </div>
-                    <div class="inline-flex items-center gap-1 px-3 py-1 bg-secondary/10 rounded-full text-xs text-gray-900">
+                    <div class="inline-flex items-center gap-1 px-3 py-1 bg-secondary/10 rounded-full text-xs text-gray-300">
                         <i class="fas fa-check-circle text-secondary text-xs"></i>
                         <span>Trusted</span>
                     </div>
@@ -322,11 +336,11 @@
 
                 <!-- Legal Links & Back to Top -->
                 <div class="flex flex-col sm:flex-row justify-center md:justify-end items-center gap-4 text-sm">
-                    <div class="flex items-center gap-3 text-gray-900">
+                    <div class="flex items-center gap-3 text-gray-400">
                         <a href="#" class="hover:text-primary transition-colors duration-300">Privacy</a>
-                        <span class="text-gray-900">•</span>
+                        <span class="text-gray-500">&bull;</span>
                         <a href="#" class="hover:text-primary transition-colors duration-300">Terms</a>
-                        <span class="text-gray-900">•</span>
+                        <span class="text-gray-500">&bull;</span>
                         <a href="#" class="hover:text-primary transition-colors duration-300">Cookies</a>
                     </div>
                     <a href="#top" class="text-primary hover:text-secondary transition-colors duration-300 font-semibold flex items-center gap-1">
@@ -340,7 +354,9 @@
 
 
     <!-- 🚀 Modern JavaScript Libraries -->
-    <!-- Alpine.js 3.x - Lightweight reactive framework (no defer - must load first) -->
+    <!-- Alpine Components (must load before Alpine init) -->
+    <script src="{{ url_for('static', filename='js/alpine-components.js') }}"></script>
+    <!-- Alpine.js 3.x - Lightweight reactive framework -->
     <script src="https://unpkg.com/alpinejs@3.13.3/dist/cdn.min.js"></script>
     
     <!-- GSAP - Premium animation library -->
@@ -360,13 +376,50 @@
     <script src="https://cdn.jsdelivr.net/npm/countup@1.8.2/dist/countUp.min.js" defer></script>
     
     <!-- Custom JavaScript Files -->
-    <script src="{{ url_for('static', filename='js/alpine-components.js') }}" defer></script>
     
-    <!-- Admin JS (only loads on admin pages) -->
+    <!-- DEPRECATED: Old Admin JS - Replaced by Alpine.js + Tailwind approach -->
+    <!-- These scripts are kept for reference but disabled to prevent conflicts -->
+    <!-- Enable only if legacy admin pages still need them (before modernization) -->
+    <!--
     {% if request.path.startswith('/admin') %}
     <script src="{{ url_for('static', filename='js/admin.js') }}"></script>
     <script src="{{ url_for('static', filename='js/admin-enhancements.js') }}" defer></script>
     {% endif %}
+    -->
+    
+    <!-- Initialize AOS and auto-inject CSRF tokens -->
+    <script>
+      // Initialize AOS when its script loads
+      document.addEventListener('DOMContentLoaded', function() {
+        if (typeof AOS !== 'undefined') {
+          AOS.init({ duration: 800, easing: 'ease-out-cubic', once: true, offset: 50 });
+        }
+      });
+      // Auto-inject CSRF tokens into all POST/PUT/DELETE forms
+      (function() {
+        var meta = document.querySelector('meta[name="csrf-token"]');
+        if (!meta) return;
+        var token = meta.getAttribute('content');
+        function inject(form) {
+          if (form.method && form.method.toUpperCase() !== 'GET' && !form.querySelector('input[name="csrf_token"]')) {
+            var inp = document.createElement('input');
+            inp.type = 'hidden'; inp.name = 'csrf_token'; inp.value = token;
+            form.appendChild(inp);
+          }
+        }
+        document.querySelectorAll('form').forEach(inject);
+        new MutationObserver(function(muts) {
+          muts.forEach(function(m) {
+            m.addedNodes.forEach(function(n) {
+              if (n.nodeType === 1) {
+                if (n.tagName === 'FORM') inject(n);
+                if (n.querySelectorAll) n.querySelectorAll('form').forEach(inject);
+              }
+            });
+          });
+        }).observe(document.body, { childList: true, subtree: true });
+      })();
+    </script>
     
     {% block scripts %}{% endblock %}
 </body>

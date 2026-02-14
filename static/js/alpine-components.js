@@ -166,6 +166,59 @@ window.AlpineComponents = {
   },
 
   /**
+   * Admin Form Validator
+   * Usage: x-data="AlpineComponents.formValidator({ fields: {...}, rules: {...} })"
+   */
+  formValidator({ fields = {}, rules = {} } = {}) {
+    return {
+      fields: fields,
+      rules: rules,
+      errors: {},
+      touched: {},
+      validateField(name) {
+        const value = this.fields[name];
+        const fieldRules = this.rules[name] || [];
+        let error = '';
+
+        fieldRules.forEach(rule => {
+          if (error) return;
+          if (rule.type === 'required' && (!value || String(value).trim() === '')) {
+            error = rule.message || 'This field is required.';
+          }
+          if (rule.type === 'email' && value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+            error = rule.message || 'Enter a valid email address.';
+          }
+          if (rule.type === 'minLength' && value && String(value).length < rule.value) {
+            error = rule.message || `Minimum ${rule.value} characters.`;
+          }
+          if (rule.type === 'url' && value && !/^(https?:\/\/|\/).+/.test(value)) {
+            error = rule.message || 'Enter a valid URL.';
+          }
+          if (rule.type === 'hex' && value && !/^#[0-9A-Fa-f]{6}$/.test(value)) {
+            error = rule.message || 'Enter a valid hex color (e.g., #2563eb).';
+          }
+          if (rule.type === 'match' && value !== this.fields[rule.field]) {
+            error = rule.message || 'Values do not match.';
+          }
+        });
+
+        this.errors[name] = error;
+        return !error;
+      },
+      touch(name) {
+        this.touched[name] = true;
+        this.validateField(name);
+      },
+      validateAll() {
+        return Object.keys(this.rules).every(name => this.validateField(name));
+      },
+      isValid() {
+        return Object.values(this.errors).every(err => !err);
+      }
+    };
+  },
+
+  /**
    * Notification/Toast Component
    * Usage: x-data="AlpineComponents.toast()"
    */
