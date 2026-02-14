@@ -61,6 +61,187 @@ SERVICE_CATEGORIES = [
     "consulting",
 ]
 
+# Default content for environments without a database (e.g., Vercel serverless).
+DEFAULT_SERVICES = [
+    {
+        "title": "Administrative & Executive Support",
+        "description": "We provide seamless virtual and on-site administrative solutions to keep organizations and individuals operating with order and professionalism.",
+        "icon": "fas fa-clipboard-check",
+        "details": "Virtual assistant and secretarial services, Report writing, document formatting, and minute-taking, Calendar, meeting, and task management, Filing systems and office workflow setup, Policy, SOP, and documentation support",
+        "category": "administrative",
+    },
+    {
+        "title": "Project & Operations Support",
+        "description": "We help organizations plan, execute, and report on their projects with precision and transparency.",
+        "icon": "fas fa-project-diagram",
+        "details": "Proposal and report writing, Budget tracking and procurement documentation, M&E data management and templates, Donor reporting and presentation packaging, Stakeholder coordination and communication",
+        "category": "operations",
+    },
+    {
+        "title": "Data Management & Analytics",
+        "description": "Data drives decision-making. We transform raw data into actionable insights for businesses and NGOs.",
+        "icon": "fas fa-chart-bar",
+        "details": "Data collection (ODK, Kobo, SurveyCTO), Data entry, cleaning, and analysis, Dashboard design and visualization (Excel, Tableau, Power BI), Executive summaries and reports, Monitoring and evaluation support",
+        "category": "data",
+    },
+    {
+        "title": "Communications & Documentation",
+        "description": "We help you communicate your story, impact, and value clearly to your audience, partners, and clients.",
+        "icon": "fas fa-bullhorn",
+        "details": "Corporate profiles and capability statements, Proposal and grant writing, Report editing and formatting, Success stories, press releases, and newsletters, Professional presentations and pitch decks",
+        "category": "communications",
+    },
+    {
+        "title": "Branding, Design & Marketing",
+        "description": "We build brands that command attention and credibility — from logo design to full-scale marketing campaigns.",
+        "icon": "fas fa-palette",
+        "details": "Logo and brand identity design, Company profiles and marketing materials, Social media setup, strategy, and content creation, Digital marketing campaigns and advertising management, Personal branding for professionals",
+        "category": "branding",
+    },
+    {
+        "title": "Business & Startup Support",
+        "description": "For entrepreneurs and SMEs, we provide all the foundational tools needed to launch, formalize, and grow.",
+        "icon": "fas fa-briefcase",
+        "details": "Business registration guidance, Proposal and business plan writing, Company profile creation, Digital system setup (emails, websites, cloud storage), Business strategy and growth consultation",
+        "category": "business",
+    },
+    {
+        "title": "Systems & Process Optimization",
+        "description": "We introduce digital systems that save time, reduce errors, and enhance organizational accountability.",
+        "icon": "fas fa-cogs",
+        "details": "Workflow automation setup, File and record management systems, Collaboration tools (Google Workspace, Notion, Trello), Process mapping and optimization consulting, Staff training on productivity tools",
+        "category": "systems",
+    },
+    {
+        "title": "Capacity Building & Training",
+        "description": "We empower professionals and teams with practical, modern skills in administration, communication, and data management.",
+        "icon": "fas fa-graduation-cap",
+        "details": "Office administration and documentation, Proposal and report writing, Data collection and reporting tools, Excel and visualization training, Communication and digital professionalism",
+        "category": "training",
+    },
+    {
+        "title": "Creative & Individual Services",
+        "description": "Thuwala Co. also supports individuals with personal and professional growth tools.",
+        "icon": "fas fa-lightbulb",
+        "details": "CV, cover letter, and portfolio design, Personal branding strategy, LinkedIn optimization, Digital profile setup and presentation design, Event and speech support documentation",
+        "category": "creative",
+    },
+    {
+        "title": "Consulting & Strategy",
+        "description": "Strategic guidance for organizational development and business growth.",
+        "icon": "fas fa-chess",
+        "details": "Business strategy development, Organizational structure optimization, Process improvement consulting, Market analysis and research, Performance metrics and KPIs",
+        "category": "consulting",
+    },
+]
+
+DEFAULT_PORTFOLIO = [
+    {
+        "title": "Malawi NGO Data Dashboard",
+        "client": "Malawi Development NGO",
+        "description": "Designed and implemented a comprehensive data dashboard for monitoring and evaluation. The system collects field data via ODK and presents real-time insights through interactive Power BI dashboards.",
+        "category": "data",
+        "image_url": "/static/images/portfolio/data-dashboard.jpg",
+        "technologies": "Power BI, ODK, Python, SQL",
+        "testimonial": "Thuwala Co. transformed our data management. What used to take weeks now takes hours. Their dashboard helps us make data-driven decisions.",
+        "client_name": "John Banda",
+        "client_role": "M&E Director",
+        "featured": True,
+    },
+    {
+        "title": "Startup Business Branding Package",
+        "client": "AgriTech Startup",
+        "description": "Complete branding package including logo design, business cards, company profile, and social media setup. Created a cohesive brand identity that helped secure initial funding.",
+        "category": "branding",
+        "image_url": "/static/images/portfolio/branding-package.jpg",
+        "technologies": "Adobe Creative Suite, Canva, WordPress",
+        "testimonial": "Professional, timely, and exceeded expectations. Our investors commented on how polished our materials looked.",
+        "client_name": "Sarah Chibwana",
+        "client_role": "CEO & Founder",
+        "featured": True,
+    },
+    {
+        "title": "Government Project Reporting System",
+        "client": "Ministry Department",
+        "description": "Streamlined project reporting system that reduced report preparation time by 60%. Created templates, automated data collection, and trained staff on new processes.",
+        "category": "administrative",
+        "image_url": "/static/images/portfolio/reporting-system.jpg",
+        "technologies": "Microsoft Office, Google Workspace, Process Automation",
+        "testimonial": "The efficiency gains have been remarkable. Our team now focuses on analysis rather than data compilation.",
+        "client_name": "Dr. Michael Phiri",
+        "client_role": "Project Director",
+        "featured": True,
+    },
+    {
+        "title": "Educational Institution Website Redesign",
+        "client": "Private College",
+        "description": "Complete website redesign with CMS integration, improving user engagement by 200%. Added online application system and student portal.",
+        "category": "systems",
+        "image_url": "/static/images/portfolio/website-redesign.jpg",
+        "project_url": "https://example-college.mw",
+        "technologies": "WordPress, PHP, JavaScript, CSS3",
+        "testimonial": "Our online applications increased by 150% after the redesign. Professional and student-friendly.",
+        "client_name": "Prof. Elizabeth Kachali",
+        "client_role": "Principal",
+        "featured": True,
+    },
+    {
+        "title": "Corporate Training Program",
+        "client": "Financial Institution",
+        "description": "Designed and delivered Excel & Data Visualization training for 50+ staff members. Created custom training materials and follow-up support system.",
+        "category": "training",
+        "image_url": "/static/images/portfolio/training-program.jpg",
+        "technologies": "Excel, Power BI, Training Materials",
+        "testimonial": "The training was practical and immediately applicable. Staff confidence with data tools improved dramatically.",
+        "client_name": "Robert Mwale",
+        "client_role": "HR Director",
+        "featured": False,
+    },
+    {
+        "title": "Business Process Optimization",
+        "client": "Manufacturing Company",
+        "description": "Analyzed and optimized supply chain documentation processes, reducing processing time by 40% and errors by 75%.",
+        "category": "operations",
+        "image_url": "/static/images/portfolio/process-optimization.jpg",
+        "technologies": "Process Mapping, SOP Development, Workflow Automation",
+        "testimonial": "The new processes saved us significant time and reduced frustration across departments.",
+        "client_name": "David Simbeye",
+        "client_role": "Operations Manager",
+        "featured": True,
+    },
+]
+
+DEFAULT_ADS = [
+    {
+        "id": 1,
+        "title": "Special Offer: 20% Off All Services",
+        "description": "Launch your projects with our professional services at a discounted rate. Limited time offer!",
+        "cta_text": "Claim Offer",
+        "cta_link": "/contact",
+        "image_url": None,
+        "background_color": "#dc2626",
+        "text_color": "#ffffff",
+    },
+    {
+        "id": 2,
+        "title": "New: Data Analytics Dashboard Solutions",
+        "description": "Transform your raw data into actionable insights with our new dashboard solutions.",
+        "cta_text": "Learn More",
+        "cta_link": "/services",
+        "image_url": None,
+        "background_color": "#2563eb",
+        "text_color": "#ffffff",
+    },
+]
+
+
+def get_services_fallback():
+    return [{**service, "id": idx + 1} for idx, service in enumerate(DEFAULT_SERVICES)]
+
+
+def get_portfolio_fallback():
+    return list(DEFAULT_PORTFOLIO)
+
 
 # Database Models
 class User(UserMixin, db.Model):
@@ -135,9 +316,32 @@ class Advertisement(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
 
+# --- Lazy DB initialization (essential for Vercel / serverless) ----------
+# On Vercel the `if __name__ == '__main__'` block never executes, so
+# `init_db()` would never be called.  We use a `before_request` hook
+# to create tables and seed data on the very first request of each
+# cold-start.
+_db_initialized = False
+
+
+@app.before_request
+def ensure_db_initialized():
+    global _db_initialized
+    if not _db_initialized:
+        try:
+            db.create_all()
+            init_db()
+        except Exception as e:
+            app.logger.warning("Lazy DB init failed: %s", e)
+        _db_initialized = True
+
+
 @login_manager.user_loader
 def load_user(user_id):
-    return User.query.get(int(user_id))
+    try:
+        return User.query.get(int(user_id))
+    except Exception:
+        return None
 
 
 def generate_reset_token():
@@ -167,11 +371,14 @@ def save_uploaded_image(file, subdir, add_timestamp=False):
         filename = f"{timestamp}_{filename}"
 
     upload_dir = os.path.join(app.config["UPLOAD_FOLDER"], subdir)
-    os.makedirs(upload_dir, exist_ok=True)
-
-    filepath = os.path.join(upload_dir, filename)
-    file.save(filepath)
-    return f"/static/uploads/{subdir}/{filename}"
+    try:
+        os.makedirs(upload_dir, exist_ok=True)
+        filepath = os.path.join(upload_dir, filename)
+        file.save(filepath)
+        return f"/static/uploads/{subdir}/{filename}"
+    except OSError as e:
+        app.logger.warning("File upload failed (read-only FS?): %s", e)
+        return None
 
 
 def send_password_reset_email(user_email, reset_url):
@@ -318,7 +525,7 @@ def build_whatsapp_url(
     The user's browser will open WhatsApp (web or app) with the message
     ready to send, so the business owner receives it instantly.
     """
-    wa_number = app.config.get("WHATSAPP_NUMBER", "265887580622")
+    wa_number = app.config.get("WHATSAPP_NUMBER", "265887873006")
 
     lines = [
         "📩 *New Inquiry from Thuwala Co. Website*",
@@ -453,78 +660,7 @@ def init_db():
             print("Updated existing services with categories")
 
         # Define all services (10 total from portfolio)
-        all_services_data = [
-            {
-                "title": "Administrative & Executive Support",
-                "description": "We provide seamless virtual and on-site administrative solutions to keep organizations and individuals operating with order and professionalism.",
-                "icon": "fas fa-clipboard-check",
-                "details": "Virtual assistant and secretarial services, Report writing, document formatting, and minute-taking, Calendar, meeting, and task management, Filing systems and office workflow setup, Policy, SOP, and documentation support",
-                "category": "administrative",
-            },
-            {
-                "title": "Project & Operations Support",
-                "description": "We help organizations plan, execute, and report on their projects with precision and transparency.",
-                "icon": "fas fa-project-diagram",
-                "details": "Proposal and report writing, Budget tracking and procurement documentation, M&E data management and templates, Donor reporting and presentation packaging, Stakeholder coordination and communication",
-                "category": "operations",
-            },
-            {
-                "title": "Data Management & Analytics",
-                "description": "Data drives decision-making. We transform raw data into actionable insights for businesses and NGOs.",
-                "icon": "fas fa-chart-bar",
-                "details": "Data collection (ODK, Kobo, SurveyCTO), Data entry, cleaning, and analysis, Dashboard design and visualization (Excel, Tableau, Power BI), Executive summaries and reports, Monitoring and evaluation support",
-                "category": "data",
-            },
-            {
-                "title": "Communications & Documentation",
-                "description": "We help you communicate your story, impact, and value clearly to your audience, partners, and clients.",
-                "icon": "fas fa-bullhorn",
-                "details": "Corporate profiles and capability statements, Proposal and grant writing, Report editing and formatting, Success stories, press releases, and newsletters, Professional presentations and pitch decks",
-                "category": "communications",
-            },
-            {
-                "title": "Branding, Design & Marketing",
-                "description": "We build brands that command attention and credibility — from logo design to full-scale marketing campaigns.",
-                "icon": "fas fa-palette",
-                "details": "Logo and brand identity design, Company profiles and marketing materials, Social media setup, strategy, and content creation, Digital marketing campaigns and advertising management, Personal branding for professionals",
-                "category": "branding",
-            },
-            {
-                "title": "Business & Startup Support",
-                "description": "For entrepreneurs and SMEs, we provide all the foundational tools needed to launch, formalize, and grow.",
-                "icon": "fas fa-briefcase",
-                "details": "Business registration guidance, Proposal and business plan writing, Company profile creation, Digital system setup (emails, websites, cloud storage), Business strategy and growth consultation",
-                "category": "business",
-            },
-            {
-                "title": "Systems & Process Optimization",
-                "description": "We introduce digital systems that save time, reduce errors, and enhance organizational accountability.",
-                "icon": "fas fa-cogs",
-                "details": "Workflow automation setup, File and record management systems, Collaboration tools (Google Workspace, Notion, Trello), Process mapping and optimization consulting, Staff training on productivity tools",
-                "category": "systems",
-            },
-            {
-                "title": "Capacity Building & Training",
-                "description": "We empower professionals and teams with practical, modern skills in administration, communication, and data management.",
-                "icon": "fas fa-graduation-cap",
-                "details": "Office administration and documentation, Proposal and report writing, Data collection and reporting tools, Excel and visualization training, Communication and digital professionalism",
-                "category": "training",
-            },
-            {
-                "title": "Creative & Individual Services",
-                "description": "Thuwala Co. also supports individuals with personal and professional growth tools.",
-                "icon": "fas fa-lightbulb",
-                "details": "CV, cover letter, and portfolio design, Personal branding strategy, LinkedIn optimization, Digital profile setup and presentation design, Event and speech support documentation",
-                "category": "creative",
-            },
-            {
-                "title": "Consulting & Strategy",
-                "description": "Strategic guidance for organizational development and business growth.",
-                "icon": "fas fa-chess",
-                "details": "Business strategy development, Organizational structure optimization, Process improvement consulting, Market analysis and research, Performance metrics and KPIs",
-                "category": "consulting",
-            },
-        ]
+        all_services_data = DEFAULT_SERVICES
 
         # Check and add missing services
         existing_titles = [s.title for s in Service.query.all()]
@@ -558,81 +694,7 @@ def init_db():
 
         # Add sample portfolio items if none exist
         if Portfolio.query.count() == 0:
-            sample_portfolio = [
-                {
-                    "title": "Malawi NGO Data Dashboard",
-                    "client": "Malawi Development NGO",
-                    "description": "Designed and implemented a comprehensive data dashboard for monitoring and evaluation. The system collects field data via ODK and presents real-time insights through interactive Power BI dashboards.",
-                    "category": "data",
-                    "image_url": "/static/images/portfolio/data-dashboard.jpg",
-                    "technologies": "Power BI, ODK, Python, SQL",
-                    "testimonial": "Thuwala Co. transformed our data management. What used to take weeks now takes hours. Their dashboard helps us make data-driven decisions.",
-                    "client_name": "John Banda",
-                    "client_role": "M&E Director",
-                    "featured": True,
-                },
-                {
-                    "title": "Startup Business Branding Package",
-                    "client": "AgriTech Startup",
-                    "description": "Complete branding package including logo design, business cards, company profile, and social media setup. Created a cohesive brand identity that helped secure initial funding.",
-                    "category": "branding",
-                    "image_url": "/static/images/portfolio/branding-package.jpg",
-                    "technologies": "Adobe Creative Suite, Canva, WordPress",
-                    "testimonial": "Professional, timely, and exceeded expectations. Our investors commented on how polished our materials looked.",
-                    "client_name": "Sarah Chibwana",
-                    "client_role": "CEO & Founder",
-                    "featured": True,
-                },
-                {
-                    "title": "Government Project Reporting System",
-                    "client": "Ministry Department",
-                    "description": "Streamlined project reporting system that reduced report preparation time by 60%. Created templates, automated data collection, and trained staff on new processes.",
-                    "category": "administrative",
-                    "image_url": "/static/images/portfolio/reporting-system.jpg",
-                    "technologies": "Microsoft Office, Google Workspace, Process Automation",
-                    "testimonial": "The efficiency gains have been remarkable. Our team now focuses on analysis rather than data compilation.",
-                    "client_name": "Dr. Michael Phiri",
-                    "client_role": "Project Director",
-                    "featured": True,
-                },
-                {
-                    "title": "Educational Institution Website Redesign",
-                    "client": "Private College",
-                    "description": "Complete website redesign with CMS integration, improving user engagement by 200%. Added online application system and student portal.",
-                    "category": "systems",
-                    "image_url": "/static/images/portfolio/website-redesign.jpg",
-                    "project_url": "https://example-college.mw",
-                    "technologies": "WordPress, PHP, JavaScript, CSS3",
-                    "testimonial": "Our online applications increased by 150% after the redesign. Professional and student-friendly.",
-                    "client_name": "Prof. Elizabeth Kachali",
-                    "client_role": "Principal",
-                    "featured": True,
-                },
-                {
-                    "title": "Corporate Training Program",
-                    "client": "Financial Institution",
-                    "description": "Designed and delivered Excel & Data Visualization training for 50+ staff members. Created custom training materials and follow-up support system.",
-                    "category": "training",
-                    "image_url": "/static/images/portfolio/training-program.jpg",
-                    "technologies": "Excel, Power BI, Training Materials",
-                    "testimonial": "The training was practical and immediately applicable. Staff confidence with data tools improved dramatically.",
-                    "client_name": "Robert Mwale",
-                    "client_role": "HR Director",
-                    "featured": False,
-                },
-                {
-                    "title": "Business Process Optimization",
-                    "client": "Manufacturing Company",
-                    "description": "Analyzed and optimized supply chain documentation processes, reducing processing time by 40% and errors by 75%.",
-                    "category": "operations",
-                    "image_url": "/static/images/portfolio/process-optimization.jpg",
-                    "technologies": "Process Mapping, SOP Development, Workflow Automation",
-                    "testimonial": "The new processes saved us significant time and reduced frustration across departments.",
-                    "client_name": "David Simbeye",
-                    "client_role": "Operations Manager",
-                    "featured": True,
-                },
-            ]
+            sample_portfolio = DEFAULT_PORTFOLIO
 
             for item in sample_portfolio:
                 portfolio = Portfolio(**item)
@@ -651,25 +713,11 @@ def init_db():
             if ad_count == 0:
                 sample_ads = [
                     {
-                        "title": "Special Offer: 20% Off All Services",
-                        "description": "Launch your projects with our professional services at a discounted rate. Limited time offer!",
-                        "cta_text": "Claim Offer",
-                        "cta_link": "/contact",
-                        "background_color": "#dc2626",
-                        "text_color": "#ffffff",
+                        **ad,
                         "is_active": True,
-                        "display_order": 1,
-                    },
-                    {
-                        "title": "New: Data Analytics Dashboard Solutions",
-                        "description": "Transform your raw data into actionable insights with our new dashboard solutions.",
-                        "cta_text": "Learn More",
-                        "cta_link": "/services",
-                        "background_color": "#2563eb",
-                        "text_color": "#ffffff",
-                        "is_active": True,
-                        "display_order": 2,
-                    },
+                        "display_order": idx + 1,
+                    }
+                    for idx, ad in enumerate(DEFAULT_ADS)
                 ]
 
                 for ad_data in sample_ads:
@@ -719,6 +767,8 @@ def inject_now():
 def index():
     try:
         services = Service.query.limit(6).all()  # Show 6 services on homepage
+        if not services:
+            services = get_services_fallback()[:6]
 
         # Get active advertisements
         ads = []
@@ -746,10 +796,12 @@ def index():
                 }
                 for ad in ads_query
             ]
+            if not ads:
+                ads = DEFAULT_ADS
             print(f"DEBUG: Found {len(ads)} active advertisements for homepage")
         except Exception as e:
             print(f"DEBUG: Error fetching ads: {e}")
-            ads = []
+            ads = DEFAULT_ADS
 
         # Query a few portfolio items for homepage preview
         try:
@@ -760,27 +812,56 @@ def index():
                 .limit(6)
                 .all()
             )
+            if not portfolio_items:
+                portfolio_items = get_portfolio_fallback()[:6]
             # Extract testimonials from portfolio items
-            testimonials = [
-                {
-                    "testimonial": p.testimonial,
-                    "client_name": p.client_name,
-                    "client_role": p.client_role,
-                }
-                for p in portfolio_items
-                if p.testimonial
-            ]
+            if portfolio_items and isinstance(portfolio_items[0], dict):
+                testimonials = [
+                    {
+                        "testimonial": p.get("testimonial"),
+                        "client_name": p.get("client_name"),
+                        "client_role": p.get("client_role"),
+                    }
+                    for p in portfolio_items
+                    if p.get("testimonial")
+                ]
+            else:
+                testimonials = [
+                    {
+                        "testimonial": p.testimonial,
+                        "client_name": p.client_name,
+                        "client_role": p.client_role,
+                    }
+                    for p in portfolio_items
+                    if p.testimonial
+                ]
         except Exception as e:
             print(f"DEBUG: Error fetching portfolio items: {e}")
-            portfolio_items = []
-            testimonials = []
+            portfolio_items = get_portfolio_fallback()[:6]
+            testimonials = [
+                {
+                    "testimonial": p.get("testimonial"),
+                    "client_name": p.get("client_name"),
+                    "client_role": p.get("client_role"),
+                }
+                for p in portfolio_items
+                if p.get("testimonial")
+            ]
 
     except Exception as e:
         print(f"Database error in index route: {e}")
-        services = []
-        ads = []
-        portfolio_items = []
-        testimonials = []
+        services = get_services_fallback()[:6]
+        ads = DEFAULT_ADS
+        portfolio_items = get_portfolio_fallback()[:6]
+        testimonials = [
+            {
+                "testimonial": p.get("testimonial"),
+                "client_name": p.get("client_name"),
+                "client_role": p.get("client_role"),
+            }
+            for p in portfolio_items
+            if p.get("testimonial")
+        ]
 
     return render_template(
         "index.html",
@@ -801,17 +882,19 @@ def about():
 def services():
     try:
         services_list = Service.query.order_by(Service.id).all()
+        if not services_list:
+            services_list = get_services_fallback()
     except Exception as e:
         print(f"Database error in services route: {e}")
-        services_list = []
+        services_list = get_services_fallback()
     return render_template("services.html", services=services_list)
 
 
 @app.route("/portfolio")
 def portfolio():
+    # Get filter category from query parameter
+    category_filter = request.args.get("category", "all")
     try:
-        # Get filter category from query parameter
-        category_filter = request.args.get("category", "all")
 
         # Query portfolio items
         if category_filter == "all":
@@ -824,15 +907,37 @@ def portfolio():
                 .order_by(Portfolio.featured.desc(), Portfolio.created_at.desc())
                 .all()
             )
+        if not portfolio_items:
+            fallback_items = get_portfolio_fallback()
+            if category_filter == "all":
+                portfolio_items = fallback_items
+            else:
+                portfolio_items = [
+                    item
+                    for item in fallback_items
+                    if item.get("category") == category_filter
+                ]
 
         # Get unique categories for filter
         categories = db.session.query(Portfolio.category).distinct().all()
         categories = [cat[0] for cat in categories if cat[0]]
+        if not categories:
+            categories = sorted(
+                {item.get("category") for item in get_portfolio_fallback()}
+            )
 
     except Exception as e:
         print(f"Database error in portfolio route: {e}")
-        portfolio_items = []
-        categories = []
+        fallback_items = get_portfolio_fallback()
+        if category_filter == "all":
+            portfolio_items = fallback_items
+        else:
+            portfolio_items = [
+                item
+                for item in fallback_items
+                if item.get("category") == category_filter
+            ]
+        categories = sorted({item.get("category") for item in fallback_items})
 
     return render_template(
         "portfolio.html",
@@ -1646,7 +1751,11 @@ def move_advertisement_down(ad_id):
 @login_required
 def admin_users():
     """Manage users (only accessible to admins)"""
-    users = User.query.order_by(User.created_at.desc()).all()
+    try:
+        users = User.query.order_by(User.created_at.desc()).all()
+    except Exception as e:
+        app.logger.warning("Error loading users: %s", e)
+        users = []
     return render_template("admin/users.html", users=users)
 
 

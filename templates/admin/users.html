@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Users - Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+    <div class="fixed inset-0 overflow-hidden pointer-events-none">
+        <div class="absolute top-20 left-10 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl animate-pulse"></div>
+        <div class="absolute bottom-20 right-10 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
+    </div>
+
+    <!-- Sidebar -->
+    <aside class="fixed left-0 top-0 h-screen w-72 bg-slate-800/50 backdrop-blur-xl border-r border-slate-700/50 overflow-y-auto z-40 lg:flex flex-col hidden transition-all duration-300">
+        <div class="bg-slate-800/50 backdrop-blur-xl px-6 py-6 text-white border-b border-slate-700/50 relative group">
+            <div class="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div class="relative z-10 flex items-center justify-center h-16">
+                <img src="{{ url_for('static', filename='images/logo/logo-512x512.png') }}" alt="Thuwala Co" class="h-14 w-auto object-contain" loading="eager" decoding="async">
+            </div>
+        </div>
+
+        <div class="p-4 border-b border-slate-700/50 backdrop-blur">
+            <div class="flex items-center gap-3 p-3 bg-slate-700/30 hover:bg-slate-700/50 rounded-lg transition-colors duration-300 group">
+                <div class="w-10 h-10 rounded-full bg-gradient-primary flex items-center justify-center text-white font-bold group-hover:scale-110 transition-transform duration-300">
+                    {{ current_user.username[0]|upper }}
+                </div>
+                <div class="flex-1 min-w-0">
+                    <p class="font-semibold text-white text-sm truncate">{{ current_user.username }}</p>
+                    <p class="text-xs text-slate-400">Administrator</p>
+                </div>
+            </div>
+        </div>
+
+        <nav class="flex-1 p-4 space-y-6">
+            <div class="space-y-2">
+                <p class="px-3 text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Navigation</p>
+                <a href="{{ url_for('admin_dashboard') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-slate-300 hover:bg-slate-700/30 hover:text-white transition-all duration-300 group">
+                    <i class="fas fa-chart-line w-5 group-hover:scale-110 transition-transform duration-300"></i>
+                    <span class="font-medium">Dashboard</span>
+                </a>
+            </div>
+            <div class="space-y-2">
+                <p class="px-3 text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Content</p>
+                <div class="space-y-1">
+                    <a href="{{ url_for('admin_services') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-slate-300 hover:bg-slate-700/30 hover:text-white transition-all duration-300 group">
+                        <i class="fas fa-cogs w-5 group-hover:scale-110 transition-transform duration-300"></i>
+                        <span class="font-medium">Services</span>
+                    </a>
+                    <a href="{{ url_for('admin_portfolio') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-slate-300 hover:bg-slate-700/30 hover:text-white transition-all duration-300 group">
+                        <i class="fas fa-briefcase w-5 group-hover:scale-110 transition-transform duration-300"></i>
+                        <span class="font-medium">Portfolio</span>
+                    </a>
+                    <a href="{{ url_for('admin_advertisements') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-slate-300 hover:bg-slate-700/30 hover:text-white transition-all duration-300 group">
+                        <i class="fas fa-bullhorn w-5 group-hover:scale-110 transition-transform duration-300"></i>
+                        <span class="font-medium">Advertisements</span>
+                    </a>
+                </div>
+            </div>
+            <div class="space-y-2">
+                <p class="px-3 text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">System</p>
+                <div class="space-y-1">
+                    <a href="{{ url_for('admin_users') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg bg-gradient-primary text-white shadow-lg shadow-blue-500/50 transition-all duration-300 group">
+                        <i class="fas fa-users w-5 group-hover:scale-110 transition-transform duration-300"></i>
+                        <span class="font-medium">Users</span>
+                    </a>
+                    <a href="{{ url_for('change_password') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-slate-300 hover:bg-slate-700/30 hover:text-white transition-all duration-300 group">
+                        <i class="fas fa-key w-5 group-hover:scale-110 transition-transform duration-300"></i>
+                        <span class="font-medium">Change Password</span>
+                    </a>
+                </div>
+            </div>
+        </nav>
+
+        <div class="p-4 border-t border-slate-700/50 backdrop-blur">
+            <a href="{{ url_for('admin_logout') }}" class="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-red-500/20 hover:bg-red-500/40 text-red-300 rounded-lg transition-all duration-300 font-medium border border-red-500/30 hover:border-red-500/50 group">
+                <i class="fas fa-sign-out-alt group-hover:scale-110 transition-transform duration-300"></i>
+                <span>Logout</span>
+            </a>
+        </div>
+    </aside>
+
+    <button class="fixed bottom-6 right-6 lg:hidden z-30 w-14 h-14 bg-gradient-primary text-white rounded-full shadow-xl shadow-blue-500/50 hover:shadow-2xl hover:shadow-blue-500/70 transition-all duration-300 flex items-center justify-center hover:scale-110">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Main Content -->
+    <main class="lg:ml-72 min-h-screen relative z-10">
+        <header class="bg-slate-800/50 backdrop-blur-xl border-b border-slate-700/50 sticky top-0 z-20">
+            <div class="px-6 py-6 flex items-center justify-between">
+                <div>
+                    <h1 class="text-4xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">Manage Users</h1>
+                    <p class="text-slate-400 mt-1">View and manage admin accounts</p>
+                </div>
+                <div class="flex items-center gap-4">
+                    <a href="{{ url_for('add_user') }}" class="inline-flex items-center gap-2 px-4 py-2 bg-gradient-primary text-white rounded-lg shadow-lg shadow-blue-500/40 hover:shadow-blue-500/60 transition-all duration-300">
+                        <i class="fas fa-user-plus"></i>
+                        <span class="hidden sm:inline">Add User</span>
+                    </a>
+                    <a href="{{ url_for('admin_dashboard') }}" class="inline-flex items-center gap-2 px-4 py-2 text-slate-300 hover:text-white hover:bg-slate-700/50 rounded-lg transition-all duration-300">
+                        <i class="fas fa-arrow-left"></i>
+                        <span class="hidden sm:inline">Dashboard</span>
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <div class="p-6">
+            <!-- Flash messages -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                    <div class="mb-4 px-4 py-3 rounded-lg text-sm border
+                        {% if category == 'success' %}bg-emerald-500/10 border-emerald-500/30 text-emerald-300
+                        {% elif category == 'error' %}bg-red-500/10 border-red-500/30 text-red-300
+                        {% else %}bg-blue-500/10 border-blue-500/30 text-blue-300{% endif %}">
+                        <i class="fas fa-{% if category == 'success' %}check-circle{% elif category == 'error' %}exclamation-circle{% else %}info-circle{% endif %} mr-2"></i>
+                        {{ message }}
+                    </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <div class="bg-slate-800/50 backdrop-blur-xl rounded-xl border border-slate-700/50 overflow-hidden">
+                {% if users %}
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead class="bg-slate-700/30 border-b border-slate-700/50">
+                            <tr>
+                                <th class="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest">User</th>
+                                <th class="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest">Email</th>
+                                <th class="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest">Created</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-700/50">
+                            {% for user in users %}
+                            <tr class="hover:bg-slate-700/20 transition-colors duration-200">
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white font-bold text-sm">
+                                            {{ user.username[0]|upper }}
+                                        </div>
+                                        <div>
+                                            <p class="font-medium text-white">{{ user.username }}</p>
+                                            <p class="text-xs text-slate-400">Administrator</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 text-slate-300">{{ user.email }}</td>
+                                <td class="px-6 py-4 text-slate-400 text-sm">
+                                    {% if user.created_at %}
+                                    {{ user.created_at.strftime('%b %d, %Y') }}
+                                    {% else %}
+                                    —
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="p-12 text-center">
+                    <i class="fas fa-users text-4xl text-slate-600 mb-4"></i>
+                    <p class="text-slate-400">No users found</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </main>
+</div>
+{% endblock %}

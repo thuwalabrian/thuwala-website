@@ -5,21 +5,27 @@ load_dotenv()
 
 
 class Config:
+    # Detect Vercel serverless environment
+    IS_VERCEL = os.environ.get("VERCEL", "").lower() in ("1", "true")
+
     # Require SECRET_KEY in production; allow a development fallback locally.
     SECRET_KEY = os.environ.get("SECRET_KEY")
     if not SECRET_KEY:
-        if os.environ.get("FLASK_ENV", "").lower() == "production":
+        if os.environ.get("FLASK_ENV", "").lower() == "production" or IS_VERCEL:
             raise RuntimeError(
                 "SECRET_KEY must be set in production (see .env.example)"
             )
         # Development fallback (safe only on local machines)
         SECRET_KEY = "dev-secret-key-change-this"
 
-    # Database URL (use DATABASE_URL env var when provided)
-    SQLALCHEMY_DATABASE_URI = os.environ.get(
-        "DATABASE_URL",
-        "sqlite:///" + os.path.join(os.path.dirname(__file__), "thuwala.db"),
+    # Database URL (use DATABASE_URL env var when provided).
+    # On Vercel the project root is read-only, so default SQLite goes to /tmp/.
+    _default_db = (
+        "sqlite:////tmp/thuwala.db"
+        if IS_VERCEL
+        else "sqlite:///" + os.path.join(os.path.dirname(__file__), "thuwala.db")
     )
+    SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URL", _default_db)
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
@@ -44,7 +50,7 @@ class Config:
     )
     SECURITY_PASSWORD_SALT = os.environ.get("SECURITY_PASSWORD_SALT")
     if not SECURITY_PASSWORD_SALT:
-        if os.environ.get("FLASK_ENV", "").lower() == "production":
+        if os.environ.get("FLASK_ENV", "").lower() == "production" or IS_VERCEL:
             raise RuntimeError(
                 "SECURITY_PASSWORD_SALT must be set in production (see .env.example)"
             )
@@ -53,4 +59,4 @@ class Config:
     # WhatsApp integration (for Vercel / no-database deployments)
     # Set WHATSAPP_ENABLED=true to redirect contact-form submissions to WhatsApp.
     WHATSAPP_ENABLED = os.environ.get("WHATSAPP_ENABLED", "true").lower() == "true"
-    WHATSAPP_NUMBER = os.environ.get("WHATSAPP_NUMBER", "265887580622")
+    WHATSAPP_NUMBER = os.environ.get("WHATSAPP_NUMBER", "265887873006")
