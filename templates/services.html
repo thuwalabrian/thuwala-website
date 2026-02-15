@@ -3,104 +3,80 @@
 {% block title %}Our Services - Thuwala Co.{% endblock %}
 
 {% block content %}
-<!-- Services Hero -->
-<section class="relative py-20 lg:py-32 bg-gradient-to-b from-gray-50 to-white overflow-hidden gsap-fade-in" data-aos="fade-up">
-    <div class="container mx-auto px-4">
-        <div class="max-w-4xl mx-auto backdrop-blur-xl bg-white/95 rounded-3xl p-8 md:p-12 border border-white/30 shadow-smooth hover:shadow-smooth-lg transition-all duration-500 hover:-translate-y-2" data-aos="fade-right">
-            <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold font-display mb-6 text-center bg-gradient-to-r from-primary via-purple-600 to-secondary bg-[length:200%_auto] animate-gradient bg-clip-text text-transparent" data-aos="fade-up" data-aos-delay="100">
-                Comprehensive Business Solutions
+<!-- Page Hero — Dark cinematic -->
+<section class="relative py-32 lg:py-40 overflow-hidden dark-mesh-bg noise-overlay gsap-fade-in">
+    <div class="orb orb-primary w-72 h-72 top-10 -left-20"></div>
+    <div class="orb orb-secondary w-48 h-48 bottom-10 right-10"></div>
+    <div class="relative z-10 container mx-auto px-4">
+        <div class="max-w-3xl">
+            <span class="section-eyebrow text-emerald-400 mb-4 block">Services</span>
+            <h1 class="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black font-display text-white tracking-tight leading-[0.95] mb-6">
+                Comprehensive<br>business <span class="gradient-text-animated">solutions.</span>
             </h1>
-            <p class="text-lg md:text-xl text-gray-900 text-center mb-12 leading-relaxed" data-aos="fade-up" data-aos-delay="200">
+            <p class="text-lg md:text-xl text-gray-400 leading-relaxed max-w-xl">
                 10 specialized service areas designed to optimize your operations, enhance productivity, and drive growth.
             </p>
-            
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8" data-aos="fade-up" data-aos-delay="300">
-                <div class="text-center" x-data="{ count: 0, target: 10, init() { setInterval(() => { if (this.count < this.target) this.count += Math.ceil(this.target / 30); }, 50); } }" x-init="init()">
-                    <div class="text-5xl font-bold text-primary mb-2" x-text="count">0</div>
-                    <div class="text-gray-900 font-medium">Service Areas</div>
-                </div>
-                <div class="text-center" x-data="{ count: 0, target: 100, init() { setInterval(() => { if (this.count < this.target) this.count += Math.ceil(this.target / 30); }, 50); } }" x-init="init()">
-                    <div class="text-5xl font-bold text-primary mb-2" x-text="count">0</div>
-                    <div class="text-gray-900 font-medium">Projects Delivered</div>
-                </div>
-                <div class="text-center" x-data="{ count: 0, target: 95, init() { setInterval(() => { if (this.count < this.target) this.count += Math.ceil(this.target / 30); }, 50); } }" x-init="init()">
-                    <div class="text-5xl font-bold text-primary mb-2" x-text="count">0</div>
-                    <div class="text-gray-900 font-medium">Client Satisfaction</div>
-                </div>
-            </div>
         </div>
-    </div>
-    
-    <!-- Decorative wave -->
-    <div class="absolute bottom-0 left-0 right-0 text-white opacity-10">
-        <svg viewBox="0 0 1200 120" preserveAspectRatio="none" class="w-full h-20 md:h-32">
-            <path fill="currentColor" d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z"></path>
-        </svg>
-    </div>
-</section>
-
-<!-- Services Navigation -->
-<section class="sticky top-20 z-40 py-6 bg-white/80 backdrop-blur-xl border-b border-gray-200/50 gsap-fade-in" data-aos="fade-up">
-    <div class="container mx-auto px-4">
-        <div class="backdrop-blur-xl bg-white/95 rounded-2xl p-4 shadow-smooth border border-white/30" data-aos="fade-up">
-            <div class="text-sm font-semibold text-gray-900 mb-3">Jump to:</div>
-            <div class="flex flex-wrap gap-3">
-                <a href="#administrative" class="group flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg font-medium hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 active" data-category="administrative">
-                    <i class="fas fa-clipboard-check"></i>
-                    <span>Administrative</span>
-                </a>
-                <a href="#operations" class="group flex items-center gap-2 px-4 py-2 bg-gray-100 text-primary rounded-lg font-medium hover:bg-primary hover:text-white hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300" data-category="operations">
-                    <i class="fas fa-project-diagram"></i>
-                    <span>Operations</span>
-                </a>
-                <a href="#data" class="group flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-900 rounded-lg font-medium hover:bg-primary hover:text-white hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300" data-category="data">
-                    <i class="fas fa-chart-bar"></i>
-                    <span>Data & Analytics</span>
-                </a>
-                <a href="#communications" class="group flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-900 rounded-lg font-medium hover:bg-primary hover:text-white hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300" data-category="communications">
-                    <i class="fas fa-bullhorn"></i>
-                    <span>Communications</span>
-                </a>
-                <a href="#branding" class="group flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-900 rounded-lg font-medium hover:bg-primary hover:text-white hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300" data-category="branding">
-                    <i class="fas fa-palette"></i>
-                    <span>Branding</span>
-                </a>
-                <a href="#business" class="group flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-900 rounded-lg font-medium hover:bg-primary hover:text-white hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300" data-category="business">
-                    <i class="fas fa-briefcase"></i>
-                    <span>Business Support</span>
-                </a>
-                <a href="#systems" class="group flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-900 rounded-lg font-medium hover:bg-primary hover:text-white hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300" data-category="systems">
-                    <i class="fas fa-cogs"></i>
-                    <span>Systems</span>
-                </a>
-                <a href="#training" class="group flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-900 rounded-lg font-medium hover:bg-primary hover:text-white hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300" data-category="training">
-                    <i class="fas fa-graduation-cap"></i>
-                    <span>Training</span>
-                </a>
-                <a href="#creative" class="group flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-900 rounded-lg font-medium hover:bg-primary hover:text-white hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300" data-category="creative">
-                    <i class="fas fa-lightbulb"></i>
-                    <span>Creative</span>
-                </a>
-                <a href="#consulting" class="group flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-900 rounded-lg font-medium hover:bg-primary hover:text-white hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300" data-category="consulting">
-                    <i class="fas fa-chess"></i>
-                    <span>Consulting</span>
-                </a>
+        
+        <div class="separator-gradient mt-12 mb-0"></div>
+        <div class="grid grid-cols-3 gap-8 pt-8">
+            <div class="text-center lg:text-left">
+                <div class="stat-number text-3xl md:text-4xl font-black text-white" x-data="{ count: 0 }" x-intersect.once="let i = setInterval(() => { count++; if(count >= 10) clearInterval(i) }, 80)">
+                    <span x-text="count"></span><span class="text-blue-400"></span>
+                </div>
+                <p class="text-gray-500 text-sm mt-1 font-medium">Service areas</p>
+            </div>
+            <div class="text-center">
+                <div class="stat-number text-3xl md:text-4xl font-black text-white" x-data="{ count: 0 }" x-intersect.once="let i = setInterval(() => { count++; if(count >= 100) clearInterval(i) }, 15)">
+                    <span x-text="count"></span><span class="text-emerald-400">+</span>
+                </div>
+                <p class="text-gray-500 text-sm mt-1 font-medium">Projects delivered</p>
+            </div>
+            <div class="text-center lg:text-right">
+                <div class="stat-number text-3xl md:text-4xl font-black text-white" x-data="{ count: 0 }" x-intersect.once="let i = setInterval(() => { count++; if(count >= 95) clearInterval(i) }, 15)">
+                    <span x-text="count"></span><span class="text-purple-400">%</span>
+                </div>
+                <p class="text-gray-500 text-sm mt-1 font-medium">Client satisfaction</p>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Breadcrumb Navigation -->
-<section class="py-4 bg-white border-b border-gray-200">
+<!-- Services Navigation — Dark sticky nav -->
+<section class="sticky top-[80px] z-40 py-4 bg-gray-950/90 backdrop-blur-xl border-b border-white/5 gsap-fade-in">
     <div class="container mx-auto px-4">
-        <nav class="flex items-center gap-2 text-sm" aria-label="Breadcrumb">
-            <a href="{{ url_for('index') }}" class="text-primary hover:text-secondary transition-colors duration-300 flex items-center gap-1">
-                <i class="fas fa-home text-xs"></i>
-                <span>Home</span>
+        <div class="scroll-snap-x flex gap-2 pb-1">
+            <a href="#administrative" class="flex-shrink-0 flex items-center gap-2 px-4 py-2 bg-white/10 text-white/80 rounded-lg text-sm font-medium hover:bg-white/20 hover:text-white transition-all duration-300" data-category="administrative">
+                <i class="fas fa-clipboard-check text-xs"></i><span>Administrative</span>
             </a>
-            <i class="fas fa-chevron-right text-gray-400 text-xs"></i>
-            <span class="text-gray-900 font-medium">Services</span>
-        </nav>
+            <a href="#operations" class="flex-shrink-0 flex items-center gap-2 px-4 py-2 bg-white/10 text-white/80 rounded-lg text-sm font-medium hover:bg-white/20 hover:text-white transition-all duration-300" data-category="operations">
+                <i class="fas fa-project-diagram text-xs"></i><span>Operations</span>
+            </a>
+            <a href="#data" class="flex-shrink-0 flex items-center gap-2 px-4 py-2 bg-white/10 text-white/80 rounded-lg text-sm font-medium hover:bg-white/20 hover:text-white transition-all duration-300" data-category="data">
+                <i class="fas fa-chart-bar text-xs"></i><span>Data</span>
+            </a>
+            <a href="#communications" class="flex-shrink-0 flex items-center gap-2 px-4 py-2 bg-white/10 text-white/80 rounded-lg text-sm font-medium hover:bg-white/20 hover:text-white transition-all duration-300" data-category="communications">
+                <i class="fas fa-bullhorn text-xs"></i><span>Communications</span>
+            </a>
+            <a href="#branding" class="flex-shrink-0 flex items-center gap-2 px-4 py-2 bg-white/10 text-white/80 rounded-lg text-sm font-medium hover:bg-white/20 hover:text-white transition-all duration-300" data-category="branding">
+                <i class="fas fa-palette text-xs"></i><span>Branding</span>
+            </a>
+            <a href="#business" class="flex-shrink-0 flex items-center gap-2 px-4 py-2 bg-white/10 text-white/80 rounded-lg text-sm font-medium hover:bg-white/20 hover:text-white transition-all duration-300" data-category="business">
+                <i class="fas fa-briefcase text-xs"></i><span>Business</span>
+            </a>
+            <a href="#systems" class="flex-shrink-0 flex items-center gap-2 px-4 py-2 bg-white/10 text-white/80 rounded-lg text-sm font-medium hover:bg-white/20 hover:text-white transition-all duration-300" data-category="systems">
+                <i class="fas fa-cogs text-xs"></i><span>Systems</span>
+            </a>
+            <a href="#training" class="flex-shrink-0 flex items-center gap-2 px-4 py-2 bg-white/10 text-white/80 rounded-lg text-sm font-medium hover:bg-white/20 hover:text-white transition-all duration-300" data-category="training">
+                <i class="fas fa-graduation-cap text-xs"></i><span>Training</span>
+            </a>
+            <a href="#creative" class="flex-shrink-0 flex items-center gap-2 px-4 py-2 bg-white/10 text-white/80 rounded-lg text-sm font-medium hover:bg-white/20 hover:text-white transition-all duration-300" data-category="creative">
+                <i class="fas fa-lightbulb text-xs"></i><span>Creative</span>
+            </a>
+            <a href="#consulting" class="flex-shrink-0 flex items-center gap-2 px-4 py-2 bg-white/10 text-white/80 rounded-lg text-sm font-medium hover:bg-white/20 hover:text-white transition-all duration-300" data-category="consulting">
+                <i class="fas fa-chess text-xs"></i><span>Consulting</span>
+            </a>
+        </div>
     </div>
 </section>
 
@@ -109,26 +85,25 @@
     <div class="container mx-auto px-4">
         <!-- Administrative Services -->
         <div class="mb-24" id="administrative">
-            <div class="grid md:grid-cols-2 gap-8 gsap-stagger-grid" data-aos="fade-up">
+            <div class="grid md:grid-cols-2 gap-8 gsap-stagger-grid">
                 {% for service in services if service.category == 'administrative' %}
-                <div class="group relative backdrop-blur-xl bg-white/95 rounded-2xl p-8 border border-white/30 shadow-smooth hover:shadow-smooth-lg transition-all duration-500 hover:-translate-y-2 gsap-scale-card grid-item" id="service-{{ service.id }}">
-                    <div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/10 via-purple-500/10 to-secondary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10 blur-xl"></div>
+                <div class="group card-accent-left bg-white rounded-xl p-8 border border-gray-100 shadow-sm hover:shadow-xl transition-transform transition-shadow duration-500 hover:-translate-y-2 gsap-scale-card grid-item" id="service-{{ service.id }}">
                     
                     <div class="flex items-start gap-4 mb-6">
-                        <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                            <i class="{{ service.icon }} text-white text-xl"></i>
+                        <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary group-hover:scale-110 transition-transform duration-300">
+                            <i class="{{ service.icon }} text-primary text-lg group-hover:text-white transition-colors duration-300"></i>
                         </div>
                         <h3 class="text-xl font-bold text-gray-900 group-hover:text-primary transition-colors duration-300">{{ service.title }}</h3>
                     </div>
                     
-                    <p class="text-gray-900 mb-6 leading-relaxed">{{ service.description }}</p>
+                    <p class="text-gray-500 text-sm mb-6 leading-relaxed">{{ service.description }}</p>
                     
                     {% if service.details %}
                     <div class="mb-6">
                         <h4 class="font-semibold text-gray-900 mb-3">Key Services:</h4>
                         <ul class="space-y-2">
                             {% for detail in service.details.split(', ') %}
-                            <li class="flex items-start gap-2 text-gray-900">
+                            <li class="flex items-start gap-2 text-gray-600 text-sm">
                                 <i class="fas fa-check text-secondary mt-1 flex-shrink-0"></i>
                                 <span>{{ detail }}</span>
                             </li>
@@ -138,7 +113,7 @@
                     {% endif %}
                     
                     <div class="pt-6 border-t border-gray-200">
-                        <p class="text-sm text-gray-900 italic mb-4">Outcome: Increased productivity and structure through reliable administrative systems.</p>
+                        <p class="text-sm text-gray-400 italic mb-4">Outcome: Increased productivity and structure through reliable administrative systems.</p>
                         <button class="w-full flex items-center justify-center gap-2 px-6 py-3 bg-primary text-white font-semibold rounded-xl hover:shadow-lg hover:-translate-y-1 transition-all duration-300" data-service="{{ service.title }}">
                             <i class="fas fa-envelope"></i> Inquire About This Service
                         </button>
@@ -150,26 +125,24 @@
 
         <!-- Operations Support -->
         <div class="mb-24" id="operations">
-            <div class="grid md:grid-cols-2 gap-8 gsap-stagger-grid" data-aos="fade-up">
+            <div class="grid md:grid-cols-2 gap-8 gsap-stagger-grid">
                 {% for service in services if service.category == 'operations' %}
-                <div class="group relative backdrop-blur-xl bg-white/95 rounded-2xl p-8 border border-white/30 shadow-smooth hover:shadow-smooth-lg transition-all duration-500 hover:-translate-y-2 grid-item" id="service-{{ service.id }}">
-                    <div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/10 via-purple-500/10 to-secondary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10 blur-xl"></div>
-                    
+                <div class="group card-accent-left bg-white rounded-xl p-8 border border-gray-100 shadow-sm hover:shadow-xl transition-transform transition-shadow duration-500 hover:-translate-y-2 grid-item" id="service-{{ service.id }}">
                     <div class="flex items-start gap-4 mb-6">
-                        <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                            <i class="{{ service.icon }} text-white text-xl"></i>
+                        <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary group-hover:scale-110 transition-transform duration-300">
+                            <i class="{{ service.icon }} text-primary text-lg group-hover:text-white transition-colors duration-300"></i>
                         </div>
                         <h3 class="text-xl font-bold text-gray-900 group-hover:text-primary transition-colors duration-300">{{ service.title }}</h3>
                     </div>
                     
-                    <p class="text-gray-900 mb-6 leading-relaxed">{{ service.description }}</p>
+                    <p class="text-gray-500 text-sm mb-6 leading-relaxed">{{ service.description }}</p>
                     
                     {% if service.details %}
                     <div class="mb-6">
                         <h4 class="font-semibold text-gray-900 mb-3">Key Services:</h4>
                         <ul class="space-y-2">
                             {% for detail in service.details.split(', ') %}
-                            <li class="flex items-start gap-2 text-gray-900">
+                            <li class="flex items-start gap-2 text-gray-600 text-sm">
                                 <i class="fas fa-check text-secondary mt-1 flex-shrink-0"></i>
                                 <span>{{ detail }}</span>
                             </li>
@@ -179,7 +152,7 @@
                     {% endif %}
                     
                     <div class="pt-6 border-t border-gray-200">
-                        <p class="text-sm text-gray-900 italic mb-4">Outcome: Projects stay organized, compliant, and deliver measurable results.</p>
+                        <p class="text-sm text-gray-400 italic mb-4">Outcome: Projects stay organized, compliant, and deliver measurable results.</p>
                         <button class="w-full flex items-center justify-center gap-2 px-6 py-3 bg-primary text-white font-semibold rounded-xl hover:shadow-lg hover:-translate-y-1 transition-all duration-300" data-service="{{ service.title }}">
                             <i class="fas fa-envelope"></i> Inquire About This Service
                         </button>
@@ -191,26 +164,24 @@
 
         <!-- Data & Analytics -->
         <div class="mb-24" id="data">
-            <div class="grid md:grid-cols-2 gap-8 gsap-stagger-grid" data-aos="fade-up">
+            <div class="grid md:grid-cols-2 gap-8 gsap-stagger-grid">
                 {% for service in services if service.category == 'data' %}
-                <div class="group relative backdrop-blur-xl bg-white/95 rounded-2xl p-8 border border-white/30 shadow-smooth hover:shadow-smooth-lg transition-all duration-500 hover:-translate-y-2 grid-item" id="service-{{ service.id }}">
-                    <div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/10 via-purple-500/10 to-secondary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10 blur-xl"></div>
-                    
+                <div class="group card-accent-left bg-white rounded-xl p-8 border border-gray-100 shadow-sm hover:shadow-xl transition-transform transition-shadow duration-500 hover:-translate-y-2 grid-item" id="service-{{ service.id }}">
                     <div class="flex items-start gap-4 mb-6">
-                        <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                            <i class="{{ service.icon }} text-white text-xl"></i>
+                        <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary group-hover:scale-110 transition-transform duration-300">
+                            <i class="{{ service.icon }} text-primary text-lg group-hover:text-white transition-colors duration-300"></i>
                         </div>
                         <h3 class="text-xl font-bold text-gray-900 group-hover:text-primary transition-colors duration-300">{{ service.title }}</h3>
                     </div>
                     
-                    <p class="text-gray-900 mb-6 leading-relaxed">{{ service.description }}</p>
+                    <p class="text-gray-500 text-sm mb-6 leading-relaxed">{{ service.description }}</p>
                     
                     {% if service.details %}
                     <div class="mb-6">
                         <h4 class="font-semibold text-gray-900 mb-3">Key Services:</h4>
                         <ul class="space-y-2">
                             {% for detail in service.details.split(', ') %}
-                            <li class="flex items-start gap-2 text-gray-900">
+                            <li class="flex items-start gap-2 text-gray-600 text-sm">
                                 <i class="fas fa-check text-secondary mt-1 flex-shrink-0"></i>
                                 <span>{{ detail }}</span>
                             </li>
@@ -220,7 +191,7 @@
                     {% endif %}
                     
                     <div class="pt-6 border-t border-gray-200">
-                        <p class="text-sm text-gray-900 italic mb-4">Outcome: Clean, clear, and visual data insights that inform smarter decisions.</p>
+                        <p class="text-sm text-gray-400 italic mb-4">Outcome: Clean, clear, and visual data insights that inform smarter decisions.</p>
                         <button class="w-full flex items-center justify-center gap-2 px-6 py-3 bg-primary text-white font-semibold rounded-xl hover:shadow-lg hover:-translate-y-1 transition-all duration-300" data-service="{{ service.title }}">
                             <i class="fas fa-envelope"></i> Inquire About This Service
                         </button>
@@ -232,26 +203,24 @@
 
         <!-- Communications -->
         <div class="mb-24" id="communications">
-            <div class="grid md:grid-cols-2 gap-8 gsap-stagger-grid" data-aos="fade-up">
+            <div class="grid md:grid-cols-2 gap-8 gsap-stagger-grid">
                 {% for service in services if service.category == 'communications' %}
-                <div class="group relative backdrop-blur-xl bg-white/95 rounded-2xl p-8 border border-white/30 shadow-smooth hover:shadow-smooth-lg transition-all duration-500 hover:-translate-y-2 grid-item" id="service-{{ service.id }}">
-                    <div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/10 via-purple-500/10 to-secondary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10 blur-xl"></div>
-                    
+                <div class="group card-accent-left bg-white rounded-xl p-8 border border-gray-100 shadow-sm hover:shadow-xl transition-transform transition-shadow duration-500 hover:-translate-y-2 grid-item" id="service-{{ service.id }}">
                     <div class="flex items-start gap-4 mb-6">
-                        <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                            <i class="{{ service.icon }} text-white text-xl"></i>
+                        <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary group-hover:scale-110 transition-transform duration-300">
+                            <i class="{{ service.icon }} text-primary text-lg group-hover:text-white transition-colors duration-300"></i>
                         </div>
                         <h3 class="text-xl font-bold text-gray-900 group-hover:text-primary transition-colors duration-300">{{ service.title }}</h3>
                     </div>
                     
-                    <p class="text-gray-900 mb-6 leading-relaxed">{{ service.description }}</p>
+                    <p class="text-gray-500 text-sm mb-6 leading-relaxed">{{ service.description }}</p>
                     
                     {% if service.details %}
                     <div class="mb-6">
                         <h4 class="font-semibold text-gray-900 mb-3">Key Services:</h4>
                         <ul class="space-y-2">
                             {% for detail in service.details.split(', ') %}
-                            <li class="flex items-start gap-2 text-gray-900">
+                            <li class="flex items-start gap-2 text-gray-600 text-sm">
                                 <i class="fas fa-check text-secondary mt-1 flex-shrink-0"></i>
                                 <span>{{ detail }}</span>
                             </li>
@@ -261,7 +230,7 @@
                     {% endif %}
                     
                     <div class="pt-6 border-t border-gray-200">
-                        <p class="text-sm text-gray-900 italic mb-4">Outcome: Your message looks, sounds, and feels professional at every level.</p>
+                        <p class="text-sm text-gray-400 italic mb-4">Outcome: Your message looks, sounds, and feels professional at every level.</p>
                         <button class="w-full flex items-center justify-center gap-2 px-6 py-3 bg-primary text-white font-semibold rounded-xl hover:shadow-lg hover:-translate-y-1 transition-all duration-300" data-service="{{ service.title }}">
                             <i class="fas fa-envelope"></i> Inquire About This Service
                         </button>
@@ -273,26 +242,24 @@
 
         <!-- Branding -->
         <div class="mb-24" id="branding">
-            <div class="grid md:grid-cols-2 gap-8 gsap-stagger-grid" data-aos="fade-up">
+            <div class="grid md:grid-cols-2 gap-8 gsap-stagger-grid">
                 {% for service in services if service.category == 'branding' %}
-                <div class="group relative backdrop-blur-xl bg-white/95 rounded-2xl p-8 border border-white/30 shadow-smooth hover:shadow-smooth-lg transition-all duration-500 hover:-translate-y-2 grid-item" id="service-{{ service.id }}">
-                    <div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/10 via-purple-500/10 to-secondary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10 blur-xl"></div>
-                    
+                <div class="group card-accent-left bg-white rounded-xl p-8 border border-gray-100 shadow-sm hover:shadow-xl transition-transform transition-shadow duration-500 hover:-translate-y-2 grid-item" id="service-{{ service.id }}">
                     <div class="flex items-start gap-4 mb-6">
-                        <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                            <i class="{{ service.icon }} text-white text-xl"></i>
+                        <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary group-hover:scale-110 transition-transform duration-300">
+                            <i class="{{ service.icon }} text-primary text-lg group-hover:text-white transition-colors duration-300"></i>
                         </div>
                         <h3 class="text-xl font-bold text-gray-900 group-hover:text-primary transition-colors duration-300">{{ service.title }}</h3>
                     </div>
                     
-                    <p class="text-gray-900 mb-6 leading-relaxed">{{ service.description }}</p>
+                    <p class="text-gray-500 text-sm mb-6 leading-relaxed">{{ service.description }}</p>
                     
                     {% if service.details %}
                     <div class="mb-6">
                         <h4 class="font-semibold text-gray-900 mb-3">Key Services:</h4>
                         <ul class="space-y-2">
                             {% for detail in service.details.split(', ') %}
-                            <li class="flex items-start gap-2 text-gray-900">
+                            <li class="flex items-start gap-2 text-gray-600 text-sm">
                                 <i class="fas fa-check text-secondary mt-1 flex-shrink-0"></i>
                                 <span>{{ detail }}</span>
                             </li>
@@ -302,7 +269,7 @@
                     {% endif %}
                     
                     <div class="pt-6 border-t border-gray-200">
-                        <p class="text-sm text-gray-900 italic mb-4">Outcome: A consistent, attractive, and persuasive brand presence online and offline.</p>
+                        <p class="text-sm text-gray-400 italic mb-4">Outcome: A consistent, attractive, and persuasive brand presence online and offline.</p>
                         <button class="w-full flex items-center justify-center gap-2 px-6 py-3 bg-primary text-white font-semibold rounded-xl hover:shadow-lg hover:-translate-y-1 transition-all duration-300" data-service="{{ service.title }}">
                             <i class="fas fa-envelope"></i> Inquire About This Service
                         </button>
@@ -314,26 +281,24 @@
 
         <!-- Business Support -->
         <div class="mb-24" id="business">
-            <div class="grid md:grid-cols-2 gap-8 gsap-stagger-grid" data-aos="fade-up">
+            <div class="grid md:grid-cols-2 gap-8 gsap-stagger-grid">
                 {% for service in services if service.category == 'business' %}
-                <div class="group relative backdrop-blur-xl bg-white/95 rounded-2xl p-8 border border-white/30 shadow-smooth hover:shadow-smooth-lg transition-all duration-500 hover:-translate-y-2 grid-item" id="service-{{ service.id }}">
-                    <div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/10 via-purple-500/10 to-secondary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10 blur-xl"></div>
-                    
+                <div class="group card-accent-left bg-white rounded-xl p-8 border border-gray-100 shadow-sm hover:shadow-xl transition-transform transition-shadow duration-500 hover:-translate-y-2 grid-item" id="service-{{ service.id }}">
                     <div class="flex items-start gap-4 mb-6">
-                        <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                            <i class="{{ service.icon }} text-white text-xl"></i>
+                        <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary group-hover:scale-110 transition-transform duration-300">
+                            <i class="{{ service.icon }} text-primary text-lg group-hover:text-white transition-colors duration-300"></i>
                         </div>
                         <h3 class="text-xl font-bold text-gray-900 group-hover:text-primary transition-colors duration-300">{{ service.title }}</h3>
                     </div>
                     
-                    <p class="text-gray-900 mb-6 leading-relaxed">{{ service.description }}</p>
+                    <p class="text-gray-500 text-sm mb-6 leading-relaxed">{{ service.description }}</p>
                     
                     {% if service.details %}
                     <div class="mb-6">
                         <h4 class="font-semibold text-gray-900 mb-3">Key Services:</h4>
                         <ul class="space-y-2">
                             {% for detail in service.details.split(', ') %}
-                            <li class="flex items-start gap-2 text-gray-900">
+                            <li class="flex items-start gap-2 text-gray-600 text-sm">
                                 <i class="fas fa-check text-secondary mt-1 flex-shrink-0"></i>
                                 <span>{{ detail }}</span>
                             </li>
@@ -343,7 +308,7 @@
                     {% endif %}
                     
                     <div class="pt-6 border-t border-gray-200">
-                        <p class="text-sm text-gray-900 italic mb-4">Outcome: Businesses start and scale with professionalism and strategic direction.</p>
+                        <p class="text-sm text-gray-400 italic mb-4">Outcome: Businesses start and scale with professionalism and strategic direction.</p>
                         <button class="w-full flex items-center justify-center gap-2 px-6 py-3 bg-primary text-white font-semibold rounded-xl hover:shadow-lg hover:-translate-y-1 transition-all duration-300" data-service="{{ service.title }}">
                             <i class="fas fa-envelope"></i> Inquire About This Service
                         </button>
@@ -359,15 +324,15 @@
 </section>
 
 <!-- Process Section -->
-<section class="py-20 lg:py-32 bg-white" data-aos="fade-up">
+<section class="py-20 lg:py-32 bg-white">
     <div class="container mx-auto px-4">
-        <div class="max-w-2xl mx-auto text-center mb-16" data-aos="fade-up">
+        <div class="max-w-2xl mx-auto text-center mb-16">
             <h2 class="text-3xl md:text-4xl font-bold font-display text-gray-900 mb-4">Our Service Delivery Process</h2>
             <p class="text-gray-900">A structured approach to ensure quality and success</p>
         </div>
         
-        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8" data-aos="fade-up">
-            <div class="group relative backdrop-blur-xl bg-white/95 rounded-2xl p-8 border border-white/30 shadow-smooth hover:shadow-smooth-lg transition-all duration-500 hover:-translate-y-2">
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div class="group card-accent-left bg-white rounded-xl p-8 border border-gray-100 shadow-sm hover:shadow-xl transition-transform transition-shadow duration-500 hover:-translate-y-2">
                 <div class="absolute top-4 right-4 text-6xl font-bold text-primary/10 group-hover:text-primary/20 transition-colors duration-300">01</div>
                 <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center mb-6 relative z-10 group-hover:scale-110 transition-transform duration-300">
                     <i class="fas fa-search text-white text-2xl"></i>
@@ -376,7 +341,7 @@
                 <p class="text-gray-900 relative z-10">We begin by understanding your specific needs, challenges, and objectives.</p>
             </div>
             
-            <div class="group relative backdrop-blur-xl bg-white/95 rounded-2xl p-8 border border-white/30 shadow-smooth hover:shadow-smooth-lg transition-all duration-500 hover:-translate-y-2">
+            <div class="group card-accent-left bg-white rounded-xl p-8 border border-gray-100 shadow-sm hover:shadow-xl transition-transform transition-shadow duration-500 hover:-translate-y-2">
                 <div class="absolute top-4 right-4 text-6xl font-bold text-primary/10 group-hover:text-primary/20 transition-colors duration-300">02</div>
                 <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center mb-6 relative z-10 group-hover:scale-110 transition-transform duration-300">
                     <i class="fas fa-clipboard-list text-white text-2xl"></i>
@@ -385,7 +350,7 @@
                 <p class="text-gray-900 relative z-10">Customized strategy and plan development tailored to your requirements.</p>
             </div>
             
-            <div class="group relative backdrop-blur-xl bg-white/95 rounded-2xl p-8 border border-white/30 shadow-smooth hover:shadow-smooth-lg transition-all duration-500 hover:-translate-y-2">
+            <div class="group card-accent-left bg-white rounded-xl p-8 border border-gray-100 shadow-sm hover:shadow-xl transition-transform transition-shadow duration-500 hover:-translate-y-2">
                 <div class="absolute top-4 right-4 text-6xl font-bold text-primary/10 group-hover:text-primary/20 transition-colors duration-300">03</div>
                 <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center mb-6 relative z-10 group-hover:scale-110 transition-transform duration-300">
                     <i class="fas fa-cogs text-white text-2xl"></i>
@@ -394,7 +359,7 @@
                 <p class="text-gray-900 relative z-10">Expert execution with regular updates and transparent communication.</p>
             </div>
             
-            <div class="group relative backdrop-blur-xl bg-white/95 rounded-2xl p-8 border border-white/30 shadow-smooth hover:shadow-smooth-lg transition-all duration-500 hover:-translate-y-2">
+            <div class="group card-accent-left bg-white rounded-xl p-8 border border-gray-100 shadow-sm hover:shadow-xl transition-transform transition-shadow duration-500 hover:-translate-y-2">
                 <div class="absolute top-4 right-4 text-6xl font-bold text-primary/10 group-hover:text-primary/20 transition-colors duration-300">04</div>
                 <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center mb-6 relative z-10 group-hover:scale-110 transition-transform duration-300">
                     <i class="fas fa-chart-line text-white text-2xl"></i>
@@ -406,33 +371,27 @@
     </div>
 </section>
 
-<!-- CTA Section -->
-<section class="py-16 lg:py-24 bg-gradient-to-r from-primary to-secondary">
-    <div class="container mx-auto px-4">
-        <div class="max-w-3xl mx-auto text-center text-white" data-aos="fade-up">
-            <h2 class="text-3xl md:text-4xl font-bold font-display mb-4">Ready to Transform Your Business Operations?</h2>
-            <p class="text-lg opacity-90 mb-8">Get a personalized consultation and discover how our services can drive your success.</p>
-            <div class="flex flex-col md:flex-row justify-center gap-4 mb-8">
-                <a href="{{ url_for('contact') }}" class="px-8 py-3 bg-white text-primary font-semibold rounded-lg hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 inline-flex items-center justify-center gap-2">
-                    <i class="fas fa-calendar-check"></i> Schedule Free Consultation
+<!-- CTA Section — Dark -->
+<section class="py-24 lg:py-36 relative dark-mesh-bg noise-overlay overflow-hidden gsap-fade-in">
+    <div class="orb orb-primary w-72 h-72 -top-20 -right-20"></div>
+    <div class="orb orb-secondary w-56 h-56 bottom-0 left-10"></div>
+    <div class="relative z-10 container mx-auto px-4">
+        <div class="max-w-3xl mx-auto text-center">
+            <span class="section-eyebrow text-blue-400 mb-6 block">Get Started</span>
+            <h2 class="text-3xl md:text-4xl lg:text-5xl font-black text-white tracking-tight mb-6">Ready to transform your<br>business operations?</h2>
+            <p class="text-lg text-gray-400 mb-10">Get a personalized consultation and discover how our services can drive your success.</p>
+            <div class="flex flex-col md:flex-row justify-center gap-4 mb-10">
+                <a href="{{ url_for('contact') }}" class="btn-magnetic group inline-flex items-center justify-center px-8 py-4 bg-white text-gray-900 font-bold rounded-xl shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300">
+                    <i class="fas fa-calendar-check mr-3"></i> Schedule Free Consultation
                 </a>
-                <a href="tel:+265887873006" class="px-8 py-3 bg-white/20 border-2 border-white text-white font-semibold rounded-lg hover:bg-white/30 transition-all duration-300 inline-flex items-center justify-center gap-2">
-                    <i class="fas fa-phone"></i> Call: +265 887 580 622
+                <a href="tel:+265887873006" class="btn-magnetic inline-flex items-center justify-center px-8 py-4 border border-white/20 text-white font-semibold rounded-xl hover:bg-white/10 hover:border-white/40 transition-all duration-300">
+                    <i class="fas fa-phone mr-3"></i> Call: +265 887 580 622
                 </a>
             </div>
-            <div class="space-y-3 text-sm">
-                <div class="flex items-center justify-center gap-2">
-                    <i class="fas fa-check-circle"></i>
-                    <span>Free initial consultation</span>
-                </div>
-                <div class="flex items-center justify-center gap-2">
-                    <i class="fas fa-check-circle"></i>
-                    <span>Customized service packages</span>
-                </div>
-                <div class="flex items-center justify-center gap-2">
-                    <i class="fas fa-check-circle"></i>
-                    <span>Flexible engagement models</span>
-                </div>
+            <div class="flex flex-wrap justify-center gap-6 text-sm text-gray-400">
+                <span class="flex items-center gap-2"><i class="fas fa-check-circle text-emerald-400"></i> Free initial consultation</span>
+                <span class="flex items-center gap-2"><i class="fas fa-check-circle text-emerald-400"></i> Custom packages</span>
+                <span class="flex items-center gap-2"><i class="fas fa-check-circle text-emerald-400"></i> Flexible engagement</span>
             </div>
         </div>
     </div>
@@ -441,13 +400,13 @@
 <!-- FAQ Section -->
 <section class="py-20 lg:py-32 bg-gray-50" x-data="{ activeId: null }">
     <div class="container mx-auto px-4">
-        <div class="max-w-2xl mx-auto text-center mb-16" data-aos="fade-up">
-            <h2 class="text-3xl md:text-4xl font-bold font-display text-gray-900 mb-4">Frequently Asked Questions</h2>
-            <p class="text-gray-900">Common questions about our services</p>
+        <div class="max-w-2xl mx-auto text-center mb-16">
+            <h2 class="text-3xl md:text-4xl font-black text-gray-900 tracking-tight mb-4">Frequently Asked Questions</h2>
+            <p class="text-gray-500">Common questions about our services</p>
         </div>
         
-        <div class="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto" data-aos="fade-up">
-            <div class="backdrop-blur-xl bg-white/95 rounded-lg border border-white/30 shadow-smooth hover:shadow-smooth-lg transition-all duration-500 overflow-hidden">
+        <div class="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
+            <div class="bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-500 overflow-hidden">
                 <button 
                     class="w-full px-6 py-4 flex items-center justify-between font-semibold text-gray-900 hover:bg-primary/5 transition-colors duration-300"
                     @click="activeId = activeId === 'q1' ? null : 'q1'"
@@ -459,13 +418,13 @@
                 <div 
                     x-show="activeId === 'q1'" 
                     x-transition
-                    class="px-6 py-4 border-t border-gray-200 text-gray-900 text-sm"
+                    class="px-6 py-4 border-t border-gray-100 text-gray-500 text-sm"
                 >
                     We begin with a comprehensive consultation to understand your specific challenges, goals, and current processes. Based on this analysis, we recommend the most relevant services from our portfolio.
                 </div>
             </div>
             
-            <div class="backdrop-blur-xl bg-white/95 rounded-lg border border-white/30 shadow-smooth hover:shadow-smooth-lg transition-all duration-500 overflow-hidden">
+            <div class="bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-500 overflow-hidden">
                 <button 
                     class="w-full px-6 py-4 flex items-center justify-between font-semibold text-gray-900 hover:bg-primary/5 transition-colors duration-300"
                     @click="activeId = activeId === 'q2' ? null : 'q2'"
@@ -477,13 +436,13 @@
                 <div 
                     x-show="activeId === 'q2'" 
                     x-transition
-                    class="px-6 py-4 border-t border-gray-200 text-gray-900 text-sm"
+                    class="px-6 py-4 border-t border-gray-100 text-gray-500 text-sm"
                 >
                     Yes, absolutely! We specialize in creating tailored solutions that combine multiple services to meet your specific requirements and budget.
                 </div>
             </div>
             
-            <div class="backdrop-blur-xl bg-white/95 rounded-lg border border-white/30 shadow-smooth hover:shadow-smooth-lg transition-all duration-500 overflow-hidden">
+            <div class="bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-500 overflow-hidden">
                 <button 
                     class="w-full px-6 py-4 flex items-center justify-between font-semibold text-gray-900 hover:bg-primary/5 transition-colors duration-300"
                     @click="activeId = activeId === 'q3' ? null : 'q3'"
@@ -495,13 +454,13 @@
                 <div 
                     x-show="activeId === 'q3'" 
                     x-transition
-                    class="px-6 py-4 border-t border-gray-200 text-gray-900 text-sm"
+                    class="px-6 py-4 border-t border-gray-100 text-gray-500 text-sm"
                 >
                     Timelines vary based on project complexity and scope. During our initial consultation, we provide a detailed timeline with milestones for your specific project.
                 </div>
             </div>
             
-            <div class="backdrop-blur-xl bg-white/95 rounded-lg border border-white/30 shadow-smooth hover:shadow-smooth-lg transition-all duration-500 overflow-hidden">
+            <div class="bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-500 overflow-hidden">
                 <button 
                     class="w-full px-6 py-4 flex items-center justify-between font-semibold text-gray-900 hover:bg-primary/5 transition-colors duration-300"
                     @click="activeId = activeId === 'q4' ? null : 'q4'"
@@ -513,7 +472,7 @@
                 <div 
                     x-show="activeId === 'q4'" 
                     x-transition
-                    class="px-6 py-4 border-t border-gray-200 text-gray-900 text-sm"
+                    class="px-6 py-4 border-t border-gray-100 text-gray-500 text-sm"
                 >
                     Yes, we offer various support packages including maintenance, updates, and additional services to ensure continued success.
                 </div>

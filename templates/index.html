@@ -7,49 +7,54 @@
 {% endblock %}
 
 {% block content %}
-<!-- Hero (split layout) -->
 {% from "_components.html" import responsive_picture %}
-<section class="relative py-20 lg:py-32 overflow-hidden gsap-fade-in" data-aos="fade-up">
-  <div class="container mx-auto px-4">
-    <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-stretch">
-      <!-- Hero Copy -->
-      <div class="backdrop-blur-xl bg-white/95 rounded-3xl p-8 lg:p-10 border border-white/30 shadow-glass transition-all duration-300 hover:-translate-y-2 hover:shadow-glass-lg" data-aos="fade-right">
-        <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold font-display mb-6 bg-gradient-to-r from-primary via-purple-600 to-secondary bg-[length:200%_auto] animate-gradient bg-clip-text text-transparent" data-aos="fade-up" data-aos-delay="100">
-          We make organizations work better — fast.
+
+<!-- Scroll Progress Bar -->
+<div x-data="{ progress: 0 }"
+     @scroll.window="progress = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100"
+     class="scroll-progress fixed top-0 left-0 h-[3px] z-[9999]"
+     :style="`width: ${progress}%`"></div>
+
+<!-- ═══════════════════════════════════════════
+     HERO — Full-viewport dark cinematic
+     ═══════════════════════════════════════════ -->
+<section class="relative min-h-screen flex items-center overflow-hidden dark-mesh-bg noise-overlay" id="hero">
+  <!-- Floating orbs -->
+  <div class="orb orb-primary w-72 h-72 top-20 -left-20 lg:w-96 lg:h-96"></div>
+  <div class="orb orb-purple w-56 h-56 top-1/3 right-10 lg:w-80 lg:h-80"></div>
+  <div class="orb orb-secondary w-48 h-48 bottom-20 left-1/4 lg:w-64 lg:h-64"></div>
+
+  <div class="relative z-10 container mx-auto px-4 py-32 lg:py-40">
+    <div class="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+      <!-- Hero Copy — spans 7 cols -->
+      <div class="lg:col-span-7 space-y-8">
+        <div class="space-y-2">
+          <span class="section-eyebrow text-blue-400 gsap-hero-eyebrow">Thuwala Co. — Malawi & Beyond</span>
+        </div>
+
+        <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black font-display leading-[0.95] tracking-tight">
+          <span class="text-white gsap-hero-line">We make</span><br>
+          <span class="text-white gsap-hero-line">organizations</span><br>
+          <span class="gradient-text-animated gsap-hero-line">work better.</span>
         </h1>
-        <p class="text-lg md:text-xl text-gray-900 mb-8 leading-relaxed" data-aos="fade-up" data-aos-delay="200">
+
+        <p class="text-lg md:text-xl text-gray-400 max-w-xl leading-relaxed gsap-hero-sub">
           Integrated services in administration, data, operations and branding — tailored for results.
         </p>
         
-        <div class="flex flex-wrap gap-4 mb-10" data-aos="fade-up" data-aos-delay="300">
-          <a href="{{ url_for('services') }}" class="inline-flex items-center px-8 py-4 bg-primary text-white font-semibold rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-1 hover:scale-105 transition-all duration-300">
+        <div class="flex flex-wrap gap-4 pt-4 gsap-hero-cta">
+          <a href="{{ url_for('services') }}" class="btn-magnetic group inline-flex items-center px-8 py-4 bg-white text-gray-900 font-bold rounded-xl shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 text-sm md:text-base">
             Explore Services
+            <i class="fas fa-arrow-right ml-3 group-hover:translate-x-1 transition-transform duration-300"></i>
           </a>
-          <a href="{{ url_for('portfolio') }}" class="inline-flex items-center px-8 py-4 bg-transparent border-2 border-primary text-primary font-semibold rounded-xl hover:bg-primary hover:text-white hover:-translate-y-1 transition-all duration-300">
+          <a href="{{ url_for('portfolio') }}" class="btn-magnetic inline-flex items-center px-8 py-4 border-2 border-white/20 text-white font-semibold rounded-xl hover:bg-white/10 hover:border-white/40 hover:-translate-y-1 transition-all duration-300 text-sm md:text-base">
             See Our Work
           </a>
         </div>
-
-        <ul class="grid grid-cols-1 md:grid-cols-3 gap-4" data-aos="fade-up" data-aos-delay="400">
-          <li class="flex items-center gap-3 text-gray-700">
-            <i class="fas fa-clock text-primary text-xl"></i>
-            <span class="font-medium">Faster delivery</span>
-          </li>
-          <li class="flex items-center gap-3 text-gray-700">
-            <i class="fas fa-chart-line text-primary text-xl"></i>
-            <span class="font-medium">Data-driven decisions</span>
-          </li>
-          <li class="flex items-center gap-3 text-gray-700">
-            <i class="fas fa-users text-primary text-xl"></i>
-            <span class="font-medium">Client-focused support</span>
-          </li>
-        </ul>
       </div>
 
-      <!-- Hero Media / Advertisements -->
-      <div class="relative group h-full" data-aos="fade-left">
-        <div class="absolute inset-0 bg-gradient-to-tr from-primary/20 to-secondary/20 rounded-3xl blur-3xl group-hover:blur-2xl transition-all duration-500"></div>
-        
+      <!-- Hero Media / Advertisements — spans 5 cols -->
+      <div class="lg:col-span-5 relative gsap-hero-media">
         {% if advertisements and advertisements|length > 0 %}
         <!-- Advertisement Carousel -->
         <div x-data='{% raw %}{
@@ -57,164 +62,139 @@
           ads: {% endraw %}{{ advertisements|tojson }}{% raw %},
           interval: null,
           init() {
-            console.log("Carousel initialized with", this.ads.length, "ads");
             this.startAutoPlay();
           },
           startAutoPlay() {
-            this.interval = setInterval(() => {
-              this.next();
-            }, 5000);
+            this.interval = setInterval(() => { this.next(); }, 5000);
           },
           stopAutoPlay() {
             if (this.interval) clearInterval(this.interval);
           },
           next() {
             this.current = (this.current + 1) % this.ads.length;
-            console.log("Next: current =", this.current);
           },
           prev() {
             this.current = (this.current - 1 + this.ads.length) % this.ads.length;
-            console.log("Prev: current =", this.current);
           },
           goTo(index) {
             this.current = index;
-            console.log("GoTo:", index);
             this.stopAutoPlay();
             this.startAutoPlay();
           }
         }{% endraw %}' 
         @mouseenter="stopAutoPlay()" 
         @mouseleave="startAutoPlay()"
-        class="relative rounded-3xl shadow-2xl overflow-hidden">
+        class="relative rounded-2xl overflow-hidden border border-white/10 shadow-2xl glow-primary">
           
-          <!-- Slides Container with defined height -->
-          <div class="relative w-full" style="min-height: 500px; height: 100%;">
-            <!-- Advertisement Slides -->
+          <div class="relative w-full" style="min-height: 420px; height: 100%;">
             <template x-for="(ad, index) in ads" :key="index">
               <div x-show="current === index"
                    class="absolute inset-0 w-full h-full flex items-center justify-center"
                    :style="`background: ${ad.background_color || '#2563eb'}`">
-                
-                <!-- Background Image (if exists) -->
                 <template x-if="ad.image_url">
-                  <img :src="ad.image_url" 
-                       :alt="ad.title"
-                       loading="lazy"
-                       decoding="async"
-                       class="absolute inset-0 w-full h-full object-cover">
+                  <img :src="ad.image_url" :alt="ad.title" loading="lazy" decoding="async" class="absolute inset-0 w-full h-full object-cover">
                 </template>
-                
-                <!-- Gradient Overlay -->
-                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent"></div>
-                
-                <!-- Ad Content -->
+                <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
                 <div class="relative z-10 text-center px-8 max-w-2xl">
-                  <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-4"
+                  <h2 class="text-2xl md:text-3xl lg:text-4xl font-bold mb-4"
                       :style="`color: ${ad.text_color || '#ffffff'}`"
                       x-text="ad.title"></h2>
-                  
-                  <p class="text-lg md:text-xl mb-6 opacity-90"
+                  <p class="text-base md:text-lg mb-6 opacity-90"
                      :style="`color: ${ad.text_color || '#ffffff'}`"
                      x-text="ad.description"
                      x-show="ad.description"></p>
-                  
-                  <a :href="ad.cta_link || '#'"
-                     x-show="ad.cta_text"
-                     class="inline-flex items-center px-8 py-4 bg-white text-primary font-semibold rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-1 hover:scale-105 transition-all duration-300">
+                  <a :href="ad.cta_link || '#'" x-show="ad.cta_text"
+                     class="inline-flex items-center px-6 py-3 bg-white text-gray-900 font-semibold rounded-lg shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 text-sm">
                     <span x-text="ad.cta_text || 'Learn More'"></span>
-                  <i class="fas fa-arrow-right ml-2"></i>
-                </a>
+                    <i class="fas fa-arrow-right ml-2"></i>
+                  </a>
+                </div>
               </div>
-            </div>
-          </template>
+            </template>
           </div>
           
-          <!-- Navigation Arrows (always show if multiple ads) -->
           <div x-show="ads.length > 1">
-            <button @click="prev()" 
-                    class="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/20 backdrop-blur-md hover:bg-white/40 transition-all duration-300 flex items-center justify-center text-white z-20"
-                    aria-label="Previous ad">
-              <i class="fas fa-chevron-left"></i>
+            <button @click="prev()" class="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/10 backdrop-blur-md hover:bg-white/20 transition-all duration-300 flex items-center justify-center text-white z-20" aria-label="Previous ad">
+              <i class="fas fa-chevron-left text-sm"></i>
             </button>
-            <button @click="next()" 
-                    class="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/20 backdrop-blur-md hover:bg-white/40 transition-all duration-300 flex items-center justify-center text-white z-20"
-                    aria-label="Next ad">
-              <i class="fas fa-chevron-right"></i>
+            <button @click="next()" class="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/10 backdrop-blur-md hover:bg-white/20 transition-all duration-300 flex items-center justify-center text-white z-20" aria-label="Next ad">
+              <i class="fas fa-chevron-right text-sm"></i>
             </button>
           </div>
           
-          <!-- Dot Indicators (always show if multiple ads) -->
-          <div x-show="ads.length > 1" class="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2 z-20">
+          <div x-show="ads.length > 1" class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-20">
             <template x-for="(ad, index) in ads" :key="index">
               <button @click="goTo(index)"
-                      :class="current === index ? 'w-8 bg-white' : 'w-3 bg-white/50'"
-                      class="h-3 rounded-full transition-all duration-300 hover:bg-white/80"
+                      :class="current === index ? 'w-8 bg-white' : 'w-3 bg-white/40'"
+                      class="h-2 rounded-full transition-all duration-300"
                       :aria-label="`Go to ad ${index + 1}`"></button>
             </template>
           </div>
         </div>
         
         {% else %}
-        <!-- Default Hero Image (no ads) -->
-        {{ responsive_picture('images/hero/hero-default.jpg', 'Thuwala Co hero', 'relative rounded-3xl shadow-2xl hover:shadow-smooth-xl transition-all duration-500 hover:scale-[1.02]', '(max-width: 767px) 100vw, 50vw', 'eager', 'async', 'high') }}
+        {{ responsive_picture('images/hero/hero-default.jpg', 'Thuwala Co hero', 'relative rounded-2xl border border-white/10 shadow-2xl glow-primary', '(max-width: 767px) 100vw, 50vw', 'eager', 'async', 'high') }}
         {% endif %}
-        
-        <!-- Social Proof Badges -->
-        <div class="absolute -bottom-6 left-1/2 -translate-x-1/2 flex gap-3 flex-wrap justify-center" data-aos="fade-up" data-aos-delay="500">
-          <div class="backdrop-blur-xl bg-white/95 rounded-full px-4 py-2 border border-white/30 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-            <div class="flex items-center gap-2">
-              <i class="fas fa-star text-yellow-500"></i>
-              <span class="text-sm font-semibold text-gray-900">Top Rated</span>
-            </div>
-          </div>
-          <div class="backdrop-blur-xl bg-white/95 rounded-full px-4 py-2 border border-white/30 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-            <div class="flex items-center gap-2">
-              <i class="fas fa-users text-primary"></i>
-              <span class="text-sm font-semibold text-gray-900">45+ Clients</span>
-            </div>
-          </div>
-          <div class="backdrop-blur-xl bg-white/95 rounded-full px-4 py-2 border border-white/30 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-            <div class="flex items-center gap-2">
-              <i class="fas fa-certificate text-secondary"></i>
-              <span class="text-sm font-semibold text-gray-900">Certified</span>
-            </div>
-          </div>
+      </div>
+    </div>
+
+    <!-- Social proof stats bar -->
+    <div class="separator-gradient mt-16 mb-0"></div>
+    <div class="grid grid-cols-3 gap-8 pt-10 gsap-hero-stats">
+      <div class="text-center lg:text-left">
+        <div class="stat-number text-3xl md:text-4xl font-black text-white" x-data="{ count: 0 }" x-intersect.once="let i = setInterval(() => { count++; if(count >= 45) clearInterval(i) }, 30)">
+          <span x-text="count"></span><span class="text-blue-400">+</span>
         </div>
+        <p class="text-gray-500 text-sm mt-1 font-medium">Clients served</p>
+      </div>
+      <div class="text-center">
+        <div class="stat-number text-3xl md:text-4xl font-black text-white" x-data="{ count: 0 }" x-intersect.once="let i = setInterval(() => { count++; if(count >= 98) clearInterval(i) }, 15)">
+          <span x-text="count"></span><span class="text-emerald-400">%</span>
+        </div>
+        <p class="text-gray-500 text-sm mt-1 font-medium">Satisfaction rate</p>
+      </div>
+      <div class="text-center lg:text-right">
+        <div class="stat-number text-3xl md:text-4xl font-black text-white" x-data="{ count: 0 }" x-intersect.once="let i = setInterval(() => { count++; if(count >= 120) clearInterval(i) }, 12)">
+          <span x-text="count"></span><span class="text-purple-400">+</span>
+        </div>
+        <p class="text-gray-500 text-sm mt-1 font-medium">Projects delivered</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- Featured Services -->
-<section class="py-20 lg:py-32 bg-gradient-to-b from-gray-50 to-white gsap-fade-in" data-aos="fade-up">
-  <div class="container mx-auto px-4 mt-8">
-    <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-center mb-4 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent" data-aos="fade-up">
-      What we do
-    </h2>
-    <p class="text-lg md:text-xl text-gray-600 text-center max-w-2xl mx-auto mb-16" data-aos="fade-up" data-aos-delay="100">
-      End-to-end solutions that let you focus on impact.
-    </p>
+<!-- ═══════════════════════════════════════════
+     SERVICES — Light section with accent cards
+     ═══════════════════════════════════════════ -->
+<section class="py-24 lg:py-36 bg-white relative gsap-fade-in">
+  <div class="container mx-auto px-4">
+    <div class="max-w-3xl mb-20">
+      <span class="section-eyebrow text-primary mb-4 block">What We Do</span>
+      <h2 class="text-3xl md:text-4xl lg:text-5xl font-black text-gray-900 tracking-tight mb-6">
+        End-to-end solutions<br class="hidden md:block"> that let you focus on <span class="text-primary">impact.</span>
+      </h2>
+      <p class="text-lg text-gray-500 leading-relaxed">
+        From strategy to execution — we handle the complexity so your team can do what they do best.
+      </p>
+    </div>
     
-    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 gsap-stagger-grid" data-aos="fade-up" data-aos-delay="200">
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 gsap-stagger-grid">
       {% for s in services[:6] %}
-      <article class="group relative backdrop-blur-xl bg-white/95 rounded-2xl p-8 border border-white/30 shadow-smooth hover:shadow-smooth-lg transition-all duration-500 hover:-translate-y-3 gsap-scale-card grid-item">
-        <!-- Gradient border glow on hover -->
-        <div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/20 via-purple-500/20 to-secondary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10 blur-xl"></div>
-        
-        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-          <i class="{{ s.icon }} text-white text-2xl"></i>
+      <article class="group card-accent-left bg-white rounded-xl p-8 border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-500 grid-item">
+        <div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-6 group-hover:bg-primary group-hover:scale-110 transition-all duration-300">
+          <i class="{{ s.icon }} text-primary text-lg group-hover:text-white transition-colors duration-300"></i>
         </div>
         
-        <h3 class="text-xl font-bold mb-4 text-gray-900 group-hover:text-primary transition-colors duration-300">
+        <h3 class="text-lg font-bold mb-3 text-gray-900 group-hover:text-primary transition-colors duration-300">
           {{ s.title }}
         </h3>
-        <p class="text-gray-600 mb-6 leading-relaxed">
+        <p class="text-gray-500 text-sm leading-relaxed mb-5">
           {{ s.description[:120] }}{% if s.description|length > 120 %}...{% endif %}
         </p>
         
-        <a href="{{ url_for('services') }}#service-{{ s.id }}" class="inline-flex items-center text-primary font-semibold hover:gap-3 gap-2 transition-all duration-300 group/link">
+        <a href="{{ url_for('services') }}#service-{{ s.id }}" class="inline-flex items-center text-primary text-sm font-semibold gap-2 group/link hover:gap-3 transition-all duration-300">
           Learn more 
-          <i class="fas fa-arrow-right group-hover/link:translate-x-1 transition-transform duration-300"></i>
+          <i class="fas fa-arrow-right text-xs group-hover/link:translate-x-1 transition-transform duration-300"></i>
         </a>
       </article>
       {% endfor %}
@@ -222,60 +202,70 @@
   </div>
 </section>
 
-<!-- Portfolio Preview -->
-<section class="py-20 lg:py-32 bg-white gsap-fade-in" data-aos="fade-up">
-  <div class="container mx-auto px-4">
-    <div class="flex flex-col md:flex-row justify-between items-center mb-16" data-aos="fade-up">
-      <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent mb-4 md:mb-0">
-        Selected projects
-      </h2>
-      <a href="{{ url_for('portfolio') }}" class="inline-flex items-center px-6 py-3 bg-transparent border-2 border-primary text-primary font-semibold rounded-xl hover:bg-primary hover:text-white hover:-translate-y-1 transition-all duration-300">
-        View all
+<!-- ═══════════════════════════════════════════
+     PORTFOLIO — Dark section with glowing cards
+     ═══════════════════════════════════════════ -->
+<section class="py-24 lg:py-36 relative dark-mesh-bg noise-overlay overflow-hidden gsap-fade-in">
+  <!-- Decorative orbs -->
+  <div class="orb orb-purple w-64 h-64 -top-20 right-10"></div>
+  <div class="orb orb-primary w-48 h-48 bottom-10 -left-10"></div>
+  
+  <div class="relative z-10 container mx-auto px-4">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 gap-6">
+      <div class="max-w-2xl">
+        <span class="section-eyebrow text-emerald-400 mb-4 block">Selected Work</span>
+        <h2 class="text-3xl md:text-4xl lg:text-5xl font-black text-white tracking-tight">
+          Projects that<br class="hidden md:block"> speak for themselves.
+        </h2>
+      </div>
+      <a href="{{ url_for('portfolio') }}" class="btn-magnetic inline-flex items-center px-6 py-3 border border-white/20 text-white text-sm font-semibold rounded-lg hover:bg-white/10 hover:border-white/40 transition-all duration-300">
+        View all work
+        <i class="fas fa-arrow-right ml-2"></i>
       </a>
     </div>
     
-    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 gsap-stagger-grid" data-aos="fade-up" data-aos-delay="150">
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 gsap-stagger-grid">
       {% for item in portfolio_items[:6] %}
-      <article class="group relative backdrop-blur-xl bg-white/95 rounded-2xl overflow-hidden border border-white/30 shadow-smooth hover:shadow-smooth-lg transition-all duration-500 hover:-translate-y-3 gsap-scale-card grid-item">
+      <article class="group relative rounded-2xl overflow-hidden border border-white/10 bg-white/5 backdrop-blur-sm hover:border-white/20 transition-all duration-500 hover:-translate-y-2 grid-item">
         <a href="{{ item.project_url or url_for('portfolio') }}" class="block relative overflow-hidden">
-          <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10"></div>
-          {{ responsive_picture(item.image_url, item.title, 'w-full h-64 object-cover group-hover:scale-110 transition-transform duration-700', '(max-width: 640px) 100vw, 33vw') }}
+          <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-500 z-10"></div>
+          {{ responsive_picture(item.image_url, item.title, 'w-full h-64 object-cover group-hover:scale-105 transition-transform duration-700', '(max-width: 640px) 100vw, 33vw') }}
+          
+          <!-- Overlay content on hover -->
+          <div class="absolute bottom-0 left-0 right-0 p-6 z-20 translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
+            <h3 class="text-lg font-bold text-white mb-1">{{ item.title }}</h3>
+            <p class="text-gray-300 text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">
+              {{ item.description[:80] }}{% if item.description|length > 80 %}...{% endif %}
+            </p>
+          </div>
         </a>
-        
-        <div class="p-6">
-          <h3 class="text-xl font-bold mb-3 text-gray-900 group-hover:text-primary transition-colors duration-300">
-            {{ item.title }}
-          </h3>
-          <p class="text-gray-600 leading-relaxed">
-            {{ item.description[:100] }}{% if item.description|length > 100 %}...{% endif %}
-          </p>
-        </div>
       </article>
       {% endfor %}
     </div>
   </div>
 </section>
 
-<!-- Testimonials -->
-<section class="py-20 lg:py-32 bg-gradient-to-b from-white to-gray-50 gsap-fade-in" data-aos="fade-up">
+<!-- ═══════════════════════════════════════════
+     TESTIMONIALS — Light section, large quotes
+     ═══════════════════════════════════════════ -->
+<section class="py-24 lg:py-36 bg-gray-50 relative gsap-fade-in">
   <div class="container mx-auto px-4">
-    <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-center mb-16 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent" data-aos="fade-up">
-      Client stories
-    </h2>
+    <div class="text-center mb-16">
+      <span class="section-eyebrow text-primary mb-4 block">Client Stories</span>
+      <h2 class="text-3xl md:text-4xl lg:text-5xl font-black text-gray-900 tracking-tight">
+        Words that matter.
+      </h2>
+    </div>
     
     <div x-data='{% raw %}{
       current: 0,
       testimonials: {% endraw %}{{ testimonials|tojson }}{% raw %},
       interval: null,
       init() {
-        if (this.testimonials.length > 0) {
-          this.startAutoPlay();
-        }
+        if (this.testimonials.length > 0) this.startAutoPlay();
       },
       startAutoPlay() {
-        this.interval = setInterval(() => {
-          this.next();
-        }, 5000);
+        this.interval = setInterval(() => { this.next(); }, 6000);
       },
       stopAutoPlay() {
         if (this.interval) clearInterval(this.interval);
@@ -296,46 +286,32 @@
     @mouseleave="startAutoPlay()"
     class="relative max-w-4xl mx-auto">
       
-      <!-- Testimonial Slides -->
       <template x-for="(testimonial, index) in testimonials" :key="index">
-        <div x-show="current === index" class="mb-8">
-          <blockquote class="backdrop-blur-xl bg-white/95 rounded-3xl p-8 md:p-10 border border-white/30 shadow-smooth hover:shadow-smooth-lg transition-all duration-500">
-            <p class="text-lg md:text-xl text-gray-700 leading-relaxed mb-6 italic">
-              <span x-text="`&quot;${testimonial.testimonial}&quot;`"></span>
+        <div x-show="current === index" x-transition:enter="transition ease-out duration-500" x-transition:enter-start="opacity-0 translate-y-4" x-transition:enter-end="opacity-100 translate-y-0" class="mb-8">
+          <blockquote class="text-center">
+            <!-- Large quotation mark -->
+            <div class="text-primary/20 text-8xl font-serif leading-none mb-4">"</div>
+            <p class="text-xl md:text-2xl lg:text-3xl text-gray-800 leading-relaxed font-medium mb-8 -mt-10">
+              <span x-text="testimonial.testimonial"></span>
             </p>
-            <footer class="flex items-center gap-4">
-              <div class="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-bold text-lg">
+            <footer class="flex items-center justify-center gap-4">
+              <div class="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center text-white font-bold text-lg">
                 <span x-text="testimonial.client_name ? testimonial.client_name[0] : '?'"></span>
               </div>
-              <div>
-                <cite class="not-italic font-semibold text-gray-900 block" x-text="testimonial.client_name"></cite>
-                <span class="text-gray-600 text-sm" x-text="testimonial.client_role"></span>
+              <div class="text-left">
+                <cite class="not-italic font-bold text-gray-900 block" x-text="testimonial.client_name"></cite>
+                <span class="text-gray-500 text-sm" x-text="testimonial.client_role"></span>
               </div>
             </footer>
           </blockquote>
         </div>
       </template>
       
-      <!-- Navigation Arrows -->
-      <div x-show="testimonials.length > 1" class="flex justify-center gap-4 mt-8">
-        <button @click="prev()" 
-                class="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-secondary text-white hover:scale-110 transition-transform duration-300 flex items-center justify-center"
-                aria-label="Previous testimonial">
-          <i class="fas fa-chevron-left"></i>
-        </button>
-        <button @click="next()" 
-                class="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-secondary text-white hover:scale-110 transition-transform duration-300 flex items-center justify-center"
-                aria-label="Next testimonial">
-          <i class="fas fa-chevron-right"></i>
-        </button>
-      </div>
-      
-      <!-- Dot Indicators -->
-      <div x-show="testimonials.length > 1" class="flex justify-center gap-2 mt-6">
+      <div x-show="testimonials.length > 1" class="flex justify-center gap-2 mt-10">
         <template x-for="(testimonial, index) in testimonials" :key="index">
           <button @click="goTo(index)"
-                  :class="current === index ? 'w-3 h-3 bg-primary' : 'w-2 h-2 bg-gray-300'"
-                  class="rounded-full transition-all duration-300 hover:bg-primary"
+                  :class="current === index ? 'w-8 h-2 bg-primary' : 'w-2 h-2 bg-gray-300'"
+                  class="rounded-full transition-all duration-300 hover:bg-primary/50"
                   :aria-label="`Go to testimonial ${index + 1}`"></button>
         </template>
       </div>
@@ -343,30 +319,30 @@
   </div>
 </section>
 
-<!-- CTA -->
-<section class="py-20 lg:py-32 bg-white gsap-fade-in" data-aos="fade-up">
-  <div class="container mx-auto px-4">
-    <div class="relative overflow-hidden backdrop-blur-xl bg-gradient-to-br from-primary/10 via-purple-500/10 to-secondary/10 rounded-3xl p-8 md:p-12 lg:p-16 border border-white/30 shadow-smooth-lg hover:shadow-smooth-xl transition-all duration-500" data-aos="zoom-in">
-      <!-- Animated gradient background -->
-      <div class="absolute inset-0 bg-gradient-mesh opacity-50"></div>
-      
-      <div class="relative z-10 text-center max-w-4xl mx-auto">
-        <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 bg-gradient-to-r from-primary via-purple-600 to-secondary bg-clip-text text-transparent">
-          Ready to transform operations?
-        </h2>
-        <p class="text-lg md:text-xl text-gray-700 mb-10 leading-relaxed">
-          Book a free consultation and get a practical plan within 48 hours.
-        </p>
-        
-        <div class="flex flex-wrap justify-center gap-4">
-          <a href="{{ url_for('contact') }}" class="inline-flex items-center px-8 py-4 bg-primary text-white font-semibold rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-1 hover:scale-105 transition-all duration-300">
-            Get started
-          </a>
-          <a href="{{ url_for('services') }}" class="inline-flex items-center px-8 py-4 bg-white/80 backdrop-blur-sm text-primary font-semibold rounded-xl border-2 border-primary/20 hover:border-primary hover:-translate-y-1 transition-all duration-300">
-            Our services
-          </a>
-        </div>
-      </div>
+<!-- ═══════════════════════════════════════════
+     CTA — Full-bleed dark with gradient accents
+     ═══════════════════════════════════════════ -->
+<section class="py-24 lg:py-36 relative dark-mesh-bg noise-overlay overflow-hidden gsap-fade-in">
+  <div class="orb orb-primary w-80 h-80 -top-20 -right-20"></div>
+  <div class="orb orb-secondary w-64 h-64 bottom-0 left-10"></div>
+  
+  <div class="relative z-10 container mx-auto px-4 text-center">
+    <span class="section-eyebrow text-blue-400 mb-6 block">Ready?</span>
+    <h2 class="text-3xl md:text-4xl lg:text-6xl font-black text-white tracking-tight mb-6 max-w-3xl mx-auto leading-tight">
+      Let's transform how<br class="hidden md:block"> your organization works.
+    </h2>
+    <p class="text-lg md:text-xl text-gray-400 mb-10 max-w-xl mx-auto">
+      Book a free consultation and get a practical plan within 48 hours.
+    </p>
+    
+    <div class="flex flex-wrap justify-center gap-4">
+      <a href="{{ url_for('contact') }}" class="btn-magnetic group inline-flex items-center px-8 py-4 bg-white text-gray-900 font-bold rounded-xl shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300">
+        Get started
+        <i class="fas fa-arrow-right ml-3 group-hover:translate-x-1 transition-transform duration-300"></i>
+      </a>
+      <a href="{{ url_for('services') }}" class="btn-magnetic inline-flex items-center px-8 py-4 border border-white/20 text-white font-semibold rounded-xl hover:bg-white/10 hover:border-white/40 transition-all duration-300">
+        Our services
+      </a>
     </div>
   </div>
 </section>
@@ -374,4 +350,31 @@
 {% endblock %}
 
 {% block scripts %}
+<script>
+// Hero entrance choreography
+document.addEventListener('DOMContentLoaded', function() {
+  if (typeof gsap === 'undefined') return;
+  
+  var tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+  
+  tl.fromTo('.gsap-hero-eyebrow', 
+    { opacity: 0, y: 20 }, 
+    { opacity: 1, y: 0, duration: 0.6, delay: 0.2 })
+  .fromTo('.gsap-hero-line', 
+    { opacity: 0, y: 60 }, 
+    { opacity: 1, y: 0, duration: 0.8, stagger: 0.15 }, '-=0.3')
+  .fromTo('.gsap-hero-sub', 
+    { opacity: 0, y: 20 }, 
+    { opacity: 1, y: 0, duration: 0.6 }, '-=0.4')
+  .fromTo('.gsap-hero-cta', 
+    { opacity: 0, y: 20 }, 
+    { opacity: 1, y: 0, duration: 0.6 }, '-=0.3')
+  .fromTo('.gsap-hero-media', 
+    { opacity: 0, x: 40, scale: 0.95 }, 
+    { opacity: 1, x: 0, scale: 1, duration: 1 }, '-=0.6')
+  .fromTo('.gsap-hero-stats', 
+    { opacity: 0, y: 20 }, 
+    { opacity: 1, y: 0, duration: 0.6 }, '-=0.4');
+});
+</script>
 {% endblock %}

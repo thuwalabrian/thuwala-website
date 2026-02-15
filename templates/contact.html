@@ -3,31 +3,32 @@
 {% block title %}Contact Us - Thuwala Co.{% endblock %}
 
 {% block content %}
-<!-- Contact Hero Section -->
-<section class="relative py-20 lg:py-32 bg-gradient-to-b from-gray-50 to-white overflow-hidden">
-  <div class="container mx-auto px-4">
-    <div class="max-w-3xl mx-auto text-center mb-16" data-aos="fade-up">
-      <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold font-display mb-6 bg-gradient-to-r from-primary via-purple-600 to-secondary bg-[length:200%_auto] animate-gradient bg-clip-text text-transparent">
-        Let's Start Your Success Story
+<!-- Page Hero — Dark cinematic -->
+<section class="relative py-32 lg:py-40 overflow-hidden dark-mesh-bg noise-overlay">
+  <div class="orb orb-primary w-64 h-64 top-10 -right-20"></div>
+  <div class="orb orb-secondary w-48 h-48 bottom-10 left-10"></div>
+  <div class="relative z-10 container mx-auto px-4">
+    <div class="max-w-3xl">
+      <span class="section-eyebrow text-emerald-400 mb-4 block gsap-fade-in">Contact</span>
+      <h1 class="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black font-display text-white tracking-tight leading-[0.95] mb-6 gsap-fade-in">
+        Let's start your<br><span class="gradient-text-animated">success story.</span>
       </h1>
-      <p class="text-lg md:text-xl text-gray-900 leading-relaxed">
-        Reach out to discuss how our services can transform your business operations
+      <p class="text-lg md:text-xl text-gray-400 leading-relaxed max-w-xl gsap-fade-in">
+        Reach out to discuss how our services can transform your business operations.
       </p>
     </div>
-
-    <!-- Hero Stats -->
-    <div class="grid md:grid-cols-3 gap-8" data-aos="fade-up" data-aos-delay="100">
-      <div class="text-center backdrop-blur-xl bg-white/95 rounded-2xl p-8 border border-white/30 shadow-glass">
-        <div class="text-3xl font-bold text-primary mb-2"><i class="fas fa-clock"></i></div>
-        <p class="font-semibold text-gray-900">24-48 hr Response</p>
+    
+    <!-- Stats row -->
+    <div class="separator-gradient mt-12 mb-0"></div>
+    <div class="grid grid-cols-3 gap-8 pt-8 gsap-fade-in">
+      <div class="text-center lg:text-left">
+        <div class="flex items-center justify-center lg:justify-start gap-2 text-white font-bold"><i class="fas fa-clock text-blue-400"></i> 24-48hr Response</div>
       </div>
-      <div class="text-center backdrop-blur-xl bg-white/95 rounded-2xl p-8 border border-white/30 shadow-glass">
-        <div class="text-3xl font-bold text-secondary mb-2"><i class="fas fa-check-circle"></i></div>
-        <p class="font-semibold text-gray-900">Free Consultation</p>
+      <div class="text-center">
+        <div class="flex items-center justify-center gap-2 text-white font-bold"><i class="fas fa-check-circle text-emerald-400"></i> Free Consultation</div>
       </div>
-      <div class="text-center backdrop-blur-xl bg-white/95 rounded-2xl p-8 border border-white/30 shadow-glass">
-        <div class="text-3xl font-bold text-purple-600 mb-2"><i class="fas fa-users"></i></div>
-        <p class="font-semibold text-gray-900">Dedicated Support</p>
+      <div class="text-center lg:text-right">
+        <div class="flex items-center justify-center lg:justify-end gap-2 text-white font-bold"><i class="fas fa-users text-purple-400"></i> Dedicated Support</div>
       </div>
     </div>
   </div>
@@ -38,21 +39,21 @@
   <div class="container mx-auto px-4">
     <div class="grid md:grid-cols-2 gap-12 lg:gap-16 mb-16">
       <!-- Contact Info Cards -->
-      <div data-aos="fade-right">
-        <h2 class="text-3xl font-bold font-display text-gray-900 mb-3">Get in Touch</h2>
-        <p class="text-gray-900 mb-8">Multiple ways to reach us for your convenience</p>
+      <div>
+        <span class="section-eyebrow text-primary mb-4 block">Get in Touch</span>
+        <h2 class="text-2xl md:text-3xl font-black text-gray-900 mb-3">Multiple ways to reach us</h2>
+        <p class="text-gray-500 mb-8">For your convenience</p>
 
-        <div class="space-y-4" data-aos="fade-up">
+        <div class="space-y-4">
           <!-- Address Card -->
-          <div class="group relative backdrop-blur-xl bg-white/95 rounded-2xl p-6 border border-white/30 shadow-smooth hover:shadow-smooth-lg transition-all duration-500 hover:-translate-y-2">
-            <div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/20 to-secondary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10 blur-xl"></div>
+          <div class="group card-accent-left bg-white rounded-xl p-6 border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-500 hover:-translate-y-1">
             <div class="flex items-start gap-4">
               <div class="flex-shrink-0 w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
                 <i class="fas fa-map-marker-alt text-primary text-lg"></i>
               </div>
               <div>
                 <h3 class="font-bold text-gray-900 mb-1">Head Office</h3>
-                <p class="text-gray-900 text-sm mb-3">Lilongwe, Malawi</p>
+                <p class="text-gray-500 text-sm mb-3">Lilongwe, Malawi</p>
                 <a href="https://maps.google.com/?q=Lilongwe+Malawi" target="_blank" class="inline-flex items-center gap-2 text-primary hover:text-secondary transition-colors duration-300 font-semibold text-sm">
                   <i class="fas fa-directions"></i> Get Directions
                 </a>
@@ -61,15 +62,14 @@
           </div>
 
           <!-- Phone Card -->
-          <div class="group relative backdrop-blur-xl bg-white/95 rounded-2xl p-6 border border-white/30 shadow-smooth hover:shadow-smooth-lg transition-all duration-500 hover:-translate-y-2">
-            <div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/20 to-secondary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10 blur-xl"></div>
+          <div class="group card-accent-left bg-white rounded-xl p-6 border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-500 hover:-translate-y-1">
             <div class="flex items-start gap-4">
               <div class="flex-shrink-0 w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
                 <i class="fas fa-phone text-primary text-lg"></i>
               </div>
               <div>
                 <h3 class="font-bold text-gray-900 mb-1">Phone & WhatsApp</h3>
-                <p class="text-gray-900 text-sm mb-3">+265 887 580 622</p>
+                <p class="text-gray-500 text-sm mb-3">+265 887 580 622</p>
                 <a href="https://wa.me/265887873006" target="_blank" class="inline-flex items-center gap-2 text-primary hover:text-secondary transition-colors duration-300 font-semibold text-sm">
                   <i class="fab fa-whatsapp"></i> Chat on WhatsApp
                 </a>
@@ -78,15 +78,14 @@
           </div>
 
           <!-- Email Card -->
-          <div class="group relative backdrop-blur-xl bg-white/95 rounded-2xl p-6 border border-white/30 shadow-smooth hover:shadow-smooth-lg transition-all duration-500 hover:-translate-y-2">
-            <div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/20 to-secondary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10 blur-xl"></div>
+          <div class="group card-accent-left bg-white rounded-xl p-6 border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-500 hover:-translate-y-1">
             <div class="flex items-start gap-4">
               <div class="flex-shrink-0 w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
                 <i class="fas fa-envelope text-primary text-lg"></i>
               </div>
               <div>
                 <h3 class="font-bold text-gray-900 mb-1">Email</h3>
-                <p class="text-gray-900 text-sm mb-3">info@thuwalaco.com</p>
+                <p class="text-gray-500 text-sm mb-3">info@thuwalaco.com</p>
                 <a href="mailto:info@thuwalaco.com" class="inline-flex items-center gap-2 text-primary hover:text-secondary transition-colors duration-300 font-semibold text-sm">
                   <i class="fas fa-paper-plane"></i> Send Email
                 </a>
@@ -95,16 +94,15 @@
           </div>
 
           <!-- Hours Card -->
-          <div class="group relative backdrop-blur-xl bg-white/95 rounded-2xl p-6 border border-white/30 shadow-smooth hover:shadow-smooth-lg transition-all duration-500 hover:-translate-y-2">
-            <div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/20 to-secondary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10 blur-xl"></div>
+          <div class="group card-accent-left bg-white rounded-xl p-6 border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-500 hover:-translate-y-1">
             <div class="flex items-start gap-4">
               <div class="flex-shrink-0 w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
                 <i class="fas fa-clock text-primary text-lg"></i>
               </div>
               <div>
                 <h3 class="font-bold text-gray-900 mb-1">Business Hours</h3>
-                <p class="text-gray-900 text-sm mb-2">Mon - Fri: 8:00 AM - 5:00 PM</p>
-                <p class="text-gray-900 text-sm">Sat: 9:00 AM - 1:00 PM</p>
+                <p class="text-gray-500 text-sm mb-2">Mon - Fri: 8:00 AM - 5:00 PM</p>
+                <p class="text-gray-500 text-sm">Sat: 9:00 AM - 1:00 PM</p>
               </div>
             </div>
           </div>
@@ -112,9 +110,10 @@
       </div>
 
       <!-- Contact Form -->
-      <div data-aos="fade-left">
-        <h2 class="text-3xl font-bold font-display text-gray-900 mb-3">Send Us a Message</h2>
-        <p class="text-gray-900 mb-8">Fill out the form below and we'll get back to you promptly</p>
+      <div>
+        <span class="section-eyebrow text-primary mb-4 block">Send a Message</span>
+        <h2 class="text-2xl md:text-3xl font-black text-gray-900 mb-3">We'd love to hear from you</h2>
+        <p class="text-gray-500 mb-8">Fill out the form below and we'll get back to you promptly</p>
 
         <form method="POST" action="{{ url_for('contact') }}" #form x-ref="form" class="space-y-5" x-data="{
           fields: { service: '', name: '', email: '', phone: '', company: '', subject: '', message: '', inquiryType: 'quote', newsletter: true },
@@ -255,7 +254,7 @@
           <!-- Newsletter Checkbox -->
           <label class="flex items-center gap-3 cursor-pointer">
             <input type="checkbox" name="newsletter" x-model="fields.newsletter" class="w-4 h-4 accent-primary">
-            <span class="text-sm text-gray-900">Subscribe to our newsletter for updates</span>
+            <span class="text-sm text-gray-600">Subscribe to our newsletter for updates</span>
           </label>
 
           <!-- Submit Button with Loading State -->
@@ -286,7 +285,7 @@
             </div>
           </button>
 
-          <p class="text-xs text-gray-900 text-center">
+          <p class="text-xs text-gray-400 text-center">
             <i class="fas fa-shield-alt text-primary mr-1"></i>Your information is secure and never shared with third parties.
           </p>
         </form>
@@ -298,12 +297,13 @@
 <!-- FAQ Section -->
 <section class="py-20 lg:py-32 bg-gray-50" x-data="{ activeId: null }">
   <div class="container mx-auto px-4">
-    <div class="max-w-2xl mx-auto text-center mb-16" data-aos="fade-up">
-      <h2 class="text-3xl md:text-4xl font-bold font-display text-gray-900 mb-4">Frequently Asked Questions</h2>
-      <p class="text-gray-900">Quick answers to common questions about contacting us</p>
+    <div class="max-w-2xl mx-auto text-center mb-16">
+      <span class="section-eyebrow text-primary mb-4 block">FAQ</span>
+      <h2 class="text-3xl md:text-4xl font-black text-gray-900 tracking-tight mb-4">Frequently Asked Questions</h2>
+      <p class="text-gray-500">Quick answers to common questions about contacting us</p>
     </div>
 
-    <div class="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto" data-aos="fade-up">
+    <div class="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
       {% set faqs = [
         {
           "id": "faq-1",
@@ -328,7 +328,7 @@
       ] %}
       
       {% for faq in faqs %}
-      <div class="backdrop-blur-xl bg-white/95 rounded-lg border border-white/30 shadow-smooth hover:shadow-smooth-lg transition-all duration-500 overflow-hidden">
+      <div class="bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-lg transition-all duration-500 overflow-hidden">
         <button 
           class="w-full px-6 py-4 flex items-center justify-between font-semibold text-gray-900 hover:bg-primary/5 transition-colors duration-300"
           @click="activeId = activeId === '{{ faq.id }}' ? null : '{{ faq.id }}'"
@@ -340,7 +340,7 @@
         <div 
           x-show="activeId === '{{ faq.id }}'" 
           x-transition
-          class="px-6 py-4 border-t border-gray-200 text-gray-900 text-sm"
+          class="px-6 py-4 border-t border-gray-100 text-gray-500 text-sm"
         >
           {{ faq.a }}
         </div>
@@ -350,18 +350,21 @@
   </div>
 </section>
 
-<!-- CTA Section -->
-<section class="py-16 lg:py-24 bg-gradient-to-r from-primary to-secondary">
-  <div class="container mx-auto px-4">
-    <div class="max-w-3xl mx-auto text-center text-white" data-aos="fade-up">
-      <h2 class="text-3xl md:text-4xl font-bold font-display mb-4">Prefer a Quick Call?</h2>
-      <p class="text-lg opacity-90 mb-8">Speak directly with our team for immediate assistance</p>
-      <div class="flex flex-col md:flex-row justify-center gap-4">
-        <a href="tel:+265887873006" class="px-8 py-3 bg-white text-primary font-semibold rounded-lg hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 inline-flex items-center justify-center gap-2">
-          <i class="fas fa-phone"></i> Call Now
+<!-- CTA — Dark -->
+<section class="py-24 lg:py-36 relative dark-mesh-bg noise-overlay overflow-hidden gsap-fade-in">
+  <div class="orb orb-primary w-72 h-72 -top-20 right-10"></div>
+  <div class="orb orb-secondary w-56 h-56 bottom-0 -left-10"></div>
+  <div class="relative z-10 container mx-auto px-4">
+    <div class="max-w-3xl mx-auto text-center">
+      <span class="section-eyebrow text-blue-400 mb-4 block">Prefer a Quick Call?</span>
+      <h2 class="text-3xl md:text-4xl lg:text-5xl font-black text-white tracking-tight mb-4">Speak directly with our team.</h2>
+      <p class="text-lg text-gray-400 mb-10">For immediate assistance, call or message us now.</p>
+      <div class="flex flex-wrap justify-center gap-4">
+        <a href="tel:+265887873006" class="btn-magnetic group inline-flex items-center px-8 py-4 bg-white text-gray-900 font-bold rounded-xl shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300">
+          <i class="fas fa-phone mr-3"></i> Call Now
         </a>
-        <a href="https://wa.me/265887873006" target="_blank" class="px-8 py-3 bg-white/20 border-2 border-white text-white font-semibold rounded-lg hover:bg-white/30 transition-all duration-300 inline-flex items-center justify-center gap-2">
-          <i class="fab fa-whatsapp"></i> WhatsApp
+        <a href="https://wa.me/265887873006" target="_blank" class="btn-magnetic inline-flex items-center px-8 py-4 border border-white/20 text-white font-semibold rounded-xl hover:bg-white/10 hover:border-white/40 transition-all duration-300">
+          <i class="fab fa-whatsapp mr-3"></i> WhatsApp
         </a>
       </div>
     </div>
