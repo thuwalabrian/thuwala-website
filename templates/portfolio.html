@@ -21,19 +21,19 @@
     <div class="separator-gradient mt-12 mb-0"></div>
     <div class="grid grid-cols-3 gap-8 pt-8 gsap-fade-in">
       <div class="text-center lg:text-left">
-        <div class="stat-number text-3xl md:text-4xl font-black text-white" x-data="{ count: 0 }" x-intersect.once="let i = setInterval(() => { count++; if(count >= 50) clearInterval(i) }, 30)">
+        <div class="stat-number text-3xl md:text-4xl font-black text-white" x-data="{ count: 0 }" x-init="let i = setInterval(() => { count++; if(count >= 50) clearInterval(i) }, 30)">
           <span x-text="count"></span><span class="text-blue-400">+</span>
         </div>
         <p class="text-gray-500 text-sm mt-1 font-medium">Projects completed</p>
       </div>
       <div class="text-center">
-        <div class="stat-number text-3xl md:text-4xl font-black text-white" x-data="{ count: 0 }" x-intersect.once="let i = setInterval(() => { count++; if(count >= 45) clearInterval(i) }, 30)">
+        <div class="stat-number text-3xl md:text-4xl font-black text-white" x-data="{ count: 0 }" x-init="let i = setInterval(() => { count++; if(count >= 45) clearInterval(i) }, 30)">
           <span x-text="count"></span><span class="text-emerald-400">+</span>
         </div>
         <p class="text-gray-500 text-sm mt-1 font-medium">Satisfied clients</p>
       </div>
       <div class="text-center lg:text-right">
-        <div class="stat-number text-3xl md:text-4xl font-black text-white" x-data="{ count: 0 }" x-intersect.once="let i = setInterval(() => { count++; if(count >= 60) clearInterval(i) }, 20)">
+        <div class="stat-number text-3xl md:text-4xl font-black text-white" x-data="{ count: 0 }" x-init="let i = setInterval(() => { count++; if(count >= 60) clearInterval(i) }, 20)">
           <span x-text="count"></span><span class="text-purple-400">%</span>
         </div>
         <p class="text-gray-500 text-sm mt-1 font-medium">Avg efficiency gain</p>

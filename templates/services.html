@@ -21,19 +21,19 @@
         <div class="separator-gradient mt-12 mb-0"></div>
         <div class="grid grid-cols-3 gap-8 pt-8">
             <div class="text-center lg:text-left">
-                <div class="stat-number text-3xl md:text-4xl font-black text-white" x-data="{ count: 0 }" x-intersect.once="let i = setInterval(() => { count++; if(count >= 10) clearInterval(i) }, 80)">
+                <div class="stat-number text-3xl md:text-4xl font-black text-white" x-data="{ count: 0 }" x-init="let i = setInterval(() => { count++; if(count >= 10) clearInterval(i) }, 80)">
                     <span x-text="count"></span><span class="text-blue-400"></span>
                 </div>
                 <p class="text-gray-500 text-sm mt-1 font-medium">Service areas</p>
             </div>
             <div class="text-center">
-                <div class="stat-number text-3xl md:text-4xl font-black text-white" x-data="{ count: 0 }" x-intersect.once="let i = setInterval(() => { count++; if(count >= 100) clearInterval(i) }, 15)">
+                <div class="stat-number text-3xl md:text-4xl font-black text-white" x-data="{ count: 0 }" x-init="let i = setInterval(() => { count++; if(count >= 100) clearInterval(i) }, 15)">
                     <span x-text="count"></span><span class="text-emerald-400">+</span>
                 </div>
                 <p class="text-gray-500 text-sm mt-1 font-medium">Projects delivered</p>
             </div>
             <div class="text-center lg:text-right">
-                <div class="stat-number text-3xl md:text-4xl font-black text-white" x-data="{ count: 0 }" x-intersect.once="let i = setInterval(() => { count++; if(count >= 95) clearInterval(i) }, 15)">
+                <div class="stat-number text-3xl md:text-4xl font-black text-white" x-data="{ count: 0 }" x-init="let i = setInterval(() => { count++; if(count >= 95) clearInterval(i) }, 15)">
                     <span x-text="count"></span><span class="text-purple-400">%</span>
                 </div>
                 <p class="text-gray-500 text-sm mt-1 font-medium">Client satisfaction</p>

@@ -349,36 +349,67 @@ def generate_reset_token():
     return secrets.token_urlsafe(32)
 
 
+def get_file_extension(filename):
+    """Extract lowercase file extension from a filename."""
+    if not filename or "." not in filename:
+        return ""
+    return filename.rsplit(".", 1)[1].lower()
+
+
 def is_allowed_file(filename):
     """Check if uploaded file has an allowed extension."""
-    return (
-        "." in filename
-        and filename.rsplit(".", 1)[1].lower() in app.config["ALLOWED_EXTENSIONS"]
-    )
+    return get_file_extension(filename) in app.config["ALLOWED_EXTENSIONS"]
 
 
-def save_uploaded_image(file, subdir, add_timestamp=False):
-    """Save an uploaded image and return its public URL."""
-    if not file or file.filename == "":
-        return None
+def has_uploaded_file(field_name):
+    """Check if a real file was submitted in the given form field."""
+    if field_name not in request.files:
+        return False
+    f = request.files[field_name]
+    return f and f.filename and f.filename.strip() != ""
 
-    filename = secure_filename(file.filename)
-    if not is_allowed_file(filename):
-        return None
+
+def save_uploaded_image(file, subdir, add_timestamp=True):
+    """Save an uploaded image file and return its web-accessible URL.
+
+    Returns a tuple (url, error_message).  On success error_message is None.
+    On failure url is None and error_message explains the problem.
+    """
+    # Guard: no file or empty filename
+    if not file or not file.filename or file.filename.strip() == "":
+        return None, None  # nothing submitted — not an error
+
+    original = file.filename.strip()
+    ext = get_file_extension(original)
+
+    if not ext:
+        return None, "File has no extension. Please upload an image file."
+
+    if ext not in app.config["ALLOWED_EXTENSIONS"]:
+        allowed = ", ".join(sorted(app.config["ALLOWED_EXTENSIONS"]))
+        return None, f"File type '.{ext}' is not supported. Allowed: {allowed}"
+
+    # Build a safe filename, preserving the extension even if secure_filename strips it
+    safe_name = secure_filename(original)
+    if not safe_name or not get_file_extension(safe_name):
+        # secure_filename stripped too much — rebuild from timestamp + extension
+        safe_name = f"upload.{ext}"
 
     if add_timestamp:
         timestamp = datetime.utcnow().strftime("%Y%m%d_%H%M%S")
-        filename = f"{timestamp}_{filename}"
+        safe_name = f"{timestamp}_{safe_name}"
 
     upload_dir = os.path.join(app.config["UPLOAD_FOLDER"], subdir)
     try:
         os.makedirs(upload_dir, exist_ok=True)
-        filepath = os.path.join(upload_dir, filename)
+        filepath = os.path.join(upload_dir, safe_name)
         file.save(filepath)
-        return f"/static/uploads/{subdir}/{filename}"
+        url = f"/static/uploads/{subdir}/{safe_name}"
+        app.logger.info("Image saved: %s", url)
+        return url, None
     except OSError as e:
-        app.logger.warning("File upload failed (read-only FS?): %s", e)
-        return None
+        app.logger.error("File upload failed: %s", e, exc_info=True)
+        return None, f"Server error saving file: {e}"
 
 
 def send_password_reset_email(user_email, reset_url):
@@ -1381,12 +1412,16 @@ def add_portfolio():
     if request.method == "POST":
         try:
             # Handle file upload for image
-            image_url = request.form.get("image_url")
-            if "image_file" in request.files:
-                file = request.files["image_file"]
-                uploaded_url = save_uploaded_image(
-                    file, "portfolio", add_timestamp=True
+            image_url = request.form.get("image_url", "").strip() or None
+            if has_uploaded_file("image_file"):
+                uploaded_url, upload_err = save_uploaded_image(
+                    request.files["image_file"], "portfolio"
                 )
+                if upload_err:
+                    flash(upload_err, "error")
+                    return render_template(
+                        "admin/edit_portfolio.html", categories=SERVICE_CATEGORIES
+                    )
                 if uploaded_url:
                     image_url = uploaded_url
 
@@ -1421,12 +1456,18 @@ def edit_portfolio(item_id):
     if request.method == "POST":
         try:
             # Handle file upload for image
-            image_url = request.form.get("image_url")
-            if "image_file" in request.files:
-                file = request.files["image_file"]
-                uploaded_url = save_uploaded_image(
-                    file, "portfolio", add_timestamp=True
+            image_url = request.form.get("image_url", "").strip() or None
+            if has_uploaded_file("image_file"):
+                uploaded_url, upload_err = save_uploaded_image(
+                    request.files["image_file"], "portfolio"
                 )
+                if upload_err:
+                    flash(upload_err, "error")
+                    return render_template(
+                        "admin/edit_portfolio.html",
+                        item=portfolio,
+                        categories=SERVICE_CATEGORIES,
+                    )
                 if uploaded_url:
                     image_url = uploaded_url
 
@@ -1533,44 +1574,46 @@ def add_advertisement():
     """Add new advertisement"""
     if request.method == "POST":
         try:
-            # Handle file upload
-            image_url = request.form.get("image_url", "").strip()
+            # --- Resolve image: uploaded file takes priority over URL ---
+            image_url = None
+            if has_uploaded_file("image_file"):
+                uploaded_url, upload_err = save_uploaded_image(
+                    request.files["image_file"], "ads"
+                )
+                if upload_err:
+                    flash(upload_err, "error")
+                    return render_template("admin/edit_advertisement.html", ad=None)
+                image_url = uploaded_url
+            else:
+                raw_url = request.form.get("image_url", "").strip()
+                if raw_url:
+                    image_url = raw_url
 
-            if "image_file" in request.files:
-                file = request.files["image_file"]
-                uploaded_url = save_uploaded_image(file, "ads", add_timestamp=True)
-                if uploaded_url:
-                    image_url = uploaded_url
-                    print(f"DEBUG: Image saved, URL: {image_url}")
-
-            # Parse dates
-            start_date_str = request.form.get("start_date")
-            end_date_str = request.form.get("end_date")
-
+            # --- Parse optional dates ---
             start_date = None
             end_date = None
-
+            start_date_str = request.form.get("start_date", "").strip()
+            end_date_str = request.form.get("end_date", "").strip()
             if start_date_str:
                 try:
                     start_date = datetime.strptime(start_date_str, "%Y-%m-%dT%H:%M")
                 except ValueError:
-                    start_date = datetime.utcnow()
-
+                    pass
             if end_date_str:
                 try:
                     end_date = datetime.strptime(end_date_str, "%Y-%m-%dT%H:%M")
                 except ValueError:
-                    end_date = None
+                    pass
 
-            # Create new advertisement
+            # --- Create advertisement ---
             ad = Advertisement(
                 title=request.form.get("title", "").strip(),
                 description=request.form.get("description", "").strip(),
                 cta_text=request.form.get("cta_text", "Learn More").strip(),
                 cta_link=request.form.get("cta_link", "").strip(),
-                image_url=image_url if image_url else None,
-                background_color=request.form.get("background_color", "#2563eb"),
-                text_color=request.form.get("text_color", "#ffffff"),
+                image_url=image_url,
+                background_color=request.form.get("background_color") or "#2563eb",
+                text_color=request.form.get("text_color") or "#ffffff",
                 is_active=bool(request.form.get("is_active")),
                 start_date=start_date,
                 end_date=end_date,
@@ -1599,36 +1642,50 @@ def edit_advertisement(ad_id):
 
     if request.method == "POST":
         try:
-            # Handle file upload
-            if "image_file" in request.files:
-                file = request.files["image_file"]
-                uploaded_url = save_uploaded_image(file, "ads", add_timestamp=True)
+            # --- Resolve image ---
+            if request.form.get("remove_image"):
+                ad.image_url = None
+            elif has_uploaded_file("image_file"):
+                uploaded_url, upload_err = save_uploaded_image(
+                    request.files["image_file"], "ads"
+                )
+                if upload_err:
+                    flash(upload_err, "error")
+                    return render_template("admin/edit_advertisement.html", ad=ad)
                 if uploaded_url:
                     ad.image_url = uploaded_url
-            elif request.form.get("image_url"):
-                ad.image_url = request.form.get("image_url", "").strip()
-
-            # Parse dates
-            start_date_str = request.form.get("start_date")
-            end_date_str = request.form.get("end_date")
-
-            if start_date_str:
-                ad.start_date = datetime.strptime(start_date_str, "%Y-%m-%dT%H:%M")
             else:
-                ad.start_date = None
+                raw_url = request.form.get("image_url", "").strip()
+                # Only update URL if user actually typed something
+                # (empty means keep current when no file uploaded)
+                if raw_url:
+                    ad.image_url = raw_url
+                elif not request.form.get("image_url"):
+                    pass  # field absent — keep current
+                else:
+                    ad.image_url = None  # user deliberately cleared it
 
-            if end_date_str:
-                ad.end_date = datetime.strptime(end_date_str, "%Y-%m-%dT%H:%M")
-            else:
-                ad.end_date = None
+            # --- Parse optional dates ---
+            start_date_str = request.form.get("start_date", "").strip()
+            end_date_str = request.form.get("end_date", "").strip()
+            ad.start_date = (
+                datetime.strptime(start_date_str, "%Y-%m-%dT%H:%M")
+                if start_date_str
+                else None
+            )
+            ad.end_date = (
+                datetime.strptime(end_date_str, "%Y-%m-%dT%H:%M")
+                if end_date_str
+                else None
+            )
 
-            # Update fields
+            # --- Update remaining fields ---
             ad.title = request.form.get("title", "").strip()
             ad.description = request.form.get("description", "").strip()
             ad.cta_text = request.form.get("cta_text", "Learn More").strip()
             ad.cta_link = request.form.get("cta_link", "").strip()
-            ad.background_color = request.form.get("background_color", "#2563eb")
-            ad.text_color = request.form.get("text_color", "#ffffff")
+            ad.background_color = request.form.get("background_color") or "#2563eb"
+            ad.text_color = request.form.get("text_color") or "#ffffff"
             ad.is_active = bool(request.form.get("is_active"))
             ad.display_order = int(request.form.get("display_order", 0) or 0)
 
@@ -1638,7 +1695,7 @@ def edit_advertisement(ad_id):
 
         except Exception as e:
             db.session.rollback()
-            print(f"Error updating advertisement: {e}")
+            app.logger.error("Error updating advertisement: %s", e, exc_info=True)
             flash(f"Error updating advertisement: {str(e)}", "error")
 
     return render_template("admin/edit_advertisement.html", ad=ad)

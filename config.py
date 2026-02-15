@@ -33,7 +33,10 @@ class Config:
     UPLOAD_FOLDER = os.environ.get("UPLOAD_FOLDER", "static/uploads")
     MAX_CONTENT_LENGTH = int(os.environ.get("MAX_CONTENT_LENGTH", 16 * 1024 * 1024))
     ALLOWED_EXTENSIONS = set(
-        os.environ.get("ALLOWED_EXTENSIONS", "png,jpg,jpeg,gif,webp").split(",")
+        os.environ.get(
+            "ALLOWED_EXTENSIONS",
+            "png,jpg,jpeg,gif,webp,svg,bmp,tiff,tif,ico,avif,heic,heif",
+        ).split(",")
     )
 
     # Email configuration

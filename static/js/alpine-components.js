@@ -105,7 +105,6 @@ window.AlpineComponents = {
       open: false,
       toggle() { this.open = !this.open; },
       close() { this.open = false; },
-      @click.away: () => { this.open = false; }
     };
   },
 
